@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Data/Terrain/terrain0-16bbp-257x257.raw</file>
+        <file>Data/Terrain/terrain0-8bbp-257x257.raw</file>
+        <file>Data/Textures/grass.jpg</file>
+        <file>Data/Textures/rock.png</file>
+        <file>Data/Textures/skydome4.jpg</file>
+        <file>Data/Textures/snow.jpg</file>
+        <file>shaders/simple.frag</file>
+        <file>shaders/simple.vert</file>
+        <file>shaders/texturedDiffuse.frag</file>
+        <file>shaders/texturedDiffuse.vert</file>
+        <file>shaders/texturediffuse.fsh</file>
+        <file>Data/Textures/road.jpg</file>
+    </qresource>
+</RCC>
