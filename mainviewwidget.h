@@ -10,6 +10,7 @@
 #include "transform3d.h"
 #include "terrain.h"
 #include "road.h"
+#include "car.h"
 #include "textures.h"
 
 class QOpenGLShaderProgram;
@@ -22,11 +23,12 @@ public:
     ~MainViewWidget();
     // OpenGL Events
     public:
-      void initializeObjects(QVBoxLayout *layout, QOpenGLShaderProgram* shader, Textures *textures, Terrain* terrain, Road* road);
+      void initializeObjects(QVBoxLayout *layout, QOpenGLShaderProgram* shader, Textures *textures, Terrain* terrain, Road* road, Car *car);
       void initializeGL();
       void resizeGL(int width, int height);
       void paintGL();
       void mainUpdate();
+      Camera3D m_camera;
 
     protected:
       QSize minimumSizeHint() const;
@@ -62,6 +64,7 @@ public:
       // Mesh Information
       Terrain* m_pTerrain;
       Road* m_pRoad;
+      Car* m_pCar;
 
       // OpenGL State Information
       int u_worldToCamera;
@@ -69,7 +72,6 @@ public:
 
 
       QMatrix4x4 m_projection;
-      Camera3D m_camera;
       Transform3D m_transform;
 
       // Private Helpers

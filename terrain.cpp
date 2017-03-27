@@ -118,9 +118,6 @@ void Terrain::setModels()
     //m_program->bind();
     m_modelToWorld = m_program->uniformLocation("modelToWorld");
     m_program->setUniformValue(m_modelToWorld, QMatrix4x4(glm::value_ptr(m_LocalToWorldMatrix)).transposed() );
-    m_program->setUniformValue("stage1", GRASS_TEXTURE);
-    m_program->setUniformValue("stage2", ROCK_TEXTURE);
-    m_program->setUniformValue("stage3", SNOW_TEXTURE);
     //m_program->release();
 
 }

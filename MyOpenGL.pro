@@ -39,7 +39,8 @@ SOURCES += main.cpp\
     part.cpp \
     controllablepart.cpp \
     wing.cpp \
-    road.cpp
+    road.cpp \
+    car.cpp
 
 HEADERS  += window.h \
     myopenglwidget.h \
@@ -68,7 +69,8 @@ HEADERS  += window.h \
     part.h \
     controllablepart.h \
     wing.h \
-    road.h
+    road.h \
+    car.h
 
 FORMS    += window.ui
 

@@ -9,6 +9,7 @@
 #include "mainviewwidget.h"
 #include "terrain.h"
 #include "road.h"
+#include "car.h"
 #include "textures.h"
 
 //#define EARTH_TEXTURE 0
@@ -27,17 +28,23 @@ public:
     explicit Window(QWidget *parent = 0);
     ~Window();
     QVBoxLayout* getControlLayout();
-//protected:
-//    void keyPressEvent(QKeyEvent *event);
-
+public Q_SLOTS:
+    void updateState();
+    void handleButton();
 private:
     Ui::Window *ui;
     QVBoxLayout *rightLayout;
+    QPushButton* m_button;
+    QTimer* timer;
+    double simTime = 0;
     MainViewWidget myOpenGLWidget;
     QOpenGLShaderProgram shader;
     Textures textures;
     Terrain g_Terrain;
     Road road;
+    Car car;
+    //protected:
+    //    void keyPressEvent(QKeyEvent *event);
 };
 
 #endif // WINDOW_H

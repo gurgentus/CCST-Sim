@@ -25,13 +25,14 @@ MainViewWidget::~MainViewWidget()
 }
 
 void MainViewWidget::initializeObjects(QVBoxLayout *layout, QOpenGLShaderProgram* shader,
-                                       Textures* textures, Terrain* terrain, Road *road)
+                                       Textures* textures, Terrain* terrain, Road *road, Car* car)
 {
     // Create Shader (Do not release until VAO is created)
     m_TexturedDiffuseShaderProgram = shader;
     m_pTextures = textures;
     m_pTerrain = terrain;
     m_pRoad = road;
+    m_pCar = car;
 
 //    u_worldToCamera = m_TexturedDiffuseShaderProgram->uniformLocation("worldToCamera");
 //    u_cameraToView = m_TexturedDiffuseShaderProgram->uniformLocation("cameraToView");
@@ -72,7 +73,8 @@ void MainViewWidget::initializeGL()
     // Cache Uniform Locations
     u_worldToCamera = m_TexturedDiffuseShaderProgram->uniformLocation("worldToCamera");
     u_cameraToView = m_TexturedDiffuseShaderProgram->uniformLocation("cameraToView");
-
+    m_TexturedDiffuseShaderProgram->setUniformValue(u_worldToCamera, QMatrix4x4());
+    m_TexturedDiffuseShaderProgram->setUniformValue(u_cameraToView, QMatrix4x4());
 //    if ( !m_pTextures->loadTexture( ":/Textures/earth.dds", EARTH_TEXTURE ) )
 //    {
 //        std::cerr << "Failed to load terrain texture for earth!" << std::endl;
@@ -110,7 +112,17 @@ void MainViewWidget::initializeGL()
     {
         std::cerr << "Road object doesn't exist!" << std::endl;
     }
-
+    if (m_pCar != NULL)
+    {
+        if ( !m_pCar->setupDefaultMesh() )
+        {
+            std::cerr << "Failed to load the car!" << std::endl;
+        }
+    }
+    else
+    {
+        std::cerr << "Car object doesn't exist!" << std::endl;
+    }
     if (m_pTerrain != NULL)
     {
         if ( !m_pTerrain->setupDefaultMesh() )
@@ -125,14 +137,15 @@ void MainViewWidget::initializeGL()
 
   m_pTerrain->setTexture(m_pTextures, ROCK_TEXTURE);
   m_pRoad->setTexture(m_pTextures, ROCK_TEXTURE);
-
+  m_pCar->setTexture(m_pTextures, GRASS_TEXTURE);
 
   // Set global information
   //glEnable(GL_DEPTH_TEST | GL_CULL_FACE);
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 
   m_pTerrain->setModels();
   m_pRoad->setModels();
+  m_pCar->setModels();
 
   m_TexturedDiffuseShaderProgram->release();
 }
@@ -159,16 +172,24 @@ void MainViewWidget::paintGL()
   m_TexturedDiffuseShaderProgram->bind();
   m_TexturedDiffuseShaderProgram->setUniformValue(u_worldToCamera, m_camera.toMatrix());
   m_TexturedDiffuseShaderProgram->setUniformValue(u_cameraToView, m_projection);
-  //m_TexturedDiffuseShaderProgram->setUniformValue(m_TexturedDiffuseShaderProgram->uniformLocation("modelToWorld"), QMatrix4x4());
+  m_TexturedDiffuseShaderProgram->setUniformValue("stage1", GRASS_TEXTURE);
+  m_TexturedDiffuseShaderProgram->setUniformValue("stage2", ROCK_TEXTURE);
+  m_TexturedDiffuseShaderProgram->setUniformValue("stage3", ROAD_TEXTURE);
+
+  m_TexturedDiffuseShaderProgram->setUniformValue(m_TexturedDiffuseShaderProgram->uniformLocation("modelToWorld"), QMatrix4x4());
 
 
   m_pRoad->setModels();
   m_pRoad->draw();
   m_pRoad->render();
-  m_pTerrain->setModels();
-  //m_pTerrain->render();
-  m_pTerrain->draw();
 
+  m_pCar->setModels();
+  m_pCar->render();
+  m_pCar->draw();
+
+  m_pTerrain->setModels();
+  m_pTerrain->render();
+  m_pTerrain->draw();
 
   m_TexturedDiffuseShaderProgram->release();
 

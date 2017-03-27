@@ -48,7 +48,7 @@ void SBody::updateControls()
     {
 
         //toPosRotMatrix.setToIdentity();
-        scaleToSize((float)sizeControl->m_value);
+        //scaleToSize((float)sizeControl->m_value);
         //sizeControl->old_value = sizeControl->m_value;
     }
 }

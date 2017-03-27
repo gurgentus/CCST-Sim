@@ -9,11 +9,11 @@ Road::Road()
 
 void Road::setModels()
 {
-    //m_modelToWorld = m_program->uniformLocation("modelToWorld");
-    //m_program->setUniformValue(m_modelToWorld, QMatrix4x4(glm::value_ptr(m_LocalToWorldMatrix)).transposed() );
+    m_modelToWorld = m_program->uniformLocation("modelToWorld");
+    m_program->setUniformValue(m_modelToWorld, QMatrix4x4(glm::value_ptr(m_LocalToWorldMatrix)).transposed() );
     //m_program->setUniformValue("stage1", GRASS_TEXTURE);
     //m_program->setUniformValue("stage2", ROCK_TEXTURE);
-    m_program->setUniformValue("stage3", ROAD_TEXTURE);
+    //m_program->setUniformValue("stage3", ROAD_TEXTURE);
 }
 
 double Road::distanceToRoad(double x, double z)

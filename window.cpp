@@ -25,7 +25,8 @@ Window::Window(QWidget *parent)
     g_Terrain.setShaderProgram(&shader);
     g_Terrain.setRoad(&road);
     road.setShaderProgram(&shader);
-    myOpenGLWidget.initializeObjects(rightLayout, &shader, &textures, &g_Terrain, &road);
+    car.setShaderProgram(&shader);
+    myOpenGLWidget.initializeObjects(rightLayout, &shader, &textures, &g_Terrain, &road, &car);
 
     QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     sizePolicy.setHorizontalStretch(0);
@@ -53,6 +54,17 @@ Window::Window(QWidget *parent)
 
     QVBoxLayout *leftLayout = new QVBoxLayout;
     leftLayout->addLayout(topLeftLayout);
+
+    // Create the button, make "this" the parent
+    m_button = new QPushButton("Start Simulation", this);
+    // set size and location of the button
+    m_button->setGeometry(QRect(QPoint(100, 100),
+    QSize(200, 50)));
+
+    // Connect button signal to appropriate slot
+    connect(m_button, SIGNAL (released()), this, SLOT (handleButton()));
+    leftLayout->addWidget(m_button);
+
 //    leftLayout->addWidget(rotXSlider);
 //    leftLayout->addWidget(rotYSlider);
 //    leftLayout->addWidget(rotZSlider);
@@ -75,6 +87,10 @@ Window::Window(QWidget *parent)
     mainLayout->addLayout(rightLayout);
     setLayout(mainLayout);
 
+    timer = new QTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateState()));
+
+
 //    std::cout << std::endl;
 //    std::vector<ComplexNumber> pols;
 //    TransferFunction p(tf1*tf2/(TransferFunction({1},{1})+tf1*tf2));
@@ -85,31 +101,71 @@ Window::Window(QWidget *parent)
 //        std::cout << std::endl;
 //    }
 //    QGridLayout * layout = new QGridLayout(this);
-//       QWidget * w;
-//       QScrollArea * area;
-//       //ButtonGroup * group;
+//    QWidget * w;
+//    QScrollArea * area;
+    //ButtonGroup * group;
 
-//       layout->addWidget(w = new QLabel(">>"), 0, 0);
-//       w->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-//       w->setStyleSheet("border: 1px solid green");
+//    leftLayout->addWidget(w = new QButton(">>"), 0, 0);
+//    w->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+//    w->setStyleSheet("border: 1px solid green");
 
-//       layout->addWidget(area = new AdjustingScrollArea, 0, 1);
-//       area->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-//       area->setStyleSheet("QScrollArea { border: 1px solid blue }");
-//       //area->setWidget(group = new ButtonGroup);
-//       layout->setColumnStretch(1, 1);
+//    layout->addWidget(area = new AdjustingScrollArea, 0, 1);
+//    area->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+//    area->setStyleSheet("QScrollArea { border: 1px solid blue }");
+//    //area->setWidget(group = new ButtonGroup);
+//    layout->setColumnStretch(1, 1);
 
-//       layout->addWidget(w = new QLabel("<<"), 0, 2);
-//       w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-//       w->setStyleSheet("border: 1px solid green");
+//    layout->addWidget(w = new QLabel("<<"), 0, 2);
+//    w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+//    w->setStyleSheet("border: 1px solid green");
 
-//       layout->addWidget(w = new QPushButton("Add a widget"), 1, 0, 1, 3);
-//       //connect(w, SIGNAL(clicked()), group, SLOT(addButton()));
+//    layout->addWidget(w = new QPushButton("Add a widget"), 1, 0, 1, 3);
+       //connect(w, SIGNAL(clicked()), group, SLOT(addButton()));
 }
 
 Window::~Window()
 {
 //    delete ui;
+}
+
+void Window::handleButton()
+{
+    // change the text
+
+    // resize button
+    //m_button->resize(100,100);
+//    if (timer != NULL)
+//    {
+//        delete(timer);
+//    }
+    if (m_button->text() == "Stop Simulation")
+    {
+        timer->stop();
+        m_button->setText("Start Simulation");
+        std::cout << "stopping simulation" << std::endl;
+    }
+    else
+    {
+        timer->start(100);
+        m_button->setText("Stop Simulation");
+        std::cout << "starting simulation" << std::endl;
+
+    }
+
+
+}
+void Window::updateState()
+{
+    //simTime = simTime + qobject_cast<QTimer*>(sender())->interval();// / 10.0;
+
+    simTime = simTime + 0.01;
+    //car.rotate(0.01,1,0,1);
+    car.setPosition(QVector3D(205*cos(simTime), 1, 205*sin(simTime)));
+    myOpenGLWidget.m_camera.setRotation(180, 0,1,0);
+    myOpenGLWidget.m_camera.rotate(-simTime*180/3.14, 0,1,0);
+    myOpenGLWidget.m_camera.setTranslation(QVector3D(205*cos(simTime-0.1), 1, 205*sin(simTime-0.1)));
+    //std::cout << simTime << std::endl;
+
 }
 
 QVBoxLayout* Window::getControlLayout()
