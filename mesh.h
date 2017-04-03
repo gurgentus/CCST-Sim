@@ -43,14 +43,12 @@ class Mesh {
         QOpenGLVertexArrayObject VAO;
 
         typedef std::vector<Vertex>  PositionBuffer;
-//        typedef std::vector<glm::vec4>  ColorBuffer;
-//        typedef std::vector<glm::vec3>  NormalBuffer;
-//        typedef std::vector<glm::vec2>  TexCoordBuffer;
         typedef std::vector<GLuint>     IndexBuffer;
 
         /*  Functions  */
         void setShaderProgram(QOpenGLShaderProgram *texturedDiffuseShaderProgram);
         bool setupMesh();
+        bool loadMesh(const string &filename, QVector4D texSignature);
         bool setupMesh(PositionBuffer positionBuffer, IndexBuffer indexBuffer);
         virtual bool setupDefaultMesh() = 0;
 
@@ -62,9 +60,6 @@ class Mesh {
         constexpr static const float _2pi = 2.0f * pi;
 
         PositionBuffer  m_PositionBuffer;
-//        ColorBuffer     m_ColorBuffer;
-//        NormalBuffer    m_NormalBuffer;
-//        TexCoordBuffer  m_Tex0Buffer;
         IndexBuffer     m_IndexBuffer;
 };
 

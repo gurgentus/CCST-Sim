@@ -42,6 +42,7 @@ namespace fs = boost::filesystem;
 #define ROCK_TEXTURE 3
 #define SNOW_TEXTURE 4
 #define ROAD_TEXTURE 5
+#define CAR_TEXTURE 6
 
 using namespace std;
 
@@ -65,9 +66,6 @@ public:
 
 
 private:
-
-    glm::mat4x4 m_LocalToWorldMatrix;
-    glm::mat4x4 m_InverseLocalToWorldMatrix;
 
     // The dimensions of the heightmap texture
     glm::uvec2 m_HeightmapDimensions;

@@ -6,26 +6,22 @@
 #include "textures.h"
 #include "sbody.h"
 
-#define EARTH_TEXTURE 0
-#define MOON_TEXTURE 1
-#define GRASS_TEXTURE 2
-#define ROCK_TEXTURE 3
-#define SNOW_TEXTURE 4
-#define ROAD_TEXTURE 5
-
 
 class Car : public Mesh, public SBody
 {
 public:
     Car();
+    void orient();
     bool setupDefaultMesh();
     void setModels();
     //double distanceToRoad(double x, double z);
-
-private:
-
-    glm::mat4x4 m_LocalToWorldMatrix;
-    glm::mat4x4 m_InverseLocalToWorldMatrix;
+    void updateState(double dt, double velocity);
+    void updateState2(double dt, double gap);
+    double xi;
+    double xi_old;
+    double x;
+    double y;
+    double angle;
 
 };
 

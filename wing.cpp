@@ -10,9 +10,6 @@ Wing::Wing()
     bool reflect = false;
 
     PositionBuffer  m_VertexBuffer;
-//    ColorBuffer     m_ColorBuffer;
-//    NormalBuffer    m_NormalBuffer;
-//    TexCoordBuffer  m_Tex0Buffer;
     IndexBuffer     m_IndexBuffer;
 
     vector<QVector2D> sketch;
@@ -109,12 +106,8 @@ Wing::Wing()
     mainPart.setupMesh(m_VertexBuffer, m_IndexBuffer);
 
     PositionBuffer  m_VertexBuffer2;
-//    ColorBuffer     m_ColorBuffer;
-//    NormalBuffer    m_NormalBuffer;
-//    TexCoordBuffer  m_Tex0Buffer;
     IndexBuffer     m_IndexBuffer2;
 
-    //vector<QVector2D> sketch;
     sketch.clear();
     sketch.push_back(QVector2D(0,b/2-ao-al));
     sketch.push_back(QVector2D(aw,b/2-ao-al));
@@ -184,7 +177,7 @@ void Wing::initializeControls()
 void Wing::updateControls()
 {
     SBody::updateControls();
-    aileron.position = position;
+    aileron.setTranslation(translation());
     aileron.toPosRotMatrix = toPosRotMatrix;
 
     if (aileronAngleControl != nullptr) // && (aileronAngleControl->m_value != aileronAngleControl->old_value))

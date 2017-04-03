@@ -9,7 +9,6 @@
 #include "vertex.h"
 #include "input.h"
 #include "mainviewwidget.h"
-#include "textureandlightingpch.h"
 #include "nums/simulator.h"
 #include <window.h>
 
@@ -25,23 +24,14 @@ MainViewWidget::~MainViewWidget()
 }
 
 void MainViewWidget::initializeObjects(QVBoxLayout *layout, QOpenGLShaderProgram* shader,
-                                       Textures* textures, Terrain* terrain, Road *road, Car* car)
+                                       Textures* textures, Terrain* terrain, Road *road, Car* car, Car* leadCar)
 {
-    // Create Shader (Do not release until VAO is created)
     m_TexturedDiffuseShaderProgram = shader;
     m_pTextures = textures;
     m_pTerrain = terrain;
     m_pRoad = road;
+    m_pLeadCar = leadCar;
     m_pCar = car;
-
-//    u_worldToCamera = m_TexturedDiffuseShaderProgram->uniformLocation("worldToCamera");
-//    u_cameraToView = m_TexturedDiffuseShaderProgram->uniformLocation("cameraToView");
-
-//    m_TexturedDiffuseShaderProgram->setUniformValue(u_worldToCamera, QMatrix4x4());
-//    m_TexturedDiffuseShaderProgram->setUniformValue(u_cameraToView, QMatrix4x4());
-//    m_TexturedDiffuseShaderProgram->release();
-
-    //printVersionInformation();
 }
 
 
@@ -100,6 +90,14 @@ void MainViewWidget::initializeGL()
     {
         std::cerr << "Failed to load terrain texture for road!" << std::endl;
     }
+    if ( !m_pTextures->loadTexture( ":/Data/Textures/car1.jpeg", CAR_TEXTURE ) )
+    {
+        std::cerr << "Failed to load terrain texture for road!" << std::endl;
+    }
+    if ( !m_pTextures->loadTexture( ":/Data/Textures/car2.jpeg", CAR2_TEXTURE ) )
+    {
+        std::cerr << "Failed to load terrain texture for road!" << std::endl;
+    }
 
     if (m_pRoad != NULL)
     {
@@ -114,9 +112,20 @@ void MainViewWidget::initializeGL()
     }
     if (m_pCar != NULL)
     {
-        if ( !m_pCar->setupDefaultMesh() )
+        if ( !m_pCar->loadMesh(":/Data/Objects/coop.obj", QVector4D( 0.0f, 1.0f, 0.0f, 1.0f )) )
         {
             std::cerr << "Failed to load the car!" << std::endl;
+        }
+    }
+    else
+    {
+        std::cerr << "Car object doesn't exist!" << std::endl;
+    }
+    if (m_pLeadCar != NULL)
+    {
+        if ( !m_pLeadCar->loadMesh(":/Data/Objects/coop.obj", QVector4D( 0.0f, 1.0f, 1.0f, 1.0f )) )
+        {
+            std::cerr << "Failed to load the lead car!" << std::endl;
         }
     }
     else
@@ -135,9 +144,6 @@ void MainViewWidget::initializeGL()
         std::cerr << "Terrain object doesn't exist!" << std::endl;
     }
 
-  m_pTerrain->setTexture(m_pTextures, ROCK_TEXTURE);
-  m_pRoad->setTexture(m_pTextures, ROCK_TEXTURE);
-  m_pCar->setTexture(m_pTextures, GRASS_TEXTURE);
 
   // Set global information
   //glEnable(GL_DEPTH_TEST | GL_CULL_FACE);
@@ -146,6 +152,7 @@ void MainViewWidget::initializeGL()
   m_pTerrain->setModels();
   m_pRoad->setModels();
   m_pCar->setModels();
+  m_pLeadCar->setModels();
 
   m_TexturedDiffuseShaderProgram->release();
 }
@@ -175,21 +182,28 @@ void MainViewWidget::paintGL()
   m_TexturedDiffuseShaderProgram->setUniformValue("stage1", GRASS_TEXTURE);
   m_TexturedDiffuseShaderProgram->setUniformValue("stage2", ROCK_TEXTURE);
   m_TexturedDiffuseShaderProgram->setUniformValue("stage3", ROAD_TEXTURE);
+  m_TexturedDiffuseShaderProgram->setUniformValue("car", CAR_TEXTURE);
+  m_TexturedDiffuseShaderProgram->setUniformValue("car2", CAR2_TEXTURE);
 
   m_TexturedDiffuseShaderProgram->setUniformValue(m_TexturedDiffuseShaderProgram->uniformLocation("modelToWorld"), QMatrix4x4());
 
+  m_pTextures->bindAllTextures();
 
   m_pRoad->setModels();
   m_pRoad->draw();
-  m_pRoad->render();
+
 
   m_pCar->setModels();
-  m_pCar->render();
   m_pCar->draw();
 
+
+  m_pLeadCar->setModels();
+  m_pLeadCar->draw();
+
+
   m_pTerrain->setModels();
-  m_pTerrain->render();
   m_pTerrain->draw();
+
 
   m_TexturedDiffuseShaderProgram->release();
 
@@ -202,6 +216,20 @@ void MainViewWidget::update()
     Input::update();
 
     // Camera Transformation
+    if (Input::keyPressed(Qt::Key_A))
+    {
+      //translation -= m_camera.right();
+      //std::cout << "A key pressed" << std::endl;
+      m_pCar->xi_old = m_pCar->xi;
+      m_pCar->xi += 0.01;
+    }
+    if (Input::keyPressed(Qt::Key_D))
+    {
+      //translation += m_camera.right();
+      //std::cout << "A key pressed" << std::endl;
+      m_pCar->xi_old = m_pCar->xi;
+      m_pCar->xi -= 0.01;
+    }
     if (Input::buttonPressed(Qt::RightButton))
     {
       static const float transSpeed = 0.5f;

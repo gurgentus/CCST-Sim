@@ -12,5 +12,10 @@
         <file>shaders/texturedDiffuse.vert</file>
         <file>shaders/texturediffuse.fsh</file>
         <file>Data/Textures/road.jpg</file>
+        <file>Data/Objects/cube.obj</file>
+        <file>Data/Objects/coop.obj</file>
+        <file>Data/Objects/Avent.obj</file>
+        <file>Data/Textures/car1.jpeg</file>
+        <file>Data/Textures/car2.jpeg</file>
     </qresource>
 </RCC>

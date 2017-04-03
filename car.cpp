@@ -1,18 +1,28 @@
 #include "car.h"
 
 Car::Car()
-    : m_LocalToWorldMatrix(1)
-    , m_InverseLocalToWorldMatrix(1)
 {
+    orient();
+    toPosRotMatrix = toMatrix();
+
+    angle = 0;
+    xi = 1.5*pi;
+    xi_old = 1.5*pi;
+    x = 201*cos(angle);
+    y = 201*sin(angle);
+}
+
+void Car::orient()
+{
+    setRotation(-90,1,0,0);
+    setScale(0.01f);
+
 }
 
 void Car::setModels()
 {
     m_modelToWorld = m_program->uniformLocation("modelToWorld");
     m_program->setUniformValue(m_modelToWorld, QMatrix4x4(toPosRotMatrix));
-    //m_program->setUniformValue("stage1", GRASS_TEXTURE);
-    //m_program->setUniformValue("stage2", ROCK_TEXTURE);
-    //m_program->setUniformValue("stage3", ROAD_TEXTURE);
 }
 
 bool Car::setupDefaultMesh()
@@ -38,12 +48,8 @@ bool Car::setupDefaultMesh()
             float Y = cos(phi);
             float Z = sin(theta) * sin(phi);
 
-            //positions.push_back( vec3( X, Y, Z) * radius );
-            m_PositionBuffer.push_back ( Vertex(QVector3D(X, Y, Z), QVector4D( 0.0f, 0.0f, 0.0f, 1.0f ), QVector3D(X, Y, Z), QVector2D(U,V) ));
+            m_PositionBuffer.push_back ( Vertex(QVector3D(X, Y, Z), QVector4D( 0.0f, 1.0f, 0.0f, 1.0f ), QVector3D(X, Y, Z), QVector2D(U,V) ));
 
-            //positions.push_back( Vertex(QVector3D(X, Y, Z)*radius, QVector3D( 1.0f, 0.0f, 0.0f )) );
-            //normals.push_back( vec3(X, Y, Z) );
-            //textureCoords.push_back( vec2(U, V) );
         }
     }
 
@@ -66,3 +72,25 @@ bool Car::setupDefaultMesh()
     return true;
 }
 
+void Car::updateState(double dt, double velocity)
+{
+    // lead car
+    angle = angle + (velocity/200.0)*dt;
+    xi_old = xi;
+    xi = xi-angle*180/3.14;
+    x = 201*cos(angle);
+    y = -201*sin(angle);
+
+}
+
+void Car::updateState2(double dt, double gap)
+{
+    // controlled car
+    double u = 150*(gap - 20);
+    angle = angle + (20/200.0)*dt;
+    x = x + u*cos(xi)*dt*dt/2;
+    y = y + u*sin(xi)*dt*dt/2;
+    std::cout << xi << " " << gap << " " << u << std::endl;
+
+
+}

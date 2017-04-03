@@ -17,9 +17,12 @@ uniform float MaterialShininess;
 uniform vec4 Ambient; // Global ambient contribution.
 
 //uniform sampler2D diffuseSampler;
+uniform sampler2D car;
+uniform sampler2D car2;
 uniform sampler2D stage1;
 uniform sampler2D stage2;
 uniform sampler2D stage3;
+
 
 layout (location=0) out vec4 out_color;
 
@@ -44,7 +47,9 @@ void main()
     
 //    out_color = ( Emissive + Ambient + Diffuse + Specular ) * texture( diffuseSampler, v2f_texcoord );
     //out_color = vColor;
-     out_color = (1-vColor[0])*texture( stage2, v2f_texcoord )  + (1-vColor[3])*texture( stage3, v2f_texcoord ) +  vColor[0]*vColor[3]*texture( stage1, v2f_texcoord );
+     out_color = (1-vColor[1])*((1-vColor[0])*texture( stage2, v2f_texcoord )  +
+             (1-vColor[3])*texture( stage3, v2f_texcoord ) +  vColor[0]*vColor[3]*texture( stage1, v2f_texcoord)) +
+             vColor[1]*(1-vColor[2])*texture( car, v2f_texcoord ) + vColor[1]*vColor[2]*texture( car2, v2f_texcoord );
 
 //     weightIce = ...;
 //     weightStone = ...;

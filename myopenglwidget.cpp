@@ -9,18 +9,10 @@
 #include "vertex.h"
 #include "input.h"
 #include "myopenglwidget.h"
-#include "textureandlightingpch.h"
 #include "nums/simulator.h"
 #include <window.h>
 
 #include <iostream>
-
-// Create a colored triangle
-//static const Vertex sg_vertexes[] = {
-//  Vertex( QVector3D( 0.00f,  0.75f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f) ),
-//  Vertex( QVector3D(-0.75f, -0.75f, 1.0f), QVector3D(0.0f, 1.0f, 0.0f) ),
-//  Vertex( QVector3D( 0.75f, -0.75f, 1.0f), QVector3D(0.0f, 0.0f, 1.0f) )
-//};
 
 
 
@@ -248,28 +240,28 @@ void MyOpenGLWidget::initializeGL()
   simulator.simulate(results);
   //std::cout << results[0].x();
   it = 0;
-  moon.setPosition(results[it]);
+  moon.setTranslation(results[it]);
 
-  fuselage.setPosition(2,2,2);
+  fuselage.setTranslation(2,2,2);
 
-  endCap1.setPosition(2,2,2);
-  endCap2.setPosition(34,2,2);
+  endCap1.setTranslation(2,2,2);
+  endCap2.setTranslation(34,2,2);
   endCap1.rotate(180, 0,1,0);
   wing1.setDimensions(0.3, 2, 0.05, 0.1, 0.3);
-  wing1.setPosition(16,3,2);
+  wing1.setTranslation(16,3,2);
   wing2.setDimensions(0.3, 2, 0.05, 0.1, 0.3);
-  wing2.setPosition(16,1,2);
+  wing2.setTranslation(16,1,2);
 
 
   tail1.setDimensions(0.1, 2, 0.05, 0.1, 1);
-  tail1.setPosition(2,2,3.5);
+  tail1.setTranslation(2,2,3.5);
   tail1.scale(0.5);
   tail2.setDimensions(0.1, 2, 0.05, 0.1, 1);
-  tail2.setPosition(2,2,3.5);
+  tail2.setTranslation(2,2,3.5);
   tail2.scale(0.5);
 
   tail3.setDimensions(0.1, 2, 0.05, 0.1, 1);
-  tail3.setPosition(2,2,3);
+  tail3.setTranslation(2,2,3);
   tail3.rotate(90, 1,0,0);
   tail3.scale(0.6);
 
@@ -373,23 +365,22 @@ void MyOpenGLWidget::paintGL()
   m_TexturedDiffuseShaderProgram->setUniformValue(u_worldToCamera, m_camera.toMatrix());
   m_TexturedDiffuseShaderProgram->setUniformValue(u_cameraToView, m_projection);
 
-  earth.render();
-  //moon.render();
-  fuselage.render();
-  endCap1.render();
-  endCap2.render();
+  earth.draw();
+  fuselage.draw();
+  endCap1.draw();
+  endCap2.draw();
 
-  wing1.render();
-  wing1.aileron.render();
-  wing2.render();
-  wing2.aileron.render();
+  wing1.draw();
+  wing1.aileron.draw();
+  wing2.draw();
+  wing2.aileron.draw();
 
-  tail1.render();
-  tail1.aileron.render();
-  tail2.render();
-  tail2.aileron.render();
-  tail3.render();
-  tail3.aileron.render();
+  tail1.draw();
+  tail1.aileron.draw();
+  tail2.draw();
+  tail2.aileron.draw();
+  tail3.draw();
+  tail3.aileron.draw();
 
   m_TexturedDiffuseShaderProgram->release();
 }
@@ -401,7 +392,7 @@ void MyOpenGLWidget::update()
 
     if (Input::keyPressed(Qt::Key_T))
     {
-      moon.setPosition(results[it]);
+      moon.setTranslation(results[it]);
       if (it < 19900) it = it+50;
     }
 

@@ -11,7 +11,6 @@ public:
     Part();
     ~Part();
     bool setupDefaultMesh();
-    //bool setupMesh(QOpenGLShaderProgram *program, PositionBuffer vertexBuffer, IndexBuffer indexBuffer);
     void initializeControls();
     void updateControls();
 };

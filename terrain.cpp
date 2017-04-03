@@ -92,9 +92,7 @@ Terrain::Terrain( float heightScale /* = 500.0f */, float blockScale /* = 2.0f *
 //, m_GLTex1Buffer(0)
 //, m_GLTex2Buffer(0)
 //, m_GLIndexBuffer(0)
-: m_LocalToWorldMatrix(1)
-, m_InverseLocalToWorldMatrix(1)
-, m_HeightmapDimensions(0,0)
+    : m_HeightmapDimensions(0,0)
 , m_fHeightScale( heightScale )
 , m_fBlockScale( blockScale )
 {
@@ -221,7 +219,7 @@ bool Terrain::LoadHeightmap( const std::string& filename, unsigned char bitsPerP
             float tex2Contribution = 1.0f - GetPercentage( heightValue, 0.75f, 1.0f );
             //std::cout << tex0Contribution << " " << tex2Contribution << std::endl;
 #if ENABLE_MULTITEXTURE
-            m_PositionBuffer.push_back ( Vertex(QVector3D(X, Y, Z), QVector4D( tex0Contribution, tex0Contribution, tex0Contribution, tex2Contribution ), QVector3D(1, 0, 0), QVector2D(S,T) ));
+            m_PositionBuffer.push_back ( Vertex(QVector3D(X, Y, Z), QVector4D( tex0Contribution, 0, tex0Contribution, tex2Contribution ), QVector3D(1, 0, 0), QVector2D(S,T) ));
 #else
             m_PositionBuffer.push_back ( Vertex(QVector3D(X, Y, Z), QVector4D( 1, 0, 0, 0 ), QVector3D(1, 0, 0), QVector2D(S,T) ));
 #endif

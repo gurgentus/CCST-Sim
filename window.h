@@ -12,11 +12,6 @@
 #include "car.h"
 #include "textures.h"
 
-//#define EARTH_TEXTURE 0
-//#define MOON_TEXTURE 1
-//#define GRASS_TEXTURE 2
-//#define ROCK_TEXTURE 3
-
 namespace Ui {
 class Window;
 }
@@ -27,24 +22,30 @@ class Window : public QWidget
 public:
     explicit Window(QWidget *parent = 0);
     ~Window();
-    QVBoxLayout* getControlLayout();
+    //QVBoxLayout* getControlLayout();
 public Q_SLOTS:
     void updateState();
     void handleButton();
 private:
     Ui::Window *ui;
-    QVBoxLayout *rightLayout;
-    QPushButton* m_button;
     QTimer* timer;
     double simTime = 0;
+
+    // GUI Elements
     MainViewWidget myOpenGLWidget;
+    QVBoxLayout* rightLayout;
+    QPushButton* m_button;
+
+    // Initialize shader program, textures and 3D objects
     QOpenGLShaderProgram shader;
     Textures textures;
     Terrain g_Terrain;
     Road road;
+    Car leadCar;
     Car car;
-    //protected:
-    //    void keyPressEvent(QKeyEvent *event);
+
+    constexpr static const float pi = 3.1415926535897932384626433832795f;
+    constexpr static const float _2pi = 2.0f * pi;
 };
 
 #endif // WINDOW_H

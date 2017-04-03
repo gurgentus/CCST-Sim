@@ -1,5 +1,5 @@
 #include "mesh.h"
-
+#include <stdio.h>
 #include <iostream>
 
 Mesh::Mesh()
@@ -71,6 +71,95 @@ bool Mesh::setupMesh(PositionBuffer vertexBuffer, IndexBuffer indexBuffer)
     m_IndexBuffer = indexBuffer;
     return setupMesh();
 
+}
+
+// original source for the functionality:
+// http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
+bool Mesh::loadMesh(const std::string& filename, QVector4D texSignature)
+{
+    std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
+    std::vector< glm::vec3 > temp_vertices;
+    std::vector< glm::vec2 > temp_uvs;
+    std::vector< glm::vec3 > temp_normals;
+
+    //FILE * file = fopen(path, "r");
+    std::cout << filename << std::endl;
+    QFile q_file(QString::fromStdString(filename));
+    //if( !fs::exists(filename) )
+    if( !q_file.exists() )
+    {
+        std::cerr << "Could not find file: " << q_file.fileName().toStdString() << std::endl;
+        return false;
+    }
+    q_file.open(QFile::ReadOnly);
+
+//    int fd = q_file.handle();
+//    qDebug() <<fd;
+//    FILE* file = fdopen(fd, "r");
+
+    QTextStream in(&q_file);
+    while (!in.atEnd())
+    {
+          QString q_line = in.readLine();
+          QByteArray array = q_line.toLocal8Bit();
+          char* line = array.data();
+
+          char lineHeader[128];
+          // read the first word of the line
+          int res = sscanf(line, "%s", lineHeader);
+
+        // else : parse lineHeader
+        if ( strcmp( lineHeader, "v" ) == 0 ){
+            glm::vec3 vertex;
+            sscanf(line, "%s %f %f %f\n", &lineHeader, &vertex.x, &vertex.y, &vertex.z );
+            temp_vertices.push_back(vertex);
+        }else if ( strcmp( lineHeader, "vt" ) == 0 ){
+            glm::vec2 uv;
+            sscanf(line, "%s %f %f\n", &lineHeader, &uv.x, &uv.y );
+            temp_uvs.push_back(uv);
+        }else if ( strcmp( lineHeader, "vn" ) == 0 ){
+            glm::vec3 normal;
+            sscanf(line, "%s %f %f %f\n", &lineHeader, &normal.x, &normal.y, &normal.z );
+            temp_normals.push_back(normal);
+        }else if ( strcmp( lineHeader, "f" ) == 0 ){
+            std::string vertex1, vertex2, vertex3;
+            unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
+
+            int matches = sscanf(line, "%s%d/%d/%d %d/%d/%d %d/%d/%d\n", &lineHeader, &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2] );
+            if (matches != 10){
+                printf("File can't be read by our simple parser : ( Try exporting with other options\n");
+                return false;
+            }
+            vertexIndices.push_back(vertexIndex[0]);
+            vertexIndices.push_back(vertexIndex[1]);
+            vertexIndices.push_back(vertexIndex[2]);
+            uvIndices    .push_back(uvIndex[0]);
+            uvIndices    .push_back(uvIndex[1]);
+            uvIndices    .push_back(uvIndex[2]);
+            normalIndices.push_back(normalIndex[0]);
+            normalIndices.push_back(normalIndex[1]);
+            normalIndices.push_back(normalIndex[2]);
+        }
+    }
+    q_file.close();
+
+    // For each vertex of each triangle
+    for( unsigned int i=0; i<vertexIndices.size(); i++ ){
+        unsigned int vertexIndex = vertexIndices[i];
+        unsigned int uvIndex = uvIndices[i];
+        unsigned int normalIndex = normalIndices[i];
+        glm::vec3 vertex = temp_vertices[ vertexIndex-1 ];
+        glm::vec2 uv = temp_uvs[uvIndex - 1];
+        glm::vec3 normal = temp_normals[normalIndex - 1];
+        m_PositionBuffer.push_back (Vertex(QVector3D(vertex.x, vertex.y, vertex.z), texSignature,
+                                           QVector3D(normal.x, normal.y, normal.z), QVector2D(uv.x,uv.y) ));
+        m_IndexBuffer.push_back(i);
+
+    }
+
+
+
+    return setupMesh();
 }
 
 bool Mesh::setupMesh()

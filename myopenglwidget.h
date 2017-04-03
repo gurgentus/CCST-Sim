@@ -68,17 +68,17 @@ public:
 //      Mesh fuselageMesh;
 //      Mesh capMesh;
       Airplane airplane;
-      SBody endCap1;
-      SBody endCap2;
-      SBody fuselage;
+      Part endCap1;
+      Part endCap2;
+      Part fuselage;
       Wing wing1;
       Wing wing2;
       Wing tail1;
       Wing tail2;
       Wing tail3;
 
-      SBody earth;
-      SBody moon;
+      Part earth;
+      Part moon;
       //SControl moonRadius;
 
       // Shader Information

@@ -23,7 +23,7 @@ public:
     ~MainViewWidget();
     // OpenGL Events
     public:
-      void initializeObjects(QVBoxLayout *layout, QOpenGLShaderProgram* shader, Textures *textures, Terrain* terrain, Road* road, Car *car);
+      void initializeObjects(QVBoxLayout *layout, QOpenGLShaderProgram* shader, Textures *textures, Terrain* terrain, Road* road, Car *car, Car *leadCar);
       void initializeGL();
       void resizeGL(int width, int height);
       void paintGL();
@@ -65,6 +65,7 @@ public:
       Terrain* m_pTerrain;
       Road* m_pRoad;
       Car* m_pCar;
+      Car* m_pLeadCar;
 
       // OpenGL State Information
       int u_worldToCamera;
@@ -80,6 +81,9 @@ public:
       QPoint lastPos;
       vector<QVector3D> results;
       int it;
+
+      constexpr static const float pi = 3.1415926535897932384626433832795f;
+      constexpr static const float _2pi = 2.0f * pi;
 
 };
 

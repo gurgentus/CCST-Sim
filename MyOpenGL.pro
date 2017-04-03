@@ -19,7 +19,6 @@ SOURCES += main.cpp\
     transform3d.cpp \
     input.cpp \
     camera3D.cpp \
-    textureandlightingpch.cpp \
     mesh.cpp \
     sbody.cpp \
     nums/AbstractOdeSolver.cpp \
@@ -48,7 +47,6 @@ HEADERS  += window.h \
     transform3d.h \
     input.h \
     camera3D.h \
-    textureandlightingpch.h \
     mesh.h \
     sbody.h \
     nums/AbstractOdeSolver.hpp \
@@ -57,7 +55,6 @@ HEADERS  += window.h \
     shader.h \
     nums/simulator.h \
     control.h \
-    adjustingscrollarea.h \
     cst/transferfunction.h \
     cst/cst.h \
     cst/complexnumber.h \
@@ -93,7 +90,8 @@ DISTFILES += \
     Data/Textures/grass.jpg \
     Data/Textures/skydome4.jpg \
     Data/Textures/snow.jpg \
-    Data/Textures/rock.png
+    Data/Textures/rock.png \
+    Data/Objects/cube.obj
 
 RESOURCES += \
     resources.qrc

@@ -2,8 +2,6 @@
 #include <cmath>
 
 Road::Road()
-    : m_LocalToWorldMatrix(1)
-    , m_InverseLocalToWorldMatrix(1)
 {
 }
 
@@ -39,8 +37,8 @@ bool Road::setupDefaultMesh()
         float X_in = 200*cos(theta);
         float Z_in = 200*sin(theta);
 
-        float X_out = 220*cos(theta);
-        float Z_out = 220*sin(theta);
+        float X_out = 205*cos(theta);
+        float Z_out = 205*sin(theta);
 
         float Y = 0.1;
 
