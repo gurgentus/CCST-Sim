@@ -8,7 +8,7 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
  - [X] Basic Qt GUI setup
  - [X] Basic modular OOP framework setup with OpenGL wrappers for 3D graphics
  - [X] Basic car module with PID control algorithm and adaptive cruise control
- - [] More realistic car model with steering
+ - [X] More realistic car model with steering
  - [] Testing, bug fixes
  - [] Optimize code design for modularity and OOP
  - [] Add satellite simulation
