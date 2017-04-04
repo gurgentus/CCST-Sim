@@ -38,6 +38,7 @@ const QMatrix4x4 &Camera3D::toMatrix()
   {
     m_dirty = false;
     m_world.setToIdentity();
+    m_world.scale(10);
     m_world.rotate(m_rotation.conjugate());
     m_world.translate(-m_translation);
   }

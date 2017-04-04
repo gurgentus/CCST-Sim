@@ -17,6 +17,10 @@ public:
     //double distanceToRoad(double x, double z);
     void updateState(double dt, double velocity);
     void updateState2(double dt, double gap);
+    double T;
+    double dw;
+
+    double v;
     double xi;
     double xi_old;
     double x;

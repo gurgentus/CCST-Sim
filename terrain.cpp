@@ -85,16 +85,9 @@ inline float GetHeightValue( const unsigned char* data, unsigned char numBytes )
 }
 
 Terrain::Terrain( float heightScale /* = 500.0f */, float blockScale /* = 2.0f */ )
-//: m_GLVertexBuffer(0)
-//, m_GLNormalBuffer(0)
-//, m_GLColorBuffer(0)
-//, m_GLTex0Buffer(0)
-//, m_GLTex1Buffer(0)
-//, m_GLTex2Buffer(0)
-//, m_GLIndexBuffer(0)
     : m_HeightmapDimensions(0,0)
-, m_fHeightScale( heightScale )
-, m_fBlockScale( blockScale )
+    , m_fHeightScale( heightScale )
+    , m_fBlockScale( blockScale )
 {
     std::cout << "TEST" << std::endl;
     // memset( m_GLTextures, 0, sizeof(m_GLTextures) );
@@ -143,11 +136,6 @@ bool Terrain::LoadHeightmap( const std::string& filename, unsigned char bitsPerP
     file.open(QFile::ReadOnly);
     QByteArray byteArray = file.readAll();
 
-//    if ( ifs.fail() )
-//    {
-//        std::cerr << "Failed to open file: " << filename << std::endl;
-//        return false;
-//    }
 
     const unsigned int bytesPerPixel = bitsPerPixel / 8;
     const unsigned int expectedFileSize = ( bytesPerPixel * width * height );
@@ -159,24 +147,9 @@ bool Terrain::LoadHeightmap( const std::string& filename, unsigned char bitsPerP
         return false;
     }
 
-    //unsigned char* heightMap = new unsigned char[fileSize];
-    //ifs.read( (char*)heightMap, fileSize);
     unsigned char* heightMap = (unsigned char*)byteArray.data();
 
-//    if ( ifs.fail() )
-//    {
-//        std::cerr << "An error occurred while reading from the height map file: " << filename << std::endl;
-//        ifs.close();
-//        delete [] heightMap;
-//        return false;
-//    }
-//    ifs.close();
-
     unsigned int numVerts = width * height;
-//    m_PositionBuffer.resize( numVerts );
-//    m_ColorBuffer.resize( numVerts );
-//    m_NormalBuffer.resize( numVerts );
-//    m_Tex0Buffer.resize( numVerts );
 
     m_HeightmapDimensions = glm::uvec2(width, height);
 
@@ -204,15 +177,15 @@ bool Terrain::LoadHeightmap( const std::string& filename, unsigned char bitsPerP
 
             // make a road
 
+            float Y = heightValue * m_fHeightScale;
             if (m_pRoad != NULL)
             {
-                if (m_pRoad->distanceToRoad(X,Z) < 20)
+                if (m_pRoad->distanceToRoad(X,Z) < 3)
                 {
-                    heightValue = 0;
+                    Y = 0.5;
                 }
             }
 
-            float Y = heightValue * m_fHeightScale;
             // std::cout <<m_fHeightScale << std::endl;
             // Blend 3 textures depending on the height of the terrain
             float tex0Contribution = 1.0f - GetPercentage( heightValue, 0.0f, 0.75f );

@@ -16,13 +16,13 @@ void Road::setModels()
 
 double Road::distanceToRoad(double x, double z)
 {
-     return std::abs(std::sqrt(x*x+z*z)-210);
+     return std::abs(std::sqrt(x*x+z*z)-200.25);
 }
 
 bool Road::setupDefaultMesh()
 {
 
-    int slices = 32;
+    int slices = 320;
 
     float V = 0;
 
@@ -37,10 +37,10 @@ bool Road::setupDefaultMesh()
         float X_in = 200*cos(theta);
         float Z_in = 200*sin(theta);
 
-        float X_out = 205*cos(theta);
-        float Z_out = 205*sin(theta);
+        float X_out = 200.5*cos(theta);
+        float Z_out = 200.5*sin(theta);
 
-        float Y = 0.1;
+        float Y = 0.51;
 
         m_PositionBuffer.push_back ( Vertex(QVector3D(X_in, Y, Z_in), QVector4D( 1, 0, 0, 0 ), QVector3D(0, 1, 0), QVector2D(-1,U) ));
         m_PositionBuffer.push_back ( Vertex(QVector3D(X_out, Y, Z_out), QVector4D( 1, 0, 0, 0 ), QVector3D(0, 1, 0), QVector2D(1,U) ));

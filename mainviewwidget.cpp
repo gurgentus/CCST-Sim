@@ -220,19 +220,19 @@ void MainViewWidget::update()
     {
       //translation -= m_camera.right();
       //std::cout << "A key pressed" << std::endl;
-      m_pCar->xi_old = m_pCar->xi;
-      m_pCar->xi += 0.01;
+      //m_pCar->xi_old = m_pCar->xi;
+      m_pCar->dw += 0.005;
     }
     if (Input::keyPressed(Qt::Key_D))
     {
       //translation += m_camera.right();
       //std::cout << "A key pressed" << std::endl;
-      m_pCar->xi_old = m_pCar->xi;
-      m_pCar->xi -= 0.01;
+      //m_pCar->xi_old = m_pCar->xi;
+      m_pCar->dw -= 0.005;
     }
     if (Input::buttonPressed(Qt::RightButton))
     {
-      static const float transSpeed = 0.5f;
+      static const float transSpeed = 0.05f;
       static const float rotSpeed   = 0.5f;
 
       // Handle rotations

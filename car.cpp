@@ -6,16 +6,19 @@ Car::Car()
     toPosRotMatrix = toMatrix();
 
     angle = 0;
+    dw = 0;
     xi = 1.5*pi;
     xi_old = 1.5*pi;
-    x = 201*cos(angle);
-    y = 201*sin(angle);
+    T = 0;
+    v = 0;
+    x = 200.1*cos(angle);
+    y = 200.1*sin(angle);
 }
 
 void Car::orient()
 {
     setRotation(-90,1,0,0);
-    setScale(0.01f);
+    setScale(0.001f);
 
 }
 
@@ -78,19 +81,28 @@ void Car::updateState(double dt, double velocity)
     angle = angle + (velocity/200.0)*dt;
     xi_old = xi;
     xi = xi-angle*180/3.14;
-    x = 201*cos(angle);
-    y = -201*sin(angle);
+    x = 200.1*cos(angle);
+    y = -200.1*sin(angle);
 
 }
 
 void Car::updateState2(double dt, double gap)
 {
     // controlled car
-    double u = 150*(gap - 20);
-    angle = angle + (20/200.0)*dt;
-    x = x + u*cos(xi)*dt*dt/2;
-    y = y + u*sin(xi)*dt*dt/2;
-    std::cout << xi << " " << gap << " " << u << std::endl;
+    // controller.update(t, gap)
+    // T = controller.pid_control()
+
+    T = 10*(gap - 0.5);
+    xi = xi + 2*(v*sin(dw/2.0)/4.0)*dt;
+
+    x = x + v*cos(xi)*dt;
+    y = y + v*sin(xi)*dt;
+    v = v + dt*(T*cos(dw)*cos(dw))/100.0;
+    if (v > 2)
+    {
+        v = 2;
+    }
+    std::cout << dw << " " << xi << " " << gap << " " << v << std::endl;
 
 
 }

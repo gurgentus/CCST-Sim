@@ -13,7 +13,7 @@ class MainViewWidget;
 
 Window::Window(QWidget *parent)
     : QWidget(parent)
-    , g_Terrain(30, 2)
+    , g_Terrain(32, 2)
     , myOpenGLWidget(parent)
     , shader()
     , textures()
@@ -160,15 +160,15 @@ void Window::updateState()
     // dt in seconds
     double dt = qobject_cast<QTimer*>(sender())->interval() / 1000.0;
     // mps to angular velocity
-    simTime = simTime + (20.0/200.0)*dt;
+    simTime = simTime + (0.1/200.0)*dt;
 
     //simTime = simTime + 0.01;
     //car.rotate(0.01,1,0,1);
     //car.setRotation(simTime*180/3.14, 0,1,0);
-    leadCar.updateState(dt, 20);
+    leadCar.updateState(dt, 1);
     leadCar.orient();
     leadCar.rotate(leadCar.xi-leadCar.xi_old, 0,1,0);
-    leadCar.setTranslation(QVector3D(leadCar.x, 0.1, -leadCar.y));
+    leadCar.setTranslation(QVector3D(leadCar.x, 0.51, -leadCar.y));
     leadCar.toPosRotMatrix = leadCar.toMatrix();
 
     car.updateState2(dt, ((cos(car.xi)*(leadCar.x - car.x) +
@@ -178,7 +178,7 @@ void Window::updateState()
 //    car.rotate(-simTime*180/3.14, 0,1,0);
 //    car.setTranslation(QVector3D(201*cos(simTime-0.08), 0.1, 201*sin(simTime-0.08)));
     car.rotate((car.xi-1.5*pi)*180/pi, 0,1,0);
-    car.setTranslation(QVector3D(car.x, 0.1, -car.y));
+    car.setTranslation(QVector3D(car.x, 0.51, -car.y));
     car.toPosRotMatrix = car.toMatrix();
 
 
@@ -186,7 +186,7 @@ void Window::updateState()
     //myOpenGLWidget.m_camera.rotate(-simTime*180/3.14, 0,1,0);
     myOpenGLWidget.m_camera.rotate((car.xi-1.5*pi)*180/pi, 0,1,0);
     //myOpenGLWidget.m_camera.setTranslation(QVector3D(202*cos(simTime-0.09), 1, 202*sin(simTime-0.09)));
-    myOpenGLWidget.m_camera.setTranslation(QVector3D(car.x-5*cos(car.xi), 1, -car.y+5*sin(car.xi)));
+    myOpenGLWidget.m_camera.setTranslation(QVector3D(car.x-0.5*cos(car.xi), 0.6, -car.y+0.5*sin(car.xi)));
 
 }
 
