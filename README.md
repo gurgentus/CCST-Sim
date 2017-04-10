@@ -1,6 +1,6 @@
 # Generic Estimation Learning Control Simulator
 
-Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, Unscented Kalman Filter, etc), Machine Learning (classical, deep learning, etc), and Control (classical, optimal, robust, adaptive)  algorithms on general models.
+Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, Unscented Kalman Filter, etc), Machine Learning (classical, deep learning, etc), and Control (classical, optimal, robust, adaptive)  algorithms on general models.  For speed and flexibility rather than using a game engine like Unity or Unreal, I decided to directly use modern OpenGL with OpenGL Shading Language with a light Qt wrapper.  The GUI is also done in Qt for platform independence.
 
 
 # TODO
