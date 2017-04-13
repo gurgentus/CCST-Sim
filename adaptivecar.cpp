@@ -90,7 +90,7 @@ void AdaptiveCar::UpdateState2(double dt)
     // control
     double mass = 1000;
     double drag = 1;
-    double desired_gap = 0.5;
+    double desired_gap = 1;
     double k_p = (-3*mass)/(cos(dw_)*sin(xi_));
     double k_i = -mass/(cos(dw_)*sin(xi_));
     double k_d = (drag-3*mass)/(cos(dw_)*sin(xi_));
