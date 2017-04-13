@@ -10,8 +10,8 @@ class Output : public QLabel
 {
     Q_OBJECT
 public:
-    Output(QVBoxLayout *layout = NULL, double value = 0, QString label = "", QString units = "")
-        : QLabel(QString::number(value), layout->parentWidget())
+    Output(QVBoxLayout *layout = NULL, double value = 0, double scale = 1, QString label = "", QString units = "")
+        : QLabel(QString::number(value*scale), layout->parentWidget())
     {
        QLabel *label1 = new QLabel(label, this);
        QLabel *label2 = new QLabel(units, this);

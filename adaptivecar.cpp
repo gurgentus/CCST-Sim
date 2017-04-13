@@ -20,9 +20,9 @@ void AdaptiveCar::InitializeControls()
 
 void AdaptiveCar::InitializeOutputs()
 {
-    speed_output = new Output(output_layout_, 0, "Speed: ", "m/s");
-    steering_output_ = new Output(output_layout_, 0, "Steering Angle: ", "rad");
-    gap_ = new Output(output_layout_, 0, "Gap: ", "m");
+    speed_output = new Output(output_layout_, 0, 10, "Speed: ", "m/s");
+    steering_output_ = new Output(output_layout_, 0, 1, "Steering Angle: ", "rad");
+    gap_ = new Output(output_layout_, 0, 1, "Gap: ", "m");
 
 }
 
@@ -75,7 +75,7 @@ void AdaptiveCar::UpdateOutputs()
 {
     if (speed_output != nullptr)// && (sizeControl->m_value != sizeControl->old_value))
     {
-        speed_output->setText(QString::number(v_));
+        speed_output->setText(QString::number(10*v_));
         gap_->setText(QString::number(distance_to_obstacle_));
         steering_output_->setText(QString::number(dw_));
         //toPosRotMatrix.setToIdentity();
