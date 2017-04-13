@@ -51,19 +51,19 @@ void MyOpenGLWidget::initializeObjects(QVBoxLayout *layout)
     //endCap1.initializeControls(layout);
     //endCap2.initializeControls(layout);
 
-    wing1.setControlPanel(layout, this);
+    wing1.SetControlPanel(layout, this);
     wing1.initializeControls();
 
-    wing2.setControlPanel(layout, this);
+    wing2.SetControlPanel(layout, this);
     wing2.initializeControls();
 
-    tail1.setControlPanel(layout, this);
+    tail1.SetControlPanel(layout, this);
     tail1.initializeControls();
 
-    tail2.setControlPanel(layout, this);
+    tail2.SetControlPanel(layout, this);
     tail2.initializeControls();
 
-    tail3.setControlPanel(layout, this);
+    tail3.SetControlPanel(layout, this);
     tail3.initializeControls();
 
 }

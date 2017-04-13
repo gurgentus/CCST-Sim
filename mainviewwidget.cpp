@@ -23,15 +23,25 @@ MainViewWidget::~MainViewWidget()
 {
 }
 
-void MainViewWidget::initializeObjects(QVBoxLayout *layout, QOpenGLShaderProgram* shader,
-                                       Textures* textures, Terrain* terrain, Road *road, Car* car, Car* leadCar)
+void MainViewWidget::InitializeObjects(QVBoxLayout *layout, QVBoxLayout *output_layout, QOpenGLShaderProgram* shader,
+                                       Textures* textures, Terrain* terrain, Road *road, AdaptiveCar* car, Car* leadCar)
 {
-    m_TexturedDiffuseShaderProgram = shader;
-    m_pTextures = textures;
-    m_pTerrain = terrain;
-    m_pRoad = road;
-    m_pLeadCar = leadCar;
-    m_pCar = car;
+    p_program_ = shader;
+    p_textures_ = textures;
+    p_terrain_ = terrain;
+    p_road_ = road;
+    p_lead_car_ = leadCar;
+    p_car_ = car;
+
+    p_car_->SetControlOutputPanel(layout, output_layout, this);
+    p_car_->InitializeControls();
+    p_car_->InitializeOutputs();
+
+    p_lead_car_->SetControlOutputPanel(layout, output_layout, this);
+    p_lead_car_->InitializeControls();
+
+
+
 }
 
 
@@ -55,16 +65,16 @@ void MainViewWidget::initializeGL()
     printVersionInformation();
 
 
-    m_TexturedDiffuseShaderProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/texturedDiffuse.vert");
-    m_TexturedDiffuseShaderProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/texturedDiffuse.frag");
-    m_TexturedDiffuseShaderProgram->link();
-    m_TexturedDiffuseShaderProgram->bind();
+    p_program_->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/texturedDiffuse.vert");
+    p_program_->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/texturedDiffuse.frag");
+    p_program_->link();
+    p_program_->bind();
 
     // Cache Uniform Locations
-    u_worldToCamera = m_TexturedDiffuseShaderProgram->uniformLocation("worldToCamera");
-    u_cameraToView = m_TexturedDiffuseShaderProgram->uniformLocation("cameraToView");
-    m_TexturedDiffuseShaderProgram->setUniformValue(u_worldToCamera, QMatrix4x4());
-    m_TexturedDiffuseShaderProgram->setUniformValue(u_cameraToView, QMatrix4x4());
+    world_to_camera_ = p_program_->uniformLocation("worldToCamera");
+    camera_to_view_ = p_program_->uniformLocation("cameraToView");
+    p_program_->setUniformValue(world_to_camera_, QMatrix4x4());
+    p_program_->setUniformValue(camera_to_view_, QMatrix4x4());
 //    if ( !m_pTextures->loadTexture( ":/Textures/earth.dds", EARTH_TEXTURE ) )
 //    {
 //        std::cerr << "Failed to load terrain texture for earth!" << std::endl;
@@ -74,34 +84,34 @@ void MainViewWidget::initializeGL()
 //        std::cerr << "Failed to load terrain texture for moon!" << std::endl;
 //    }
 
-    if ( !m_pTextures->loadTexture( ":/Data/Textures/grass.jpg", GRASS_TEXTURE ) )
+    if ( !p_textures_->loadTexture( ":/Data/Textures/grass.jpg", GRASS_TEXTURE ) )
     {
         std::cerr << "Failed to load terrain texture for grass!" << std::endl;
     }
-    if ( !m_pTextures->loadTexture( ":/Data/Textures/rock.png", ROCK_TEXTURE ) )
+    if ( !p_textures_->loadTexture( ":/Data/Textures/rock.png", ROCK_TEXTURE ) )
     {
         std::cerr << "Failed to load terrain texture for rock!" << std::endl;
     }
-    if ( !m_pTextures->loadTexture( ":/Data/Textures/snow.jpg", SNOW_TEXTURE ) )
+    if ( !p_textures_->loadTexture( ":/Data/Textures/snow.jpg", SNOW_TEXTURE ) )
     {
         std::cerr << "Failed to load terrain texture for snow!" << std::endl;
     }
-    if ( !m_pTextures->loadTexture( ":/Data/Textures/road.jpg", ROAD_TEXTURE ) )
+    if ( !p_textures_->loadTexture( ":/Data/Textures/road.jpg", ROAD_TEXTURE ) )
     {
         std::cerr << "Failed to load terrain texture for road!" << std::endl;
     }
-    if ( !m_pTextures->loadTexture( ":/Data/Textures/car1.jpeg", CAR_TEXTURE ) )
+    if ( !p_textures_->loadTexture( ":/Data/Textures/car1.jpeg", CAR_TEXTURE ) )
     {
         std::cerr << "Failed to load terrain texture for road!" << std::endl;
     }
-    if ( !m_pTextures->loadTexture( ":/Data/Textures/car2.jpeg", CAR2_TEXTURE ) )
+    if ( !p_textures_->loadTexture( ":/Data/Textures/car2.jpeg", CAR2_TEXTURE ) )
     {
         std::cerr << "Failed to load terrain texture for road!" << std::endl;
     }
 
-    if (m_pRoad != NULL)
+    if (p_road_ != NULL)
     {
-        if ( !m_pRoad->setupDefaultMesh() )
+        if ( !p_road_->SetupDefaultMesh() )
         {
             std::cerr << "Failed to load the road!" << std::endl;
         }
@@ -110,9 +120,9 @@ void MainViewWidget::initializeGL()
     {
         std::cerr << "Road object doesn't exist!" << std::endl;
     }
-    if (m_pCar != NULL)
+    if (p_car_ != NULL)
     {
-        if ( !m_pCar->loadMesh(":/Data/Objects/coop.obj", QVector4D( 0.0f, 1.0f, 0.0f, 1.0f )) )
+        if ( !p_car_->LoadMesh(":/Data/Objects/coop.obj", QVector4D( 0.0f, 1.0f, 0.0f, 1.0f )) )
         {
             std::cerr << "Failed to load the car!" << std::endl;
         }
@@ -121,9 +131,9 @@ void MainViewWidget::initializeGL()
     {
         std::cerr << "Car object doesn't exist!" << std::endl;
     }
-    if (m_pLeadCar != NULL)
+    if (p_lead_car_ != NULL)
     {
-        if ( !m_pLeadCar->loadMesh(":/Data/Objects/coop.obj", QVector4D( 0.0f, 1.0f, 1.0f, 1.0f )) )
+        if ( !p_lead_car_->LoadMesh(":/Data/Objects/coop.obj", QVector4D( 0.0f, 1.0f, 1.0f, 1.0f )) )
         {
             std::cerr << "Failed to load the lead car!" << std::endl;
         }
@@ -132,9 +142,9 @@ void MainViewWidget::initializeGL()
     {
         std::cerr << "Car object doesn't exist!" << std::endl;
     }
-    if (m_pTerrain != NULL)
+    if (p_terrain_ != NULL)
     {
-        if ( !m_pTerrain->setupDefaultMesh() )
+        if ( !p_terrain_->SetupDefaultMesh() )
         {
             std::cerr << "Failed to load heightmap for terrain!" << std::endl;
         }
@@ -149,12 +159,11 @@ void MainViewWidget::initializeGL()
   //glEnable(GL_DEPTH_TEST | GL_CULL_FACE);
   glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 
-  m_pTerrain->setModels();
-  m_pRoad->setModels();
-  m_pCar->setModels();
-  m_pLeadCar->setModels();
-
-  m_TexturedDiffuseShaderProgram->release();
+  p_terrain_->SetModels();
+  p_road_->SetModels();
+  p_car_->SetModels();
+  p_lead_car_->SetModels();
+  p_program_->release();
 }
 
 void MainViewWidget::resizeGL(int width, int height)
@@ -162,8 +171,8 @@ void MainViewWidget::resizeGL(int width, int height)
     // Currently we are not handling width/height changes.
     (void)width;
     (void)height;
-    m_projection.setToIdentity();
-    m_projection.perspective(45.0f, width / float(height), 1.0f, 1000.0f);
+    projection_.setToIdentity();
+    projection_.perspective(45.0f, width / float(height), 1.0f, 1000.0f);
 }
 
 void MainViewWidget::paintGL()
@@ -176,36 +185,36 @@ void MainViewWidget::paintGL()
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
 
-  m_TexturedDiffuseShaderProgram->bind();
-  m_TexturedDiffuseShaderProgram->setUniformValue(u_worldToCamera, m_camera.toMatrix());
-  m_TexturedDiffuseShaderProgram->setUniformValue(u_cameraToView, m_projection);
-  m_TexturedDiffuseShaderProgram->setUniformValue("stage1", GRASS_TEXTURE);
-  m_TexturedDiffuseShaderProgram->setUniformValue("stage2", ROCK_TEXTURE);
-  m_TexturedDiffuseShaderProgram->setUniformValue("stage3", ROAD_TEXTURE);
-  m_TexturedDiffuseShaderProgram->setUniformValue("car", CAR_TEXTURE);
-  m_TexturedDiffuseShaderProgram->setUniformValue("car2", CAR2_TEXTURE);
+  p_program_->bind();
+  p_program_->setUniformValue(world_to_camera_, camera_.toMatrix());
+  p_program_->setUniformValue(camera_to_view_, projection_);
+  p_program_->setUniformValue("stage1", GRASS_TEXTURE);
+  p_program_->setUniformValue("stage2", ROCK_TEXTURE);
+  p_program_->setUniformValue("stage3", ROAD_TEXTURE);
+  p_program_->setUniformValue("car", CAR_TEXTURE);
+  p_program_->setUniformValue("car2", CAR2_TEXTURE);
 
-  m_TexturedDiffuseShaderProgram->setUniformValue(m_TexturedDiffuseShaderProgram->uniformLocation("modelToWorld"), QMatrix4x4());
+  p_program_->setUniformValue(p_program_->uniformLocation("modelToWorld"), QMatrix4x4());
 
-  m_pTextures->bindAllTextures();
+  p_textures_->bindAllTextures();
 
-  m_pRoad->setModels();
-  m_pRoad->draw();
-
-
-  m_pCar->setModels();
-  m_pCar->draw();
+  p_road_->SetModels();
+  p_road_->Draw();
 
 
-  m_pLeadCar->setModels();
-  m_pLeadCar->draw();
+  p_car_->SetModels();
+  p_car_->Draw();
 
 
-  m_pTerrain->setModels();
-  m_pTerrain->draw();
+  p_lead_car_->SetModels();
+  p_lead_car_->Draw();
 
 
-  m_TexturedDiffuseShaderProgram->release();
+  p_terrain_->SetModels();
+  p_terrain_->Draw();
+
+
+  p_program_->release();
 
 
 }
@@ -220,68 +229,63 @@ void MainViewWidget::update()
     {
       //translation -= m_camera.right();
       //std::cout << "A key pressed" << std::endl;
-      //m_pCar->xi_old = m_pCar->xi;
-      m_pCar->dw += 0.005;
+      p_car_->SteerLeft();
     }
     if (Input::keyPressed(Qt::Key_D))
     {
       //translation += m_camera.right();
       //std::cout << "A key pressed" << std::endl;
-      //m_pCar->xi_old = m_pCar->xi;
-      m_pCar->dw -= 0.005;
+      p_car_->SteerRight();
     }
     if (Input::buttonPressed(Qt::RightButton))
     {
-      static const float transSpeed = 0.05f;
+      static const float transSpeed = 0.5f;
       static const float rotSpeed   = 0.5f;
 
       // Handle rotations
-      m_camera.rotate(-rotSpeed * Input::mouseDelta().x(), Camera3D::LocalUp);
-      m_camera.rotate(-rotSpeed * Input::mouseDelta().y(), m_camera.right());
+      camera_.rotate(-rotSpeed * Input::mouseDelta().x(), Camera3D::LocalUp);
+      camera_.rotate(-rotSpeed * Input::mouseDelta().y(), camera_.right());
 
       // Handle translations
       QVector3D translation;
       if (Input::keyPressed(Qt::Key_W))
       {
-        translation += m_camera.forward();
+        translation += camera_.forward();
       }
       if (Input::keyPressed(Qt::Key_S))
       {
-        translation -= m_camera.forward();
+        translation -= camera_.forward();
       }
       if (Input::keyPressed(Qt::Key_A))
       {
-        translation -= m_camera.right();
+        translation -= camera_.right();
       }
       if (Input::keyPressed(Qt::Key_D))
       {
-        translation += m_camera.right();
+        translation += camera_.right();
       }
       if (Input::keyPressed(Qt::Key_Q))
       {
-        translation -= m_camera.up();
+        translation -= camera_.up();
       }
       if (Input::keyPressed(Qt::Key_E))
       {
-        translation += m_camera.up();
+        translation += camera_.up();
       }
-      m_camera.translate(transSpeed * translation);
+      camera_.translate(transSpeed * translation);
 
     }
   // Schedule a redraw
    //std::cout << "TTEST" << std::endl;
    this->makeCurrent();
    this->paintGL();
-  QOpenGLWidget::update();
-}
-void MainViewWidget::mainUpdate()
-{
+   QOpenGLWidget::update();
 }
 
 void MainViewWidget::teardownGL()
 {
   // Actually destroy our OpenGL information
-  delete m_TexturedDiffuseShaderProgram;
+  delete p_program_;
 }
 
 void MainViewWidget::keyPressEvent(QKeyEvent *event)

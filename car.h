@@ -11,22 +11,40 @@ class Car : public Mesh, public SBody
 {
 public:
     Car();
-    void orient();
-    bool setupDefaultMesh();
-    void setModels();
-    //double distanceToRoad(double x, double z);
-    void updateState(double dt, double velocity);
-    void updateState2(double dt, double gap);
-    double T;
-    double dw;
+    void InitializeState();
+    void ResetOrientation();
+    bool SetupDefaultMesh();
+    void UpdateSpeed(double speed);
+    void UpdateState(double dt, double radius);
+    void InitializeControls();
+    void UpdateControls();
 
-    double v;
-    double xi;
-    double xi_old;
-    double x;
-    double y;
-    double angle;
+    void SteerLeft();
+    void SteerRight();
 
+    double x() const;
+    void setX(double x);
+
+    double y() const;
+    void setY(double y);
+
+    double xi() const;
+    void setXi(double xi);
+
+    double dw() const;
+    void setDw(double dw);
+
+protected:
+    Control* speedControl;
+    double T_;
+    double dw_;
+    double v_;
+    double xi_;
+    double xi_old_;
+    double x_;
+    double y_;
+    double angle_;
+    double total_error_;
 };
 
 #endif // ROAD_H

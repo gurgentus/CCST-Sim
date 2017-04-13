@@ -10,9 +10,9 @@ class Part : public SBody, public Mesh
 public:
     Part();
     ~Part();
-    bool setupDefaultMesh();
-    void initializeControls();
-    void updateControls();
+    bool SetupDefaultMesh();
+    void InitializeControls();
+    void UpdateControls();
 };
 
 #endif // PART_H

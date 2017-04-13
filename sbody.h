@@ -7,9 +7,8 @@
 #include "textures.h"
 #include "control.h"
 #include "transform3d.h"
-//#include "myopenglwidget.h"
 
-class MyOpenGLWidget;
+class QOpenGLWidget;
 
 class SBody: public Transform3D
 {
@@ -19,23 +18,20 @@ public:
     ~SBody();
 
     // sets the
-    void setControlPanel(QVBoxLayout* layout, MyOpenGLWidget* drawingWidget);
-    virtual void initializeControls();
-    virtual void updateControls();
-
-    QMatrix4x4 toPosRotMatrix;
+    void SetControlOutputPanel(QVBoxLayout* control_layout, QVBoxLayout* output_layout, QOpenGLWidget* drawingWidget);
+    virtual void InitializeControls();
+    virtual void InitializeOutputs();
+    virtual void UpdateControls();
+    virtual void InitializeState();
+    virtual void ResetOrientation();
 
 protected:
     float size;
-    int m_modelToWorld;
-
-    glm::mat4x4 m_LocalToWorldMatrix;
-    glm::mat4x4 m_InverseLocalToWorldMatrix;
-
     // pointers to controls and the drawing area for this object
     Control* sizeControl;
-    QVBoxLayout* controlLayout;
-    MyOpenGLWidget* drawingWidget;
+    QVBoxLayout* control_layout_;
+    QVBoxLayout* output_layout_;
+    QOpenGLWidget* drawingWidget;
 
 };
 

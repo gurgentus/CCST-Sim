@@ -10,8 +10,7 @@ class Road : public Mesh, public SBody
 {
 public:
     Road();
-    bool setupDefaultMesh();
-    void setModels();
+    bool SetupDefaultMesh();
     double distanceToRoad(double x, double z);
 };
 

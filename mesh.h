@@ -7,7 +7,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-//#include <glm/gtc/swizzle.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/std_based_type.hpp>
 #include <glm/gtx/vector_angle.hpp>
@@ -27,8 +26,8 @@
 #define TEXCOORD1_ATTRIBUTE 9
 #define TEXCOORD2_ATTRIBUTE 10
 
-#define BUFFER_OFFSET(offset) ((void*)(offset))
-#define MEMBER_OFFSET(s,m) ((char*)NULL + (offsetof(s,m)))
+//#define BUFFER_OFFSET(offset) ((void*)(offset))
+//#define MEMBER_OFFSET(s,m) ((char*)NULL + (offsetof(s,m)))
 
 using namespace std;
 
@@ -36,31 +35,34 @@ class Mesh {
     public:
         Mesh();
         ~Mesh();
-        /*  Mesh Data  */
-        //vector<Vertex> m_VertexBuffer;
-        //vector<QOpenGLTexture*> m_textures;
-        QOpenGLShaderProgram* m_program;
-        QOpenGLVertexArrayObject VAO;
 
         typedef std::vector<Vertex>  PositionBuffer;
         typedef std::vector<GLuint>     IndexBuffer;
 
         /*  Functions  */
-        void setShaderProgram(QOpenGLShaderProgram *texturedDiffuseShaderProgram);
-        bool setupMesh();
-        bool loadMesh(const string &filename, QVector4D texSignature);
-        bool setupMesh(PositionBuffer positionBuffer, IndexBuffer indexBuffer);
-        virtual bool setupDefaultMesh() = 0;
+        virtual bool SetupDefaultMesh() = 0;
+        void SetShaderProgram(QOpenGLShaderProgram *program);
+        bool SetupMesh();
+        bool SetupMesh(PositionBuffer position_buffer, IndexBuffer index_buffer);
+        bool LoadMesh(const string &filename, QVector4D texSignature);
+        void SetModels();
 
         /*  Render data  */
-        void draw();
-        void cleanup();
+        void Draw();
+        void Cleanup();
+
     protected:
         constexpr static const float pi = 3.1415926535897932384626433832795f;
         constexpr static const float _2pi = 2.0f * pi;
+        QOpenGLShaderProgram* p_program_;
+        QOpenGLVertexArrayObject vao_;
+        int model_to_world_;
+        QMatrix4x4 local_to_world_matrix_;
+        glm::mat4x4 m_LocalToWorldMatrix;
+        glm::mat4x4 m_InverseLocalToWorldMatrix;
 
-        PositionBuffer  m_PositionBuffer;
-        IndexBuffer     m_IndexBuffer;
+        PositionBuffer  position_buffer_;
+        IndexBuffer     index_buffer_;
 };
 
 #endif // MESH_H

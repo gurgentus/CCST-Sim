@@ -14,17 +14,17 @@ Part::~Part()
 
 
 
-void Part::initializeControls()
+void Part::InitializeControls()
 {
 //    aileronAngleControl = new Control(controlLayout, drawingWidget);
 //    aileronAngleControl->setValue(20);
-    SBody::initializeControls();
+    SBody::InitializeControls();
 //    sizeControl->setValue(4);
 //    aileron.sizeControl = sizeControl;
 }
-void Part::updateControls()
+void Part::UpdateControls()
 {
-    SBody::updateControls();
+    SBody::UpdateControls();
 //    aileron.position = position;
 //    aileron.toPosRotMatrix = toPosRotMatrix;
 
@@ -37,7 +37,7 @@ void Part::updateControls()
 
 }
 
-bool Part::setupDefaultMesh()
+bool Part::SetupDefaultMesh()
 {
 
 }

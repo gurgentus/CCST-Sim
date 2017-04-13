@@ -14,18 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         window.cpp \
-    myopenglwidget.cpp \
-    shader.cpp \
+#    myopenglwidget.cpp \
     transform3d.cpp \
     input.cpp \
     camera3D.cpp \
     mesh.cpp \
     sbody.cpp \
-    nums/AbstractOdeSolver.cpp \
-    nums/ForwardEulerSolver.cpp \
-    nums/NumericalSolver.cpp \
-    nums/RungeKuttaSolver.cpp \
-    nums/simulator.cpp \
     control.cpp \
     cst/transferfunction.cpp \
     cst/cst.cpp \
@@ -34,26 +28,28 @@ SOURCES += main.cpp\
     terrain.cpp \
     mainviewwidget.cpp \
     textures.cpp \
-    airplane.cpp \
-    part.cpp \
-    controllablepart.cpp \
-    wing.cpp \
+#    airplane.cpp \
+#    part.cpp \
+#    wing.cpp \
     road.cpp \
-    car.cpp
+    car.cpp \
+    adaptivecar.cpp \
+    nums/AbstractOdeSolver.cpp \
+    nums/ForwardEulerSolver.cpp \
+    nums/NumericalSolver.cpp \
+    nums/RungeKuttaSolver.cpp \
+    nums/simulator.cpp \
+    output.cpp
+#    dynamiccontrol.cpp
 
 HEADERS  += window.h \
-    myopenglwidget.h \
+#    myopenglwidget.h \
     vertex.h \
     transform3d.h \
     input.h \
     camera3D.h \
     mesh.h \
     sbody.h \
-    nums/AbstractOdeSolver.hpp \
-    nums/ForwardEulerSolver.hpp \
-    nums/RungeKuttaSolver.hpp \
-    shader.h \
-    nums/simulator.h \
     control.h \
     cst/transferfunction.h \
     cst/cst.h \
@@ -62,12 +58,18 @@ HEADERS  += window.h \
     terrain.h \
     mainviewwidget.h \
     textures.h \
-    airplane.h \
-    part.h \
-    controllablepart.h \
-    wing.h \
+#    airplane.h \
+#    part.h \
+#    wing.h \
     road.h \
-    car.h
+    car.h \
+    adaptivecar.h \
+    nums/AbstractOdeSolver.hpp \
+    nums/ForwardEulerSolver.hpp \
+    nums/RungeKuttaSolver.hpp \
+    nums/simulator.h \
+    output.h
+#    dynamiccontrol.h
 
 FORMS    += window.ui
 
@@ -104,11 +106,8 @@ else:unix: LIBS += -L$$PWD/../../../../Applications/anaconda/lib/ -lpython3.5m
 INCLUDEPATH += $$PWD/../../../../Applications/anaconda/include/python3.5m
 
 
-INCLUDEPATH += /usr/local/Cellar/boost/1.60.0_2/include/
-LIBS += -L/usr/local/Cellar/boost/1.60.0_2/lib/ -lboost_filesystem -lboost_system
-
-#INCLUDEPATH += $$PWD/Dropbox/MyOpenGL/glew-2.0.0/include
-#LIBS += $$PWD/Dropbox/MyOpenGL/glew-2.0.0/lib/
+#INCLUDEPATH += /usr/local/Cellar/boost/1.60.0_2/include/
+#LIBS += -L/usr/local/Cellar/boost/1.60.0_2/lib/ -lboost_filesystem -lboost_system
 
 DEPENDPATH += $$PWD/../../../../Applications/anaconda/include/python3.5m
 CONFIG += no_keywords

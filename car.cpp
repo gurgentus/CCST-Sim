@@ -2,33 +2,34 @@
 
 Car::Car()
 {
-    orient();
-    toPosRotMatrix = toMatrix();
-
-    angle = 0;
-    dw = 0;
-    xi = 1.5*pi;
-    xi_old = 1.5*pi;
-    T = 0;
-    v = 0;
-    x = 200.1*cos(angle);
-    y = 200.1*sin(angle);
+    InitializeState();
 }
 
-void Car::orient()
+void Car::InitializeState()
+{
+    ResetOrientation();
+    local_to_world_matrix_ = toMatrix();
+
+    // set state variables
+    angle_ = 0;
+    dw_ = 0;
+    xi_ = 1.5*pi;
+    xi_old_ = 1.5*pi;
+    T_ = 0;
+    v_ = 1;
+    x_ = 200.1*cos(angle_);
+    y_ = 200.1*sin(angle_);
+    total_error_ = 0;
+}
+
+void Car::ResetOrientation()
 {
     setRotation(-90,1,0,0);
     setScale(0.001f);
 
 }
 
-void Car::setModels()
-{
-    m_modelToWorld = m_program->uniformLocation("modelToWorld");
-    m_program->setUniformValue(m_modelToWorld, QMatrix4x4(toPosRotMatrix));
-}
-
-bool Car::setupDefaultMesh()
+bool Car::SetupDefaultMesh()
 {
 
 
@@ -51,7 +52,7 @@ bool Car::setupDefaultMesh()
             float Y = cos(phi);
             float Z = sin(theta) * sin(phi);
 
-            m_PositionBuffer.push_back ( Vertex(QVector3D(X, Y, Z), QVector4D( 0.0f, 1.0f, 0.0f, 1.0f ), QVector3D(X, Y, Z), QVector2D(U,V) ));
+            position_buffer_.push_back ( Vertex(QVector3D(X, Y, Z), QVector4D( 0.0f, 1.0f, 0.0f, 1.0f ), QVector3D(X, Y, Z), QVector2D(U,V) ));
 
         }
     }
@@ -60,49 +61,105 @@ bool Car::setupDefaultMesh()
 
     for( int i = 0; i < slices * stacks + slices; ++i )
     {
-        m_IndexBuffer.push_back( i );
-        m_IndexBuffer.push_back( i + slices + 1  );
-        m_IndexBuffer.push_back( i + slices );
+        index_buffer_.push_back( i );
+        index_buffer_.push_back( i + slices + 1  );
+        index_buffer_.push_back( i + slices );
 
-        m_IndexBuffer.push_back( i + slices + 1  );
-        m_IndexBuffer.push_back( i );
-        m_IndexBuffer.push_back( i + 1 );
+        index_buffer_.push_back( i + slices + 1  );
+        index_buffer_.push_back( i );
+        index_buffer_.push_back( i + 1 );
     }
 
-    setupMesh();
+    SetupMesh();
 
     std::cout << "Car loaded" << std::endl;
     return true;
 }
 
-void Car::updateState(double dt, double velocity)
+void Car::SteerLeft()
+{
+    dw_ += 0.01;
+}
+
+void Car::SteerRight()
+{
+    dw_ -= 0.01;
+}
+
+// this controls the lead car location (not using real physics)
+void Car::UpdateState(double dt, double radius)
 {
     // lead car
-    angle = angle + (velocity/200.0)*dt;
-    xi_old = xi;
-    xi = xi-angle*180/3.14;
-    x = 200.1*cos(angle);
-    y = -200.1*sin(angle);
+    angle_ = angle_ + (v_/radius)*dt;
+    xi_old_ = xi_;
+    xi_ = xi_-angle_*180/3.14;
+    x_ = radius*cos(angle_);
+    y_ = -radius*sin(angle_);
+
+    ResetOrientation();
+    rotate(xi_-xi_old_, 0,1,0);
+    setTranslation(QVector3D(x_, 0.51, -y_));
+    local_to_world_matrix_ = toMatrix();
 
 }
 
-void Car::updateState2(double dt, double gap)
+void Car::UpdateSpeed(double speed)
 {
-    // controlled car
-    // controller.update(t, gap)
-    // T = controller.pid_control()
-
-    T = 10*(gap - 0.5);
-    xi = xi + 2*(v*sin(dw/2.0)/4.0)*dt;
-
-    x = x + v*cos(xi)*dt;
-    y = y + v*sin(xi)*dt;
-    v = v + dt*(T*cos(dw)*cos(dw))/100.0;
-    if (v > 2)
-    {
-        v = 2;
-    }
-    std::cout << dw << " " << xi << " " << gap << " " << v << std::endl;
-
-
+    v_ = speed;
 }
+
+void Car::InitializeControls()
+{
+    speedControl = new Control(control_layout_, drawingWidget, this, 1, 100, 1, 10, "Lead Car Speed: ", "m/s");
+}
+
+void Car::UpdateControls()
+{
+    if (speedControl != nullptr)// && (sizeControl->m_value != sizeControl->old_value))
+    {
+        UpdateSpeed(0.1*(double)speedControl->m_value);
+    }
+}
+
+
+double Car::x() const
+{
+    return x_;
+}
+
+void Car::setX(double x)
+{
+    x_ = x;
+}
+
+double Car::y() const
+{
+    return y_;
+}
+
+void Car::setY(double y)
+{
+    y_ = y;
+}
+
+double Car::xi() const
+{
+    return xi_;
+}
+
+void Car::setXi(double xi)
+{
+    xi_ = xi;
+}
+
+double Car::dw() const
+{
+    return dw_;
+}
+
+void Car::setDw(double dw)
+{
+    dw_ = dw;
+}
+
+

@@ -12,7 +12,7 @@
 #define ENABLE_SLOPE_BASED_BLEND 1
 #endif
 
-#define BUFFER_OFFSET(i) ((char*)NULL + (i))
+//#define BUFFER_OFFSET(i) ((char*)NULL + (i))
 
 inline float GetPercentage( float value, const float min, const float max )
 {
@@ -104,16 +104,7 @@ void Terrain::setRoad(Road* road)
     m_pRoad = road;
 }
 
-void Terrain::setModels()
-{
-    //m_program->bind();
-    m_modelToWorld = m_program->uniformLocation("modelToWorld");
-    m_program->setUniformValue(m_modelToWorld, QMatrix4x4(glm::value_ptr(m_LocalToWorldMatrix)).transposed() );
-    //m_program->release();
-
-}
-
-bool Terrain::setupDefaultMesh()
+bool Terrain::SetupDefaultMesh()
 {
     return LoadHeightmap( ":/Data/Terrain/terrain0-16bbp-257x257.raw", 16, 257, 257 );
 
@@ -148,8 +139,6 @@ bool Terrain::LoadHeightmap( const std::string& filename, unsigned char bitsPerP
     }
 
     unsigned char* heightMap = (unsigned char*)byteArray.data();
-
-    unsigned int numVerts = width * height;
 
     m_HeightmapDimensions = glm::uvec2(width, height);
 
@@ -192,7 +181,7 @@ bool Terrain::LoadHeightmap( const std::string& filename, unsigned char bitsPerP
             float tex2Contribution = 1.0f - GetPercentage( heightValue, 0.75f, 1.0f );
             //std::cout << tex0Contribution << " " << tex2Contribution << std::endl;
 #if ENABLE_MULTITEXTURE
-            m_PositionBuffer.push_back ( Vertex(QVector3D(X, Y, Z), QVector4D( tex0Contribution, 0, tex0Contribution, tex2Contribution ), QVector3D(1, 0, 0), QVector2D(S,T) ));
+            position_buffer_.push_back ( Vertex(QVector3D(X, Y, Z), QVector4D( tex0Contribution, 0, tex0Contribution, tex2Contribution ), QVector3D(1, 0, 0), QVector2D(S,T) ));
 #else
             m_PositionBuffer.push_back ( Vertex(QVector3D(X, Y, Z), QVector4D( 1, 0, 0, 0 ), QVector3D(1, 0, 0), QVector2D(S,T) ));
 #endif
@@ -228,7 +217,7 @@ bool Terrain::LoadHeightmap( const std::string& filename, unsigned char bitsPerP
     const unsigned int numTriangles = ( terrainWidthInt - 1 ) * ( terrainHeightInt - 1 ) * 2;
 
     // 3 indices for each triangle in the terrain mesh
-    m_IndexBuffer.resize( numTriangles * 3 );
+    index_buffer_.resize( numTriangles * 3 );
 
 
     unsigned int index = 0; // Index in the index buffer
@@ -238,13 +227,13 @@ bool Terrain::LoadHeightmap( const std::string& filename, unsigned char bitsPerP
         {
             int vertexIndex = ( j * terrainWidthInt ) + i;
             // Top triangle (T0)
-            m_IndexBuffer[index++] = vertexIndex;                           // V0
-            m_IndexBuffer[index++] = vertexIndex + terrainWidthInt + 1;        // V3
-            m_IndexBuffer[index++] = vertexIndex + 1;                       // V1
+            index_buffer_[index++] = vertexIndex;                           // V0
+            index_buffer_[index++] = vertexIndex + terrainWidthInt + 1;        // V3
+            index_buffer_[index++] = vertexIndex + 1;                       // V1
             // Bottom triangle (T1)
-            m_IndexBuffer[index++] = vertexIndex;                           // V0
-            m_IndexBuffer[index++] = vertexIndex + terrainWidthInt;            // V2
-            m_IndexBuffer[index++] = vertexIndex + terrainWidthInt + 1;        // V3
+            index_buffer_[index++] = vertexIndex;                           // V0
+            index_buffer_[index++] = vertexIndex + terrainWidthInt;            // V2
+            index_buffer_[index++] = vertexIndex + terrainWidthInt + 1;        // V3
         }
     }
 
@@ -253,21 +242,21 @@ bool Terrain::LoadHeightmap( const std::string& filename, unsigned char bitsPerP
     //GenerateVertexBuffers();
 
     // Generate Normals
-    for ( unsigned int i = 0; i < m_IndexBuffer.size(); i += 3 )
+    for ( unsigned int i = 0; i < index_buffer_.size(); i += 3 )
     {
-        QVector3D v0 = m_PositionBuffer[ m_IndexBuffer[i + 0] ].position();
-        QVector3D v1 = m_PositionBuffer[ m_IndexBuffer[i + 1] ].position();
-        QVector3D v2 = m_PositionBuffer[ m_IndexBuffer[i + 2] ].position();
+        QVector3D v0 = position_buffer_[ index_buffer_[i + 0] ].position();
+        QVector3D v1 = position_buffer_[ index_buffer_[i + 1] ].position();
+        QVector3D v2 = position_buffer_[ index_buffer_[i + 2] ].position();
 
         QVector3D normal = QVector3D::normal(v1-v0, v2-v0);
 
-        m_PositionBuffer[ m_IndexBuffer[i + 0] ].setNormal(normal);
-        m_PositionBuffer[ m_IndexBuffer[i + 1] ].setNormal(normal);
-        m_PositionBuffer[ m_IndexBuffer[i + 2] ].setNormal(normal);
+        position_buffer_[ index_buffer_[i + 0] ].setNormal(normal);
+        position_buffer_[ index_buffer_[i + 1] ].setNormal(normal);
+        position_buffer_[ index_buffer_[i + 2] ].setNormal(normal);
     }
 
     std::cout << "about to mesh" << std::endl;
-    setupMesh();
+    SetupMesh();
 
     return true;
 }

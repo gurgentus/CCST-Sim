@@ -9,9 +9,9 @@
 #include <iostream>
 #include <ctime>
 
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/fstream.hpp>
-namespace fs = boost::filesystem;
+//#include <boost/filesystem.hpp>
+//#include <boost/filesystem/fstream.hpp>
+//namespace fs = boost::filesystem;
 
 #define GLM_SWIZZLE_XYZW
 
@@ -54,8 +54,7 @@ public:
     virtual ~Terrain();
 
     //void Terminate();
-    bool setupDefaultMesh();
-    void setModels();
+    bool SetupDefaultMesh();
     void setRoad(Road* road);
     Road* m_pRoad;
     // Get the height of the terrain at a position in world space

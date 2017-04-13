@@ -2,14 +2,11 @@
 #include <iostream>
 
 SBody::SBody()
-    : m_LocalToWorldMatrix(1)
-    , m_InverseLocalToWorldMatrix(1)
 {
     size = 1;
     sizeControl = nullptr;
-    controlLayout = nullptr;
+    control_layout_ = nullptr;
     drawingWidget = nullptr;
-    toPosRotMatrix.setToIdentity();
 }
 
 
@@ -17,19 +14,24 @@ SBody::~SBody()
 {
 }
 
-void SBody::initializeControls()
+void SBody::SetControlOutputPanel(QVBoxLayout* control_layout, QVBoxLayout *output_layout, QOpenGLWidget *drawingWidget)
 {
-    sizeControl = new Control(controlLayout, drawingWidget);
-    sizeControl->setValue(1);
-}
-
-void SBody::setControlPanel(QVBoxLayout* layout, MyOpenGLWidget *drawingWidget)
-{
-   controlLayout = layout;
+   control_layout_ = control_layout;
+   output_layout_ = output_layout;
    this->drawingWidget = drawingWidget;
 }
 
-void SBody::updateControls()
+void SBody::InitializeControls()
+{
+    sizeControl = new Control(control_layout_, drawingWidget);
+    sizeControl->setValue(1);
+}
+
+void SBody::InitializeOutputs()
+{
+}
+
+void SBody::UpdateControls()
 {
 
     if (sizeControl != nullptr)// && (sizeControl->m_value != sizeControl->old_value))
@@ -41,4 +43,14 @@ void SBody::updateControls()
     }
 }
 
+
+void SBody::InitializeState()
+{
+
+}
+
+void SBody::ResetOrientation()
+{
+
+}
 

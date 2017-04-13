@@ -7,7 +7,7 @@ class Airplane : public Mesh
 {
 public:
     Airplane();
-    bool setupDefaultMesh();
+    bool SetupDefaultMesh();
 private:
     void setupCapMesh();
     void setupSphereMesh();

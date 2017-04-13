@@ -10,6 +10,7 @@
 #include "terrain.h"
 #include "road.h"
 #include "car.h"
+#include "adaptivecar.h"
 #include "textures.h"
 
 namespace Ui {
@@ -25,7 +26,8 @@ public:
     //QVBoxLayout* getControlLayout();
 public Q_SLOTS:
     void updateState();
-    void handleButton();
+    void handleButton1();
+    void handleButton2();
 private:
     Ui::Window *ui;
     QTimer* timer;
@@ -33,16 +35,21 @@ private:
 
     // GUI Elements
     MainViewWidget myOpenGLWidget;
-    QVBoxLayout* rightLayout;
+    QVBoxLayout* right_layout;
+    QVBoxLayout* bottom_right_layout;
+    QVBoxLayout* fill_right_layout;
     QPushButton* m_button;
+    QPushButton* m_button1;
+    QPushButton* m_button2;
+    int currentSim = 0;
 
     // Initialize shader program, textures and 3D objects
     QOpenGLShaderProgram shader;
     Textures textures;
-    Terrain g_Terrain;
-    Road road;
-    Car leadCar;
-    Car car;
+    Terrain terrain_;
+    Road road_;
+    Car lead_car_;
+    AdaptiveCar car_;
 
     constexpr static const float pi = 3.1415926535897932384626433832795f;
     constexpr static const float _2pi = 2.0f * pi;
