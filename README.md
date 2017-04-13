@@ -1,31 +1,20 @@
 # Generic Estimation Learning Control Simulator
 
-Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, Unscented Kalman Filter, etc), Machine Learning (classical, deep learning, etc), and Control (classical, optimal, robust, adaptive)  algorithms on general models.
+Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, Unscented Kalman Filter, etc), Machine Learning (classical, deep learning, etc), and Control (classical, optimal, robust, adaptive)  algorithms on general models.  For speed and flexibility rather than using a game engine like Unity or Unreal, I decided to directly use modern OpenGL with OpenGL Shading Language with a light Qt wrapper.  The GUI is also done in Qt for platform independence.
 
 
-	<li>
-<ol>
- 	<li>CS Tools: C++, Python, Modern OpenGL</li>
- 	<li>Mathematical Tools: Fluid Mechanics, Linear Algebra, Control Theory, Differential Equations, Machine Learning
-<ol>
- 	<li>General Framework and API (in process)</li>
- 	<li>Atmospheric Landing Module Control and Estimation (to be implemented with students in MATH 4900, Spring 2017)</li>
- 	<li>Aircraft Simulation Module - Not Implemented</li>
- 	<li></li>
-	
 # TODO
 
  - [X] Basic Qt GUI setup
  - [X] Basic modular OOP framework setup with OpenGL wrappers for 3D graphics
- - [X] Two body problem simulation using Runge-Kutta integrator 
- - [X] 3DoF Car Module with PID control algorithm and adaptive cruise control
- - [] Testing, bug fixes, optimize code design for modularity and OOP
- - [] Atmospheric Landing Module Control and Estimation
- - [] Statistical Orbit Determination Module
- - [] Optimize code design for modularity and OOP
- - [] Add Generic Estimation and Learning Simulation
- - [] Optimize code design for modularity and OOP
- - [] Full 6DoF modular and OO simulator
+ - [X] Basic car module with PID control algorithm and adaptive cruise control
+ - [X] More realistic car model with steering
+ - [ ] Controls toolbox with basic algorithms (mixed C++ and calls to Python libraries, eventually all C++ for performance improvement)
+ - [ ] Two body orbital mechanics simulation
+ - [ ] Testing, bug fixes
+ - [ ] Optimize code design for modularity and OOP for easy extensions to other models and simulations
+ - [ ] Add satellite simulation as a module with a tutorial describing how to add modules
+ - [ ] Add full 6DF module
 
 [//]: # (Image References)
 
@@ -53,7 +42,6 @@ http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
 Initial testing car meshes were loaded based on car obj file in:
 http://people.sc.fsu.edu/~jburkardt/data/obj/obj.html
 
-Advanced PID controller is designed by students in my MATH 4900 class.
 
 # Notes to self
 
