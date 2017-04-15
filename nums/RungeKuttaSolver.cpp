@@ -67,33 +67,33 @@ void RungeKuttaSolver::RKIteration(double ti, std::vector<double>& yi)
     std::vector<double> int3(12);
     std::vector<double> int4(12);
 
-        RightHandSide(ti, yi, f1);
-        for (int j=0; j < 12; j++)
-        {
-            k1[j] = mStepSize*f1[j];
-            int2[j] = yi[j] + 0.5 * k1[j];
-        }
-        RightHandSide(ti+0.5*mStepSize, int2, f2);
-        for (int j=0; j < 12; j++)
-        {
-            k2[j] = mStepSize*f2[j];
-            int3[j] = yi[j] + 0.5 * k2[j];
-        }
-        RightHandSide(ti+0.5*mStepSize, int3, f3);
-        for (int j=0; j < 12; j++)
-        {
-            k3[j] = mStepSize*f3[j];
-            int4[j] = yi[j]+k3[j];
-        }
+    RightHandSide(ti, yi, f1);
+    for (int j=0; j < 12; j++)
+    {
+        k1[j] = mStepSize*f1[j];
+        int2[j] = yi[j] + 0.5 * k1[j];
+    }
+    RightHandSide(ti+0.5*mStepSize, int2, f2);
+    for (int j=0; j < 12; j++)
+    {
+        k2[j] = mStepSize*f2[j];
+        int3[j] = yi[j] + 0.5 * k2[j];
+    }
+    RightHandSide(ti+0.5*mStepSize, int3, f3);
+    for (int j=0; j < 12; j++)
+    {
+        k3[j] = mStepSize*f3[j];
+        int4[j] = yi[j]+k3[j];
+    }
 
-        RightHandSide(ti+mStepSize, int4, f4);
-        for (int j=0; j < 12; j++)
-        {
-            k4[j] = mStepSize*f4[j];
-            yi[j] = yi[j] + (1.0/6.0)*(k1[j] + 2*k2[j] + 2*k3[j] + k4[j]);
-        }
+    RightHandSide(ti+mStepSize, int4, f4);
+    for (int j=0; j < 12; j++)
+    {
+        k4[j] = mStepSize*f4[j];
+        yi[j] = yi[j] + (1.0/6.0)*(k1[j] + 2*k2[j] + 2*k3[j] + k4[j]);
+    }
 
-        //std::cout << ti << " " << yi << std::endl;
+    //std::cout << ti << " " << yi << std::endl;
 
 }
 

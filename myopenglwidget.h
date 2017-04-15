@@ -8,11 +8,11 @@
 #include <QMatrix4x4>
 #include "camera3d.h"
 #include "transform3d.h"
-#include "mesh.h"
-#include "sbody.h"
-#include "wing.h"
-#include "part.h"
-#include "airplane.h"
+#include "objects/mesh.h"
+#include "objects/sbody.h"
+#include "objects/wing.h"
+#include "objects/part.h"
+#include "objects/airplane.h"
 
 class QOpenGLShaderProgram;
 //class SBody;

@@ -23,8 +23,8 @@ void SBody::SetControlOutputPanel(QVBoxLayout* control_layout, QVBoxLayout *outp
 
 void SBody::InitializeControls()
 {
-    sizeControl = new Control(control_layout_, drawingWidget);
-    sizeControl->setValue(1);
+    //sizeControl = new Control(control_layout_, drawingWidget);
+    //sizeControl->setValue(1);
 }
 
 void SBody::InitializeOutputs()
@@ -52,5 +52,15 @@ void SBody::InitializeState()
 void SBody::ResetOrientation()
 {
 
+}
+
+Simulator *SBody::p_simulator() const
+{
+    return p_simulator_;
+}
+
+void SBody::setP_simulator(Simulator *p_simulator)
+{
+    p_simulator_ = p_simulator;
 }
 

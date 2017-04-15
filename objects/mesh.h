@@ -36,28 +36,32 @@ class Mesh {
         Mesh();
         ~Mesh();
 
+        // vertex and index data containers
         typedef std::vector<Vertex>  PositionBuffer;
         typedef std::vector<GLuint>     IndexBuffer;
+        // constant data
+        constexpr static const float pi = 3.1415926535897932384626433832795f;
+        constexpr static const float _2pi = 2.0f * pi;
 
-        /*  Functions  */
-        virtual bool SetupDefaultMesh() = 0;
-        void SetShaderProgram(QOpenGLShaderProgram *program);
+        // setup car mesh based on vertex data or obj file
+        virtual bool SetupDefaultMesh(QVector4D tex_signature) = 0;
         bool SetupMesh();
         bool SetupMesh(PositionBuffer position_buffer, IndexBuffer index_buffer);
         bool LoadMesh(const string &filename, QVector4D texSignature);
-        void SetModels();
 
+
+        void SetShaderProgram(QOpenGLShaderProgram *program);
+        void SetModels();
+        QMatrix4x4 local_to_world_matrix_;
         /*  Render data  */
         void Draw();
         void Cleanup();
 
     protected:
-        constexpr static const float pi = 3.1415926535897932384626433832795f;
-        constexpr static const float _2pi = 2.0f * pi;
+
         QOpenGLShaderProgram* p_program_;
         QOpenGLVertexArrayObject vao_;
         int model_to_world_;
-        QMatrix4x4 local_to_world_matrix_;
         glm::mat4x4 m_LocalToWorldMatrix;
         glm::mat4x4 m_InverseLocalToWorldMatrix;
 

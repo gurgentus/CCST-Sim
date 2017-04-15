@@ -5,6 +5,17 @@ AdaptiveCar::AdaptiveCar()
     distance_to_obstacle_ = 0;
 }
 
+void AdaptiveCar::InitializeControls()
+{
+}
+
+void AdaptiveCar::InitializeOutputs()
+{
+    speed_output_ = new Output(output_layout_, 0, 10, "Speed: ", "m/s");
+    steering_output_ = new Output(output_layout_, 0, 1, "Steering Angle: ", "rad");
+    gap_ = new Output(output_layout_, 0, 1, "Gap: ", "m");
+}
+
 void AdaptiveCar::Sense(const Car& lead_car)
 {
     distance_to_obstacle_ = ((cos(xi_)*(lead_car.x() - x_) +
@@ -14,17 +25,7 @@ void AdaptiveCar::Sense(const Car& lead_car)
 
 }
 
-void AdaptiveCar::InitializeControls()
-{
-}
 
-void AdaptiveCar::InitializeOutputs()
-{
-    speed_output = new Output(output_layout_, 0, 10, "Speed: ", "m/s");
-    steering_output_ = new Output(output_layout_, 0, 1, "Steering Angle: ", "rad");
-    gap_ = new Output(output_layout_, 0, 1, "Gap: ", "m");
-
-}
 
 // this controls the main car with simple proportional controller
 void AdaptiveCar::UpdateState1(double dt)
@@ -61,29 +62,6 @@ void AdaptiveCar::UpdateState1(double dt)
 
 }
 
-
-
-//void AdaptiveCar::UpdateControls()
-//{
-//    if (steering_output_ != nullptr)
-//    {
-//        dw_ =(double)steering_output_->m_value;
-//    }
-//}
-
-void AdaptiveCar::UpdateOutputs()
-{
-    if (speed_output != nullptr)// && (sizeControl->m_value != sizeControl->old_value))
-    {
-        speed_output->setText(QString::number(10*v_));
-        gap_->setText(QString::number(distance_to_obstacle_));
-        steering_output_->setText(QString::number(dw_));
-        //toPosRotMatrix.setToIdentity();
-        //scaleToSize((float)sizeControl->m_value);
-        //sizeControl->old_value = sizeControl->m_value;
-    }
-}
-
 // this controls the main car with the fancy student controller
 void AdaptiveCar::UpdateState2(double dt)
 {
@@ -116,4 +94,14 @@ void AdaptiveCar::UpdateState2(double dt)
     setTranslation(QVector3D(x_, 0.51, -y_));
     local_to_world_matrix_ = toMatrix();
     UpdateOutputs();
+}
+
+void AdaptiveCar::UpdateOutputs()
+{
+    if (speed_output_ != nullptr)
+    {
+        speed_output_->setText(QString::number(10*v_));
+        gap_->setText(QString::number(distance_to_obstacle_));
+        steering_output_->setText(QString::number(dw_));
+    }
 }

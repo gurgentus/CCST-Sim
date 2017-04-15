@@ -5,7 +5,7 @@ Airplane::Airplane()
 }
 
 
-bool Airplane::setupDefaultMesh()
+bool Airplane::SetupDefaultMesh(QVector4D texSignature = QVector4D( 0.0f, 1.0f, 0.0f, 1.0f ))
 {
     setupCapMesh();
     setupSphereMesh();

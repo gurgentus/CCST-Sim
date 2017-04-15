@@ -37,7 +37,7 @@ void Part::UpdateControls()
 
 }
 
-bool Part::SetupDefaultMesh()
+bool Part::SetupDefaultMesh(QVector4D texSignature = QVector4D( 0.0f, 1.0f, 0.0f, 1.0f ))
 {
 
 }

@@ -7,7 +7,7 @@ class Airplane : public Mesh
 {
 public:
     Airplane();
-    bool SetupDefaultMesh();
+    bool SetupDefaultMesh(QVector4D texSignature = QVector4D( 0.0f, 1.0f, 0.0f, 1.0f ));
 private:
     void setupCapMesh();
     void setupSphereMesh();

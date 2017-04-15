@@ -49,21 +49,12 @@ using namespace std;
 class Terrain : public Mesh, public SBody
 {
 public:
-
     Terrain( float heightScale = 500.0f, float blockScale = 2.0f );
     virtual ~Terrain();
+    bool SetupDefaultMesh(QVector4D texSignature = QVector4D( 0.0f, 1.0f, 0.0f, 1.0f ));
 
-    //void Terminate();
-    bool SetupDefaultMesh();
     void setRoad(Road* road);
     Road* m_pRoad;
-    // Get the height of the terrain at a position in world space
-    //float GetHeightAt( const glm::vec3& position );
-
-    // In debug builds, the terrain normals will be rendered.
-    // void DebugRender();
-
-
 private:
 
     // The dimensions of the heightmap texture

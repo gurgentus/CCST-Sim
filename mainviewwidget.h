@@ -8,11 +8,9 @@
 #include <QMatrix4x4>
 #include "camera3d.h"
 #include "transform3d.h"
-#include "terrain.h"
-#include "road.h"
-#include "car.h"
-#include "adaptivecar.h"
 #include "textures.h"
+#include "input.h"
+#include <vector>
 
 class QOpenGLShaderProgram;
 
@@ -24,8 +22,7 @@ public:
     ~MainViewWidget();
 
     public:
-      void InitializeObjects(QVBoxLayout *layout, QVBoxLayout *control_layout, QOpenGLShaderProgram* shader,
-                             Textures *textures, Terrain* terrain, Road* road, AdaptiveCar *car, Car *leadCar);
+      void InitializeObjects(QOpenGLShaderProgram* shader, Textures* textures);
       // inherited QOpenGLWidget methods
       void initializeGL();
       void resizeGL(int width, int height);
@@ -44,8 +41,29 @@ public:
       void mouseReleaseEvent(QMouseEvent *event);
       void mouseMoveEvent(QMouseEvent *event);
 
+      // OpenGL State Information
+      int world_to_camera_;
+      int camera_to_view_;
+
+      // shader program and camera info
+      QOpenGLShaderProgram* p_program_;
+      QMatrix4x4 projection_;
+
+      // various objects
+      Textures* p_textures_;
+
+      // print openGL info
+      void printVersionInformation();
+
+      QPoint lastPos;
+      std::vector<QVector3D> results;
+      int it;
+
+      constexpr static const float pi = 3.1415926535897932384626433832795f;
+      constexpr static const float _2pi = 2.0f * pi;
+
     protected Q_SLOTS:
-      void update();
+      virtual void update();
       void teardownGL();
 
 //    public Q_SLOTS:
@@ -60,31 +78,6 @@ public:
         void yRotationChanged(int angle);
         void zRotationChanged(int angle);
 
-    private:
-        // OpenGL State Information
-        int world_to_camera_;
-        int camera_to_view_;
-
-        // shader program and camera info
-        QOpenGLShaderProgram* p_program_;
-        QMatrix4x4 projection_;
-
-        // various objects
-        Textures* p_textures_;
-        Terrain* p_terrain_;
-        Road* p_road_;
-        AdaptiveCar* p_car_;
-        Car* p_lead_car_;
-
-        // print openGL info
-        void printVersionInformation();
-
-        QPoint lastPos;
-        vector<QVector3D> results;
-        int it;
-
-        constexpr static const float pi = 3.1415926535897932384626433832795f;
-        constexpr static const float _2pi = 2.0f * pi;
 
 };
 

@@ -18,28 +18,32 @@ SOURCES += main.cpp\
     transform3d.cpp \
     input.cpp \
     camera3D.cpp \
-    mesh.cpp \
-    sbody.cpp \
     control.cpp \
     cst/transferfunction.cpp \
     cst/cst.cpp \
     cst/complexnumber.cpp \
     cst/pfd.cpp \
-    terrain.cpp \
     mainviewwidget.cpp \
     textures.cpp \
-#    airplane.cpp \
-#    part.cpp \
-#    wing.cpp \
-    road.cpp \
-    car.cpp \
-    adaptivecar.cpp \
     nums/AbstractOdeSolver.cpp \
     nums/ForwardEulerSolver.cpp \
     nums/NumericalSolver.cpp \
     nums/RungeKuttaSolver.cpp \
     nums/simulator.cpp \
-    output.cpp
+    output.cpp \
+    carsimulation.cpp \
+    orbitalsimulation.cpp \
+    simulation.cpp \
+    objects/car.cpp \
+    objects/adaptivecar.cpp \
+    objects/mesh.cpp \
+    objects/road.cpp \
+    objects/sbody.cpp \
+    objects/planet.cpp \
+    objects/terrain.cpp \
+#    objects/part.cpp \
+#    objects/wing.cpp \
+#    objects/airplane.cpp
 #    dynamiccontrol.cpp
 
 HEADERS  += window.h \
@@ -48,27 +52,31 @@ HEADERS  += window.h \
     transform3d.h \
     input.h \
     camera3D.h \
-    mesh.h \
-    sbody.h \
     control.h \
     cst/transferfunction.h \
     cst/cst.h \
     cst/complexnumber.h \
     cst/pfd.h \
-    terrain.h \
     mainviewwidget.h \
     textures.h \
-#    airplane.h \
-#    part.h \
-#    wing.h \
-    road.h \
-    car.h \
-    adaptivecar.h \
     nums/AbstractOdeSolver.hpp \
     nums/ForwardEulerSolver.hpp \
     nums/RungeKuttaSolver.hpp \
     nums/simulator.h \
-    output.h
+    output.h \
+    carsimulation.h \
+    orbitalsimulation.h \
+    simulation.h \
+    objects/planet.h \
+    objects/car.h \
+    objects/adaptivecar.h \
+    objects/road.h \
+    objects/sbody.h \
+    objects/mesh.h \
+    objects/terrain.h \
+#    objects/airplane.h \
+#    objects/part.h \
+#    objects/wing.h
 #    dynamiccontrol.h
 
 FORMS    += window.ui

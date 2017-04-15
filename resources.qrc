@@ -17,5 +17,7 @@
         <file>Data/Objects/Avent.obj</file>
         <file>Data/Textures/car1.jpeg</file>
         <file>Data/Textures/car2.jpeg</file>
+        <file>Data/Textures/earth.dds</file>
+        <file>Data/Textures/moon.dds</file>
     </qresource>
 </RCC>

@@ -10,7 +10,7 @@ double Road::distanceToRoad(double x, double z)
      return std::abs(std::sqrt(x*x+z*z)-200.25);
 }
 
-bool Road::SetupDefaultMesh()
+bool Road::SetupDefaultMesh(QVector4D texSignature)
 {
 
     int slices = 320;
@@ -29,8 +29,8 @@ bool Road::SetupDefaultMesh()
 
         float Y = 0.51;
 
-        position_buffer_.push_back ( Vertex(QVector3D(X_in, Y, Z_in), QVector4D( 1, 0, 0, 0 ), QVector3D(0, 1, 0), QVector2D(-1,U) ));
-        position_buffer_.push_back ( Vertex(QVector3D(X_out, Y, Z_out), QVector4D( 1, 0, 0, 0 ), QVector3D(0, 1, 0), QVector2D(1,U) ));
+        position_buffer_.push_back ( Vertex(QVector3D(X_in, Y, Z_in), texSignature, QVector3D(0, 1, 0), QVector2D(-1,U) ));
+        position_buffer_.push_back ( Vertex(QVector3D(X_out, Y, Z_out), texSignature, QVector3D(0, 1, 0), QVector2D(1,U) ));
 
     }
 

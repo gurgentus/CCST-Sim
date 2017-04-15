@@ -10,7 +10,7 @@ class Part : public SBody, public Mesh
 public:
     Part();
     ~Part();
-    bool SetupDefaultMesh();
+    bool SetupDefaultMesh(QVector4D texSignature);
     void InitializeControls();
     void UpdateControls();
 };

@@ -6,7 +6,7 @@
 #include <cmath>
 #include "simulator.h"
 #include <QApplication>
-#include "RungeKuttaSolver.hpp"
+
 #include <Python.h>
 
 const int n = 20000;
@@ -19,19 +19,65 @@ const double h = (tf-t0)/n;
 
 using namespace std;
 
-void Simulator::simulate(vector<QVector3D> &results)
+void Simulator::update_state(double dt)
+{
+    rk.SetStepSize(h);
+    //std::cout << t_ << std::endl;
+    double total_d = 0;
+    while (total_d < dt)
+    {
+        rk.RKIteration(t_, state);
+        total_d += h;
+    }
+    t_ = t_ + total_d;
+
+//        double r = sqrt(pow(state[i][3]-state[i][0],2) + pow(state[i][4]-state[i][1],2) + pow(state[i][5]-state[i][2],2));
+
+//        f[i][0] = state[i][6];
+//        f[i][1] = state[i][7];
+//        f[i][2] = state[i][8];
+//        f[i][3] = state[i][9];
+//        f[i][4] = state[i][10];
+//        f[i][5] = state[i][11];
+//        f[i][6] = G*m2*(state[i][3]-state[i][0])/pow(r,3);
+//        f[i][7] = G*m2*(state[i][4]-state[i][1])/pow(r,3);
+//        f[i][8] = G*m2*(state[i][5]-state[i][2])/pow(r,3);
+//        f[i][9] = -G*m1*(state[i][3]-state[i][0])/pow(r,3);
+//        f[i][10] = -G*m1*(state[i][4]-state[i][1])/pow(r,3);
+//        f[i][11] = -G*m1*(state[i][5]-state[i][2])/pow(r,3);
+
+//        for (int j = 0; j < 12; j++)
+//        {
+//            state[i+1][j] = state[i][j] + h * f[i][j];
+//        }
+//                //std::cout <<  m1 << " " << state[11][i] << " " <<  f[11][i] * h << " " << state[11][i+1] << std::endl;
+
+    //results.push_back(QVector3D(XG, YG, ZG)/100);
+
+}
+
+QVector3D Simulator::position()
+{
+    double XG;
+    double YG;
+    double ZG;
+
+    XG = state[3] - state[0]; //(m1*state[0][i] + m2*state[3][i])/(m1+m2);
+    YG = state[4] - state[1]; //(m1*state[1][i] + m2*state[4][i])/(m1+m2);
+    ZG = state[5] - state[2]; // (m1*state[2][i] + m2*state[5][i])/(m1+m2);
+
+    return QVector3D(XG, YG, ZG)/100;
+}
+void Simulator::simulate()
 {
     //std::cout << "Hello World!" << std::endl;
     
     //std::ofstream write_output("data.txt");
     //assert(write_output.is_open());
 
-    std::vector<double> state;
+
 
     //double f[n][12];
-    double XG;
-    double YG;
-    double ZG;
 
     state.reserve(12);
     state[0] = 0;
@@ -47,8 +93,6 @@ void Simulator::simulate(vector<QVector3D> &results)
     state[10] = 40;
     state[11] = 0;
 
-    RungeKuttaSolver rk;
-    rk.SetStepSize(h);
     rk.SetInitialValue(state);
     rk.SetTimeInterval(t0, tf);
 
@@ -75,7 +119,7 @@ void Simulator::simulate(vector<QVector3D> &results)
     // std::cout << "Y:" << state[10] << std::endl;
     // std::cout << "Z:" << state[11] << std::endl;
 
-    double t = t0;
+    t_ = t0;
 
     std::cout << "Calling Python to find the sum of 2 and 2.\n";
     // Initialize the Python interpreter.
@@ -150,41 +194,6 @@ void Simulator::simulate(vector<QVector3D> &results)
 //    // Print the result.
 //    std::cout << "The result is " << result << std::endl;
 
-    for (int i = 0; i < n-1; i++)
-    {
-
-        rk.RKIteration(t, state);
-        t = t + h;
-
-//        double r = sqrt(pow(state[i][3]-state[i][0],2) + pow(state[i][4]-state[i][1],2) + pow(state[i][5]-state[i][2],2));
-
-//        f[i][0] = state[i][6];
-//        f[i][1] = state[i][7];
-//        f[i][2] = state[i][8];
-//        f[i][3] = state[i][9];
-//        f[i][4] = state[i][10];
-//        f[i][5] = state[i][11];
-//        f[i][6] = G*m2*(state[i][3]-state[i][0])/pow(r,3);
-//        f[i][7] = G*m2*(state[i][4]-state[i][1])/pow(r,3);
-//        f[i][8] = G*m2*(state[i][5]-state[i][2])/pow(r,3);
-//        f[i][9] = -G*m1*(state[i][3]-state[i][0])/pow(r,3);
-//        f[i][10] = -G*m1*(state[i][4]-state[i][1])/pow(r,3);
-//        f[i][11] = -G*m1*(state[i][5]-state[i][2])/pow(r,3);
-
-//        for (int j = 0; j < 12; j++)
-//        {
-//            state[i+1][j] = state[i][j] + h * f[i][j];
-//        }
-//                //std::cout <<  m1 << " " << state[11][i] << " " <<  f[11][i] * h << " " << state[11][i+1] << std::endl;
-
-
-
-        XG = state[3] - state[0]; //(m1*state[0][i] + m2*state[3][i])/(m1+m2);
-        YG = state[4] - state[1]; //(m1*state[1][i] + m2*state[4][i])/(m1+m2);
-        ZG = state[5] - state[2]; // (m1*state[2][i] + m2*state[5][i])/(m1+m2);
-
-        results.push_back(QVector3D(XG, YG, ZG)/100);
-
         //std::cout  << XG << " " << YG << " " << ZG << std::endl;
 
 //         for (int j = 0; j < 12; j++)
@@ -194,8 +203,6 @@ void Simulator::simulate(vector<QVector3D> &results)
 //         }
         //write_output << std::endl;
 
-
-    }
     //write_output.close();
     //return 0;
 }

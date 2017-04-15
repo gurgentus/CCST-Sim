@@ -31,9 +31,6 @@ public:
   static bool buttonReleased(Qt::MouseButton button);
   static QPoint mousePosition();
   static QPoint mouseDelta();
-
-private:
-
   // State updating
   static void update();
   static void registerKeyPress(int key);
@@ -41,8 +38,6 @@ private:
   static void registerMousePress(Qt::MouseButton button);
   static void registerMouseRelease(Qt::MouseButton button);
   static void reset();
-  friend class MyOpenGLWidget;
-  friend class MainViewWidget;
 };
 
 inline bool Input::keyTriggered(Qt::Key key)

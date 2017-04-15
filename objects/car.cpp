@@ -22,6 +22,18 @@ void Car::InitializeState()
     total_error_ = 0;
 }
 
+void Car::InitializeControls()
+{
+    speedControl = new Control(control_layout_, drawingWidget, this, 1, 100, 1, 10, "Lead Car Speed: ", "m/s");
+}
+void Car::UpdateControls()
+{
+    if (speedControl != nullptr)
+    {
+        UpdateSpeed(0.1*(double)speedControl->m_value);
+    }
+}
+
 void Car::ResetOrientation()
 {
     setRotation(-90,1,0,0);
@@ -29,7 +41,7 @@ void Car::ResetOrientation()
 
 }
 
-bool Car::SetupDefaultMesh()
+bool Car::SetupDefaultMesh(QVector4D texSignature)
 {
 
 
@@ -107,20 +119,6 @@ void Car::UpdateSpeed(double speed)
 {
     v_ = speed;
 }
-
-void Car::InitializeControls()
-{
-    speedControl = new Control(control_layout_, drawingWidget, this, 1, 100, 1, 10, "Lead Car Speed: ", "m/s");
-}
-
-void Car::UpdateControls()
-{
-    if (speedControl != nullptr)// && (sizeControl->m_value != sizeControl->old_value))
-    {
-        UpdateSpeed(0.1*(double)speedControl->m_value);
-    }
-}
-
 
 double Car::x() const
 {

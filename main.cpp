@@ -35,5 +35,11 @@ int main(int argc, char *argv[])
     else
         window.showMaximized();
 
+//    Window window2;
+//    if (((float)widgetArea / (float)desktopArea) < 0.75f)
+//        window2.show();
+//    else
+//        window2.showMaximized();
+
     return app.exec();
 }

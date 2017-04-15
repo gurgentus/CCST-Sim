@@ -104,7 +104,7 @@ void Terrain::setRoad(Road* road)
     m_pRoad = road;
 }
 
-bool Terrain::SetupDefaultMesh()
+bool Terrain::SetupDefaultMesh(QVector4D texSignature)
 {
     return LoadHeightmap( ":/Data/Terrain/terrain0-16bbp-257x257.raw", 16, 257, 257 );
 

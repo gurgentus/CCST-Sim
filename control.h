@@ -5,10 +5,8 @@
 #include <QVBoxLayout>
 #include <QOpenGLWidget>
 #include <QLabel>
-//#include "myopenglwidget.h"
 #include <iostream>
 
-//class MyOpenGLWidget;
 class SBody;
 
 class Control : public QSlider

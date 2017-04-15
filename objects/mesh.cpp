@@ -178,7 +178,7 @@ bool Mesh::LoadMesh(const std::string& filename, QVector4D texSignature)
 void Mesh::Draw()
 {
   // render using the shader
-  //  std::cout << index_buffer_.size() << std::endl;
+  // std::cout << index_buffer_.size() << std::endl;
   vao_.bind();
   glDrawElements(GL_TRIANGLES, index_buffer_.size(), GL_UNSIGNED_INT, 0);
   vao_.release();
