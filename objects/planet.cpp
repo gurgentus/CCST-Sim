@@ -79,6 +79,14 @@ void Planet::InitializeControls()
 {
     speedControl = new Control(control_layout_, drawingWidget, this, 1, 100, 1, 10, "Simulation Speed: ", "");
 }
+
+void Planet::InitializeOutputs()
+{
+    x_position_output_ = new Output(output_layout_, 0, 1, "Relative X Position: ", "km");
+    y_position_output_ = new Output(output_layout_, 0, 1, "Relative Y Position: ", "km");
+    z_position_output_ = new Output(output_layout_, 0, 1, "Relative Z Position: ", "km");
+}
+
 void Planet::UpdateControls()
 {
     if (speedControl != nullptr)
@@ -112,5 +120,22 @@ void Planet::UpdateState(double dt)
     ResetOrientation();
     setTranslation(x_, y_, z_);
     local_to_world_matrix_ = toMatrix();
+    UpdateOutputs();
+}
+
+void Planet::UpdateOutputs()
+{
+    if (x_position_output_ != nullptr)
+    {
+        x_position_output_->setText(QString::number(x_));
+    }
+    if (y_position_output_ != nullptr)
+    {
+        y_position_output_->setText(QString::number(y_));
+    }
+    if (z_position_output_ != nullptr)
+    {
+        z_position_output_->setText(QString::number(z_));
+    }
 }
 

@@ -16,7 +16,6 @@ public:
     // GUI Elements
     // Instructions label
     QLabel* instructions = new QLabel("Change text to include instructions");
-    QVBoxLayout* right_layout;
 
     int currentSim = 0;
 
@@ -24,6 +23,7 @@ public:
     constexpr static const float _2pi = 2.0f * pi;
 
     virtual void InitializeObjects(QOpenGLShaderProgram* shader, Textures *textures_);
+    virtual void InitializeObjects(QVBoxLayout* info_layout) = 0;
     virtual void UpdateState(double dt) = 0;
 
 

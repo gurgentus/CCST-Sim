@@ -36,7 +36,7 @@ QSize MainViewWidget::minimumSizeHint() const
 
 QSize MainViewWidget::sizeHint() const
 {
-    return QSize(800, 800);
+    return QSize(1000, 1000);
 }
 
 void MainViewWidget::initializeGL()

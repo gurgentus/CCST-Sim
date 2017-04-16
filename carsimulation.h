@@ -12,7 +12,7 @@
 class CarSimulation : public Simulation
 {
 public:
-    CarSimulation(QWidget *parent);
+    CarSimulation();
 
     // 3D objects
     Terrain terrain_;
@@ -23,6 +23,7 @@ public:
     using Simulation::InitializeObjects;
     void InitializeObjects(QVBoxLayout *layout, QVBoxLayout *control_layout, QOpenGLShaderProgram* shader,
                            Textures *textures_, Terrain* terrain, Road* road, AdaptiveCar *car, Car *leadCar);
+    void InitializeObjects(QVBoxLayout* info_layout);
 
     // OpenGL functions
     void initializeGL();

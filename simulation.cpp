@@ -3,15 +3,14 @@
 Simulation::Simulation()
     : shader()
     , textures_()
-{    
+{
     setFocusPolicy( Qt::StrongFocus );
-    right_layout = new QVBoxLayout;
-    right_layout->addWidget(instructions);
 }
 
 void Simulation::InitializeObjects(QOpenGLShaderProgram* shader, Textures* textures)
 {
     MainViewWidget::InitializeObjects(shader, textures);
+    setFocusPolicy( Qt::StrongFocus );
 }
 
 void Simulation::initializeGL()

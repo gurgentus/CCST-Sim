@@ -15,8 +15,10 @@ public:
     // initialize state and control values
     void InitializeState();
     void InitializeControls();
-    // update state based on gui control
+    void InitializeOutputs();
+    // update state and output based on gui control
     void UpdateControls();
+    void UpdateOutputs();
 
     double r() const;
     void setR(double r);
@@ -38,7 +40,10 @@ protected:
     double z_;
     double r_;
 
-
+    // define outputs to be displayed
+    Output* x_position_output_;
+    Output* y_position_output_;
+    Output* z_position_output_;
 };
 
 #endif // PLANET_H

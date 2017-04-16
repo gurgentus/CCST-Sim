@@ -21,6 +21,7 @@ public:
     using Simulation::InitializeObjects;
     void InitializeObjects(QVBoxLayout *layout, QVBoxLayout *control_layout, QOpenGLShaderProgram* shader,
                            Textures *textures_, Planet *earth, Planet *moon);
+    void InitializeObjects(QVBoxLayout* info_layout);
 
     void setZRotation(int angle);
     void setYRotation(int angle);

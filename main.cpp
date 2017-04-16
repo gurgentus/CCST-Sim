@@ -28,10 +28,10 @@ int main(int argc, char *argv[])
 
     window.setWindowTitle("Simulator");
 
-    //window.resize(QSize(800, 600));
+    //window.resize(QSize(1000, 600));
 
     if (((float)widgetArea / (float)desktopArea) < 0.75f)
-        window.show();
+        window.showMaximized();
     else
         window.showMaximized();
 

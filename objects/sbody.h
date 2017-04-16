@@ -8,6 +8,7 @@
 #include "control.h"
 #include "transform3d.h"
 #include "nums/simulator.h"
+#include "output.h"
 
 class QOpenGLWidget;
 

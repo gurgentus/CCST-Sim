@@ -2,7 +2,6 @@
 #define ADAPTIVECAR_H
 
 #include "car.h"
-#include "output.h"
 
 // car with adaptive cruise control
 class AdaptiveCar : public Car

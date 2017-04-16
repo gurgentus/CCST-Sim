@@ -5,32 +5,30 @@ OrbitalSimulation::OrbitalSimulation()
 {
     earth_.SetShaderProgram(&shader);
     moon_.SetShaderProgram(&shader);
-
     moon_.setP_simulator(&simulator);
     moon_.setR(1);
     moon_.setTranslation(QVector3D(10,10,0));
     moon_.local_to_world_matrix_ = moon_.toMatrix();
-
     earth_.setR(3);
-
-    InitializeObjects(right_layout, right_layout, &shader, &textures_, &earth_, &moon_);
-
-    instructions->setText("Move slider to change simulation speed");
-
-    simulator.simulate();
 }
 
+void OrbitalSimulation::InitializeObjects(QVBoxLayout* info_layout)
+{
+    instructions->setText("Move slider to change simulation speed");
+    info_layout->addWidget(instructions);
+    InitializeObjects(info_layout, info_layout, &shader, &textures_, &earth_, &moon_);
+    simulator.simulate();
+}
 
 void OrbitalSimulation::InitializeObjects(QVBoxLayout *layout, QVBoxLayout *output_layout, QOpenGLShaderProgram* shader,
                                        Textures* textures, Planet* earth, Planet* moon)
 {
-    earth_.SetControlOutputPanel(layout, output_layout, this);
 
     //earth_.InitializeControls();
-    earth_.InitializeOutputs();
-
     moon_.SetControlOutputPanel(layout, output_layout, this);
+    moon_.InitializeOutputs();
     moon_.InitializeControls();
+    earth_.SetControlOutputPanel(layout, output_layout, this);
 
     Simulation::InitializeObjects(shader, textures);
 }
@@ -99,7 +97,14 @@ void OrbitalSimulation::start_simulation2()
 void OrbitalSimulation::initializeGL()
 {
     Simulation::initializeGL();
-
+    if ( !textures_.loadTexture( ":/Data/Textures/rock.png", CAR_TEXTURE ) )
+    {
+        std::cerr << "Failed to load terrain texture for road!" << std::endl;
+    }
+    if ( !textures_.loadTexture( ":/Data/Textures/snow.jpg", CAR2_TEXTURE ) )
+    {
+        std::cerr << "Failed to load terrain texture for road!" << std::endl;
+    }
     if ( !textures_.loadTexture( ":/Data/Textures/earth.dds", EARTH_TEXTURE ) )
     {
         std::cerr << "Failed to load terrain texture for earth!" << std::endl;
@@ -134,13 +139,13 @@ void OrbitalSimulation::paintGL()
     Simulation::paintGL();
 
     p_program_->bind();
-    p_textures_->bindTexture(EARTH_TEXTURE);
-    p_textures_->bindTexture(MOON_TEXTURE);
-    p_program_->setUniformValue("stage1", EARTH_TEXTURE);
-    p_program_->setUniformValue("stage2", MOON_TEXTURE);
-    p_program_->setUniformValue("stage3", EARTH_TEXTURE);
-    p_program_->setUniformValue("car", EARTH_TEXTURE);
-    p_program_->setUniformValue("car2", EARTH_TEXTURE);
+    p_textures_->bindTexture(CAR_TEXTURE);
+    p_textures_->bindTexture(CAR2_TEXTURE);
+    p_program_->setUniformValue("stage1", CAR_TEXTURE);
+    p_program_->setUniformValue("stage2", CAR2_TEXTURE);
+    p_program_->setUniformValue("stage3", CAR_TEXTURE);
+    p_program_->setUniformValue("car", CAR_TEXTURE);
+    p_program_->setUniformValue("car2", CAR_TEXTURE);
 
     earth_.SetModels();
     earth_.Draw();

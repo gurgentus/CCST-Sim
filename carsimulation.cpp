@@ -1,6 +1,6 @@
 #include "carsimulation.h"
 
-CarSimulation::CarSimulation(QWidget *parent)
+CarSimulation::CarSimulation()
     : terrain_(32, 2)
 , Simulation()
 {
@@ -9,13 +9,14 @@ CarSimulation::CarSimulation(QWidget *parent)
     road_.SetShaderProgram(&shader);
     lead_car_.SetShaderProgram(&shader);
     car_.SetShaderProgram(&shader);
+    setFocusPolicy( Qt::StrongFocus );
+}
 
-    right_layout = new QVBoxLayout;
-    InitializeObjects(right_layout, right_layout, &shader, &textures_, &terrain_, &road_, &car_, &lead_car_);
-
+void CarSimulation::InitializeObjects(QVBoxLayout *info_layout)
+{
     instructions->setText("Press A to steer left; Press D to steer right.");
-    right_layout->addWidget(instructions);
-
+    info_layout->addWidget(instructions);
+    InitializeObjects(info_layout, info_layout, &shader, &textures_, &terrain_, &road_, &car_, &lead_car_);
 }
 
 void CarSimulation::UpdateState(double dt)

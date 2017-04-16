@@ -13,85 +13,28 @@
 class MainViewWidget;
 
 Window::Window(QWidget *parent)
+    //: QMainWindow(parent)
     : QWidget(parent)
-    , simulation(parent)
+    , simulation()
     , orbital_simulation()
 //  , ui(new Ui::Window)
 {
     //ui->setupUi(this);
-    int sim_type = 1;
 
-    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    sizePolicy.setHorizontalStretch(0);
-    sizePolicy.setVerticalStretch(0);
+    // create menu bar
+    QMenuBar* menu_bar = new QMenuBar(this);
+    QAction* car_sim = new QAction("2D Car Simulation", this);
+    QAction* orbit_sim = new QAction("2 Body Problem", this);
 
-    QHBoxLayout *topLeftLayout = new QHBoxLayout;
-    QVBoxLayout *leftLayout = new QVBoxLayout;
+    //menu_bar->setNativeMenuBar(true);
+    menu = new QMenu("Simulation");
+    menu_bar->addMenu(menu);
+    menu->addAction(car_sim);
+    menu->addAction(orbit_sim);
+    menu_bar->addAction(menu->menuAction());
 
-    if (sim_type == 1)
-    {
-        orbital_simulation.setSizePolicy(sizePolicy);
-//        QSlider* rotXSlider = new QSlider(Qt::Horizontal);
-//        rotXSlider->setLayoutDirection(Qt::LeftToRight);
-//        rotXSlider->setRange(0,360);
-//        QSlider* rotYSlider = new QSlider(Qt::Horizontal);
-//        rotYSlider->setLayoutDirection(Qt::LeftToRight);
-//        rotYSlider->setRange(0,360);
-//        QSlider* rotZSlider = new QSlider(Qt::Horizontal);
-//        rotZSlider->setLayoutDirection(Qt::LeftToRight);
-//        rotZSlider->setRange(0,360);
+    connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(setup_simulation(QAction*)));
 
-//        connect(&orbital_simulation, SIGNAL(xRotationChanged(int)), rotXSlider, SLOT(setValue(int)));
-//        connect(&orbital_simulation, SIGNAL(yRotationChanged(int)), rotYSlider, SLOT(setValue(int)));
-//        connect(&orbital_simulation, SIGNAL(zRotationChanged(int)), rotZSlider, SLOT(setValue(int)));
-
-        topLeftLayout->addWidget(&orbital_simulation);
-
-//        leftLayout->addWidget(rotXSlider);
-//        leftLayout->addWidget(rotYSlider);
-//        leftLayout->addWidget(rotZSlider);
-        current_simulation = &orbital_simulation;
-    }
-    else
-    {
-        simulation.setSizePolicy(sizePolicy);
-        topLeftLayout->addWidget(&simulation);
-        current_simulation = &simulation;
-    }
-    leftLayout->addLayout(topLeftLayout);
-
-    // Create the button, make "this" the parent
-    m_button1 = new QPushButton("Simulation 1", this);
-    m_button1->setGeometry(QRect(QPoint(100, 100),
-    QSize(200, 50)));
-    connect(m_button1, SIGNAL (released()), this, SLOT (handleButton1()));
-    leftLayout->addWidget(m_button1);
-
-    // Create the button, make "this" the parent
-    m_button2 = new QPushButton("Simulation 2", this);
-    m_button2->setGeometry(QRect(QPoint(100, 100),
-    QSize(200, 50)));
-    connect(m_button2, SIGNAL (released()), this, SLOT (handleButton2()));
-    leftLayout->addWidget(m_button2);
-
-
-    QHBoxLayout *mainLayout = new QHBoxLayout;
-    mainLayout->addLayout(leftLayout);
-
-    QSizePolicy fSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-
-    if (sim_type == 1)
-    {
-        mainLayout->addLayout(orbital_simulation.right_layout);
-    }
-    else
-    {
-        mainLayout->addLayout(simulation.right_layout);
-    }
-
-    setLayout(mainLayout);
-    timer = new QTimer();
-    connect(timer, SIGNAL(timeout()), this, SLOT(updateState()));
 
 //    std::cout << std::endl;
 //    std::vector<ComplexNumber> pols;
@@ -103,7 +46,7 @@ Window::Window(QWidget *parent)
 //        std::cout << std::endl;
 //    }
 
-}
+ }
 
 Window::~Window()
 {
@@ -153,6 +96,73 @@ void Window::updateState()
 }
 
 
+void Window::setup_simulation(QAction *action)
+{
+
+    timer = new QTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateState()));
+
+
+    topLeftLayout = new QHBoxLayout;
+    leftLayout = new QVBoxLayout;
+
+    leftLayout->addLayout(topLeftLayout);
+
+    menu->setEnabled(false);
+
+    // Create the button, make "this" the parent
+    m_button1 = new QPushButton("Simulation 1", this);
+    m_button1->setGeometry(QRect(QPoint(100, 100),
+    QSize(200, 50)));
+    connect(m_button1, SIGNAL (released()), this, SLOT (handleButton1()));
+    leftLayout->addWidget(m_button1);
+
+    // Create the button, make "this" the parent
+    m_button2 = new QPushButton("Simulation 2", this);
+    m_button2->setGeometry(QRect(QPoint(100, 100),
+    QSize(200, 50)));
+    connect(m_button2, SIGNAL (released()), this, SLOT (handleButton2()));
+    leftLayout->addWidget(m_button2);
+
+    mainLayout = new QHBoxLayout;
+    right_layout = new QVBoxLayout;
+    right_layout->setSizeConstraint(QLayout::SetFixedSize);
+
+    //clearWidgets(right_layout);
+    if (action->text() == "2D Car Simulation")
+    {
+        current_simulation = &simulation;
+    }
+    if (action->text() == "2 Body Problem")
+    {
+        current_simulation = &orbital_simulation;
+    }
+
+    mainLayout->addLayout(leftLayout);
+    mainLayout->addLayout(right_layout);
+
+    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    sizePolicy.setHorizontalStretch(0);
+    sizePolicy.setVerticalStretch(0);
+    //QSizePolicy fSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    this->setSizePolicy(sizePolicy);
+    current_simulation->InitializeObjects(right_layout);
+
+    topLeftLayout->addWidget(current_simulation);
+    this->setLayout(mainLayout);
+
+}
+
+
+//void Window::clearWidgets(QLayout * layout) {
+//   if (! layout)
+//      return;
+//   while (auto item = layout->takeAt(0)) {
+//      delete item->widget();
+//      clearWidgets(item->layout());
+//   }
+//}
+
 //void Window::keyPressEvent(QKeyEvent *e)
 //{
 //    if (e->key() == Qt::Key_Escape)
@@ -160,3 +170,23 @@ void Window::updateState()
 //    else
 //        QWidget::keyPressEvent(e);
 //}
+
+
+
+//        QSlider* rotXSlider = new QSlider(Qt::Horizontal);
+//        rotXSlider->setLayoutDirection(Qt::LeftToRight);
+//        rotXSlider->setRange(0,360);
+//        QSlider* rotYSlider = new QSlider(Qt::Horizontal);
+//        rotYSlider->setLayoutDirection(Qt::LeftToRight);
+//        rotYSlider->setRange(0,360);
+//        QSlider* rotZSlider = new QSlider(Qt::Horizontal);
+//        rotZSlider->setLayoutDirection(Qt::LeftToRight);
+//        rotZSlider->setRange(0,360);
+
+//        connect(&orbital_simulation, SIGNAL(xRotationChanged(int)), rotXSlider, SLOT(setValue(int)));
+//        connect(&orbital_simulation, SIGNAL(yRotationChanged(int)), rotYSlider, SLOT(setValue(int)));
+//        connect(&orbital_simulation, SIGNAL(zRotationChanged(int)), rotZSlider, SLOT(setValue(int)));
+
+//        leftLayout->addWidget(rotXSlider);
+//        leftLayout->addWidget(rotYSlider);
+//        leftLayout->addWidget(rotZSlider);
