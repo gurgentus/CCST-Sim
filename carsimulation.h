@@ -1,12 +1,12 @@
 #ifndef CARSIMULATION_H
 #define CARSIMULATION_H
 
-#include "simulation.h"
+#include <common/simulation.h>
 
-#include "objects/terrain.h"
-#include "objects/road.h"
-#include "objects/car.h"
-#include "objects/adaptivecar.h"
+#include <objects/terrain.h>
+#include <objects/road.h>
+#include <objects/car.h>
+#include <objects/adaptivecar.h>
 
 
 class CarSimulation : public Simulation

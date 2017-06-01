@@ -1,10 +1,10 @@
 #ifndef ORBITALSIMULATION_H
 #define ORBITALSIMULATION_H
 
-#include "simulation.h"
-#include "textures.h"
-#include "objects/planet.h"
-#include "nums/simulator.h"
+#include <common/simulation.h>
+#include <common/textures.h>
+#include <objects/planet.h>
+#include <nums/simulator.h>
 
 class OrbitalSimulation : public Simulation
 {

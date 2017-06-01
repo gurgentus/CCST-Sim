@@ -3,7 +3,7 @@
 #include <QDesktopWidget>
 #include <QtOpenGL>
 #include <iostream>
-#include "window.h"
+#include <window.h>
 
 int main(int argc, char *argv[])
 {

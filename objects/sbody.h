@@ -3,12 +3,12 @@
 
 #include <QVector3D>
 #include <QMatrix4x4>
-#include "mesh.h"
-#include "textures.h"
-#include "control.h"
-#include "transform3d.h"
-#include "nums/simulator.h"
-#include "output.h"
+#include <objects/mesh.h>
+#include <common/textures.h>
+#include <common/control.h>
+#include <common/transform3d.h>
+#include <nums/simulator.h>
+#include <common/output.h>
 
 class QOpenGLWidget;
 

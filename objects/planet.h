@@ -1,10 +1,10 @@
 #ifndef PLANET_H
 #define PLANET_H
 
-#include "vertex.h"
-#include "mesh.h"
-#include "textures.h"
-#include "sbody.h"
+#include <common/vertex.h>
+#include <objects/mesh.h>
+#include <common/textures.h>
+#include <objects/sbody.h>
 
 class Planet : public Mesh, public SBody
 {

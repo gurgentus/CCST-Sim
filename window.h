@@ -6,10 +6,10 @@
 #include <QWidget>
 #include <QSlider>
 #include <QVBoxLayout>
-#include "textures.h"
+#include <common/textures.h>
 
-#include "carsimulation.h"
-#include "orbitalsimulation.h"
+#include <carsimulation.h>
+#include <orbitalsimulation.h>
 
 namespace Ui {
 class Window;

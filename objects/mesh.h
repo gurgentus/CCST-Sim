@@ -1,7 +1,7 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "vertex.h"
+#include <common/vertex.h>
 #include <QtOpenGL>
 #include <QOpenGLVertexArrayObject>
 

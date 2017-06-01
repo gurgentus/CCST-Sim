@@ -6,10 +6,10 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLTexture>
 #include <QMatrix4x4>
-#include "camera3d.h"
-#include "transform3d.h"
-#include "textures.h"
-#include "input.h"
+#include <common/camera3d.h>
+#include <common/transform3d.h>
+#include <common/textures.h>
+#include <common/input.h>
 #include <vector>
 
 class QOpenGLShaderProgram;

@@ -2,8 +2,8 @@
 
 #include <QtWidgets>
 #include <QOpenGLContext>
-#include "window.h"
-#include "ui_window.h"
+#include <window.h>
+#include <ui_window.h>
 #include <iostream>
 
 //#include "cst/transferfunction.h"

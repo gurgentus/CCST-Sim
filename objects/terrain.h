@@ -15,11 +15,11 @@
 
 #define GLM_SWIZZLE_XYZW
 
-#include "vertex.h"
-#include "mesh.h"
-#include "textures.h"
-#include "sbody.h"
-#include "road.h"
+#include <common/vertex.h>
+#include <objects/mesh.h>
+#include <common/textures.h>
+#include <objects/sbody.h>
+#include <objects/road.h>
 #include <QtOpenGL>
 
 

@@ -12,28 +12,28 @@ TARGET = MyOpenGL
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        window.cpp \
+SOURCES += common/main.cpp\
+     window.cpp \
 #    myopenglwidget.cpp \
-    transform3d.cpp \
-    input.cpp \
-    camera3D.cpp \
-    control.cpp \
+    common/transform3d.cpp \
+    common/input.cpp \
+    common/camera3D.cpp \
+    common/control.cpp \
     cst/transferfunction.cpp \
     cst/cst.cpp \
     cst/complexnumber.cpp \
     cst/pfd.cpp \
     mainviewwidget.cpp \
-    textures.cpp \
+    common/textures.cpp \
     nums/AbstractOdeSolver.cpp \
     nums/ForwardEulerSolver.cpp \
     nums/NumericalSolver.cpp \
     nums/RungeKuttaSolver.cpp \
     nums/simulator.cpp \
-    output.cpp \
+    common/output.cpp \
     carsimulation.cpp \
     orbitalsimulation.cpp \
-    simulation.cpp \
+    common/simulation.cpp \
     objects/car.cpp \
     objects/adaptivecar.cpp \
     objects/mesh.cpp \
@@ -48,25 +48,25 @@ SOURCES += main.cpp\
 
 HEADERS  += window.h \
 #    myopenglwidget.h \
-    vertex.h \
-    transform3d.h \
-    input.h \
-    camera3D.h \
-    control.h \
+    common/vertex.h \
+    common/transform3d.h \
+    common/input.h \
+    common/camera3D.h \
+    common/control.h \
     cst/transferfunction.h \
     cst/cst.h \
     cst/complexnumber.h \
     cst/pfd.h \
     mainviewwidget.h \
-    textures.h \
+    common/textures.h \
     nums/AbstractOdeSolver.hpp \
     nums/ForwardEulerSolver.hpp \
     nums/RungeKuttaSolver.hpp \
     nums/simulator.h \
-    output.h \
+    common/output.h \
     carsimulation.h \
     orbitalsimulation.h \
-    simulation.h \
+    common/simulation.h \
     objects/planet.h \
     objects/car.h \
     objects/adaptivecar.h \

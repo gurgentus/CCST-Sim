@@ -6,7 +6,7 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLBuffer>
 #include <QOpenGLVertexArrayObject>
-#include "vertex.h"
+#include <common/vertex.h>
 #include "mainviewwidget.h"
 #include "nums/simulator.h"
 #include <window.h>

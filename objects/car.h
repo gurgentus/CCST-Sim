@@ -1,10 +1,10 @@
 #ifndef CAR_H
 #define CAR_H
 
-#include "vertex.h"
-#include "mesh.h"
-#include "textures.h"
-#include "sbody.h"
+#include <common/vertex.h>
+#include <objects/mesh.h>
+#include <common/textures.h>
+#include <objects/sbody.h>
 
 
 class Car : public Mesh, public SBody
