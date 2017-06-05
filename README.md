@@ -18,18 +18,18 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
 
 [//]: # (Image References)
 
- [GUI]: ./GUI.png "GUI"
+ [GUI]: ./SolverDefinition.png "Solver"
  [Car]: ./Car.png "Car"
  [Orbit]: ./Orbit.png "Orbit"
  [R3B]: ./Restricted3Body.png "Restricted 3 Body"
-
-![GUI][GUI]
 
 ![Car][Car]
 
 ![R3B][R3B]
 
 ![Orbit][Orbit]
+
+![GUI][Solver]
 
 # License
 
