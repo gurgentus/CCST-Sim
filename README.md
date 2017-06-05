@@ -29,7 +29,7 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
 
 ![Orbit][Orbit]
 
-![GUI][Solver]
+![GUI][GUI]
 
 # License
 
