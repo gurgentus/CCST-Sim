@@ -1,8 +1,14 @@
 #include "planet.h"
+#include "nums/RungeKuttaSolver.hpp"
 
 Planet::Planet()
 {
     InitializeState();
+}
+
+void Planet::SetPositionFunction( QVector3D (AbstractOdeSolver::*fun)()  )
+{
+    pos = fun;
 }
 
 void Planet::InitializeState()
@@ -77,7 +83,7 @@ bool Planet::SetupDefaultMesh(QVector4D texSignature)
 
 void Planet::InitializeControls()
 {
-    speedControl = new Control(control_layout_, drawingWidget, this, 1, 100, 1, 10, "Simulation Speed: ", "");
+    speedControl = new Control(control_layout_, drawingWidget, this, 1, 100000, 1, 10, "Simulation Speed: ", "");
 }
 
 void Planet::InitializeOutputs()
@@ -85,6 +91,10 @@ void Planet::InitializeOutputs()
     x_position_output_ = new Output(output_layout_, 0, 1, "Relative X Position: ", "km");
     y_position_output_ = new Output(output_layout_, 0, 1, "Relative Y Position: ", "km");
     z_position_output_ = new Output(output_layout_, 0, 1, "Relative Z Position: ", "km");
+    r_output_ = new Output(output_layout_, 0, 1, "Distance to the origin: ", "km");
+    e_output_ = new Output(output_layout_, 0, 1, "Eccentricity", "");
+    t_output_ = new Output(output_layout_, 0, 1, "Time", "days");
+
 }
 
 void Planet::UpdateControls()
@@ -115,10 +125,16 @@ void Planet::setPosition(QVector3D pos)
 
 void Planet::UpdateState(double dt)
 {
-    p_simulator_->update_state(sim_speed_*dt);
-    setPosition(p_simulator_->position());
+    double scale = 10000;
+
+    p_simulator_->UpdateState(sim_speed_*dt);
+    setPosition((p_simulator_->*pos)());
+    //QVector3D vel = p_simulator_->velocity();
+    //u_ = vel.x();
+    //v_ = vel.y();
+    //w_ = vel.z();
     ResetOrientation();
-    setTranslation(x_, y_, z_);
+    setTranslation(x_/scale, y_/scale, z_/scale);
     local_to_world_matrix_ = toMatrix();
     UpdateOutputs();
 }
@@ -136,6 +152,20 @@ void Planet::UpdateOutputs()
     if (z_position_output_ != nullptr)
     {
         z_position_output_->setText(QString::number(z_));
+    }
+    if (r_output_ != nullptr)
+    {
+        r_output_->setText(QString::number(sqrt(x_*x_+y_*y_+z_*z_)));
+    }
+    if (e_output_ != nullptr)
+    {
+        //double e = p_simulator_->eccentricity();
+        //e_output_->setText(QString::number(e));
+    }
+    if (t_output_ != nullptr)
+    {
+
+        t_output_->setText(QString::number(p_simulator_->time()/(3600*24)));
     }
 }
 

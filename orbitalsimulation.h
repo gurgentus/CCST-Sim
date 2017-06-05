@@ -4,7 +4,7 @@
 #include <common/simulation.h>
 #include <common/textures.h>
 #include <objects/planet.h>
-#include <nums/simulator.h>
+#include <nums/TwoBodySolver.h>
 
 class OrbitalSimulation : public Simulation
 {
@@ -12,15 +12,14 @@ public:
     OrbitalSimulation();
 
     // 3D objects
-    Planet earth_;
-    Planet moon_;
+    vector<Planet*> planets;
+    // Planet earth_;
+    // Planet moon_;
 
-    // For orbital mechanics simulation logic
-    Simulator simulator;
-
+    void AddPlanet(Planet& planet);
     using Simulation::InitializeObjects;
     void InitializeObjects(QVBoxLayout *layout, QVBoxLayout *control_layout, QOpenGLShaderProgram* shader,
-                           Textures *textures_, Planet *earth, Planet *moon);
+                           Textures *textures_);
     void InitializeObjects(QVBoxLayout* info_layout);
 
     void setZRotation(int angle);

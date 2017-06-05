@@ -8,7 +8,7 @@
 #include <QOpenGLVertexArrayObject>
 #include <common/vertex.h>
 #include "mainviewwidget.h"
-#include "nums/simulator.h"
+#include "nums/TwoBodySolver.h"
 #include <window.h>
 
 #include <iostream>

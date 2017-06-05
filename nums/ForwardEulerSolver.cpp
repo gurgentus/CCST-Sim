@@ -8,7 +8,7 @@ double ForwardEulerSolver::RightHandSide(double t, double y)
     return 1+t;
 }
 
-double ForwardEulerSolver::SolveScalarEquation()
+double ForwardEulerSolver::SolveEquation()
 {
     double numPoints = (mFinalTime - mInitialTime)/mStepSize;
     double ti = mInitialTime;

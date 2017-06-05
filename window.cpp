@@ -25,12 +25,15 @@ Window::Window(QWidget *parent)
     QMenuBar* menu_bar = new QMenuBar(this);
     QAction* car_sim = new QAction("2D Car Simulation", this);
     QAction* orbit_sim = new QAction("2 Body Problem", this);
+    QAction* orbit_sim2 = new QAction("Restricted 3 Body Problem", this);
+
 
     //menu_bar->setNativeMenuBar(true);
     menu = new QMenu("Simulation");
     menu_bar->addMenu(menu);
     menu->addAction(car_sim);
     menu->addAction(orbit_sim);
+    menu->addAction(orbit_sim2);
     menu_bar->addAction(menu->menuAction());
 
     connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(setup_simulation(QAction*)));
@@ -129,6 +132,7 @@ void Window::setup_simulation(QAction *action)
     right_layout->setSizeConstraint(QLayout::SetFixedSize);
 
     //clearWidgets(right_layout);
+
     if (action->text() == "2D Car Simulation")
     {
         current_simulation = &simulation;
@@ -136,6 +140,12 @@ void Window::setup_simulation(QAction *action)
     if (action->text() == "2 Body Problem")
     {
         current_simulation = &orbital_simulation;
+        orbital_simulation.InitializeSimulation();
+    }
+    if (action->text() == "Restricted 3 Body Problem")
+    {
+        current_simulation = &restricted_3body;
+        restricted_3body.InitializeSimulation();
     }
 
     mainLayout->addLayout(leftLayout);
@@ -146,9 +156,24 @@ void Window::setup_simulation(QAction *action)
     sizePolicy.setVerticalStretch(0);
     //QSizePolicy fSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     this->setSizePolicy(sizePolicy);
+
     current_simulation->InitializeObjects(right_layout);
 
+    if (action->text() == "2 Body Problem")
+    {
+        orbital_simulation.InitializeGUI();
+    }
+    if (action->text() == "Restricted 3 Body Problem")
+    {
+        restricted_3body.InitializeGUI();
+    }
     topLeftLayout->addWidget(current_simulation);
+
+        //QMainWindow window;
+//        window.setCentralWidget(chartView);
+//        window.resize(400, 300);
+//        window.show();
+
     this->setLayout(mainLayout);
 
 }

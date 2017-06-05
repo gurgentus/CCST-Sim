@@ -7,7 +7,7 @@ class ForwardEulerSolver: public AbstractOdeSolver
 {
 public:
     double RightHandSide(double y, double t);
-    double SolveScalarEquation();
+    double SolveEquation();
 };
 
 #endif

@@ -18,3 +18,8 @@ void AbstractOdeSolver::SetInitialValue(std::vector<double> y0)
 {
     mInitialValueVector = y0;
 }
+
+double AbstractOdeSolver::time()
+{
+    return t_;
+}

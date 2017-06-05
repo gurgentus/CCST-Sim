@@ -4,13 +4,12 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl
+QT       += core gui opengl charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = MyOpenGL
 TEMPLATE = app
-
 
 SOURCES += common/main.cpp\
      window.cpp \
@@ -29,7 +28,6 @@ SOURCES += common/main.cpp\
     nums/ForwardEulerSolver.cpp \
     nums/NumericalSolver.cpp \
     nums/RungeKuttaSolver.cpp \
-    nums/simulator.cpp \
     common/output.cpp \
     carsimulation.cpp \
     orbitalsimulation.cpp \
@@ -41,6 +39,11 @@ SOURCES += common/main.cpp\
     objects/sbody.cpp \
     objects/planet.cpp \
     objects/terrain.cpp \
+    restricted3bodysimulation.cpp \
+    twobodysimulation.cpp \
+    nums/TwoBodySolver.cpp \
+    nums/Restricted3BodySolver.cpp \
+    nums/AdaptiveRungeKuttaSolver.cpp
 #    objects/part.cpp \
 #    objects/wing.cpp \
 #    objects/airplane.cpp
@@ -62,7 +65,6 @@ HEADERS  += window.h \
     nums/AbstractOdeSolver.hpp \
     nums/ForwardEulerSolver.hpp \
     nums/RungeKuttaSolver.hpp \
-    nums/simulator.h \
     common/output.h \
     carsimulation.h \
     orbitalsimulation.h \
@@ -74,6 +76,11 @@ HEADERS  += window.h \
     objects/sbody.h \
     objects/mesh.h \
     objects/terrain.h \
+    restricted3bodysimulation.h \
+    twobodysimulation.h \
+    nums/TwoBodySolver.h \
+    nums/Restricted3BodySolver.h \
+    nums/AdaptiveRungeKuttaSolver.h
 #    objects/airplane.h \
 #    objects/part.h \
 #    objects/wing.h
@@ -111,13 +118,17 @@ win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../Applications/a
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../Applications/anaconda/lib/debug/ -lpython3.5m
 else:unix: LIBS += -L$$PWD/../../../../Applications/anaconda/lib/ -lpython3.5m
 
+LIBS += -L$$PWD/../../../../Applications/anaconda/lib/ -lpython3.5m
 INCLUDEPATH += $$PWD/../../../../Applications/anaconda/include/python3.5m
-
+DEPENDPATH += $$PWD/../../../../Applications/anaconda/include/python3.5m
 
 #INCLUDEPATH += /usr/local/Cellar/boost/1.60.0_2/include/
 #LIBS += -L/usr/local/Cellar/boost/1.60.0_2/lib/ -lboost_filesystem -lboost_system
 
-DEPENDPATH += $$PWD/../../../../Applications/anaconda/include/python3.5m
 CONFIG += no_keywords
 
 QMAKE_MAC_SDK = macosx10.12
+
+#CONFIG += qwt
+#INCLUDEPATH +="/usr/local/qwt-6.1.3/include"
+#LIBS += -L/usr/local/qwt-6.1.3/lib -lqwt

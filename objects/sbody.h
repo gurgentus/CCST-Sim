@@ -7,7 +7,7 @@
 #include <common/textures.h>
 #include <common/control.h>
 #include <common/transform3d.h>
-#include <nums/simulator.h>
+#include <nums/TwoBodySolver.h>
 #include <common/output.h>
 
 class QOpenGLWidget;
@@ -32,8 +32,10 @@ public:
 
 
     // set/get methods
-    Simulator *p_simulator() const;
-    void setP_simulator(Simulator *p_simulator);
+    AbstractOdeSolver *p_simulator() const;
+    void setP_simulator(AbstractOdeSolver *p_simulator);
+
+    QVBoxLayout* output_layout_;
 
 protected:
     // convenience method that resets orientation before applying rotations
@@ -45,11 +47,11 @@ protected:
     // pointers to controls and the drawing area for this object
     Control* sizeControl;
     QVBoxLayout* control_layout_;
-    QVBoxLayout* output_layout_;
+
     QOpenGLWidget* drawingWidget;
 
     // pointer to simulator if needed
-    Simulator* p_simulator_;
+    AbstractOdeSolver* p_simulator_;
 };
 
 

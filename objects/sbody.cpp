@@ -54,12 +54,12 @@ void SBody::ResetOrientation()
 
 }
 
-Simulator *SBody::p_simulator() const
+AbstractOdeSolver *SBody::p_simulator() const
 {
     return p_simulator_;
 }
 
-void SBody::setP_simulator(Simulator *p_simulator)
+void SBody::setP_simulator(AbstractOdeSolver *p_simulator)
 {
     p_simulator_ = p_simulator;
 }

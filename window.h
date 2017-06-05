@@ -10,6 +10,8 @@
 
 #include <carsimulation.h>
 #include <orbitalsimulation.h>
+#include <restricted3bodysimulation.h>
+#include <twobodysimulation.h>
 
 namespace Ui {
 class Window;
@@ -33,7 +35,9 @@ private:
     double simTime = 0;
 
     CarSimulation simulation;
-    OrbitalSimulation orbital_simulation;
+    TwoBodySimulation orbital_simulation;
+    Restricted3BodySimulation restricted_3body;
+
     Simulation* current_simulation;
     QPushButton* m_button;
     QPushButton* m_button1;
