@@ -5,25 +5,13 @@
 #include <cmath>
 #include "myopenglwidget.h"
 #include <string>
-//#include <Python.h>
-
-
-//void Control::addToLayout(SBody* body)
-//{
-
-//    //m_slider = new QSlider(Qt::Horizontal);
-//    //m_slider->setRange(0,10);
-//    //m_slider->setValue(1);
-//    //QObject::connect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(setValue(float)));
-//    //m_slider->connect(this, SIGNAL(valueChanged()), m_slider, SLOT(setValue(int)));
-//    //layout->addWidget(this);
-//}
 
 Control::~Control()
 {
-    //delete timer;
 }
 
+// Called on value changed of the slider and updates the simulated object
+// and the label text
 void Control::setFValue(int value)
 {           
     old_value = m_value;
@@ -33,7 +21,8 @@ void Control::setFValue(int value)
 
 }
 
-//void Control::valueChanged()
-//{
-
-//}
+// Returns the current value of the control
+double Control::value()
+{
+    return m_value;
+}

@@ -1,8 +1,8 @@
 #ifndef TWOBODYSIMULATION_H
 #define TWOBODYSIMULATION_H
 
+#include "orbitalsimulation.h"
 #include <objects/planet.h>
-#include <orbitalsimulation.h>
 
 class TwoBodySimulation : public OrbitalSimulation
 {

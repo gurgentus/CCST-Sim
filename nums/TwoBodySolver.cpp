@@ -13,9 +13,6 @@ const double G = 6.67259e-20;
 const double m1 = 5.974e24;
 const double m2 = 7.348e22;
 
-//const int n = 20000;
-const double t0 = 0;
-const double tf = 480;
 const double h = 10;// (tf-t0)/n;
 
 const double r = 384400;

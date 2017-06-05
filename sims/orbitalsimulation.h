@@ -1,7 +1,7 @@
 #ifndef ORBITALSIMULATION_H
 #define ORBITALSIMULATION_H
 
-#include <common/simulation.h>
+#include "simulation.h"
 #include <common/textures.h>
 #include <objects/planet.h>
 #include <nums/TwoBodySolver.h>
@@ -32,8 +32,8 @@ public:
 
     // simulation logic
     void UpdateState(double dt);
-    void start_simulation1();
-    void start_simulation2();
+    void StartSimulation1();
+    void StartSimulation2();
 
 protected Q_SLOTS:
     void update();

@@ -8,10 +8,10 @@
 #include <QVBoxLayout>
 #include <common/textures.h>
 
-#include <carsimulation.h>
-#include <orbitalsimulation.h>
-#include <restricted3bodysimulation.h>
-#include <twobodysimulation.h>
+#include <sims/carsimulation.h>
+#include <sims/orbitalsimulation.h>
+#include <sims/restricted3bodysimulation.h>
+#include <sims/twobodysimulation.h>
 
 namespace Ui {
 class Window;

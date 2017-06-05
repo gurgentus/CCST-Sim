@@ -101,7 +101,7 @@ void Planet::UpdateControls()
 {
     if (speedControl != nullptr)
     {
-        sim_speed_ = (double)speedControl->m_value;
+        sim_speed_ = (double)speedControl->value();
     }
 }
 

@@ -1,8 +1,7 @@
 #include "carsimulation.h"
 
 CarSimulation::CarSimulation()
-    : terrain_(32, 2)
-, Simulation()
+    : Simulation(), terrain_(32, 2)
 {
     terrain_.SetShaderProgram(&shader);
     terrain_.setRoad(&road_);
@@ -16,7 +15,7 @@ void CarSimulation::InitializeObjects(QVBoxLayout *info_layout)
 {
     instructions->setText("Press A to steer left; Press D to steer right.");
     info_layout->addWidget(instructions);
-    InitializeObjects(info_layout, info_layout, &shader, &textures_, &terrain_, &road_, &car_, &lead_car_);
+    InitializeObjects(info_layout, info_layout, &shader, &textures_);
 }
 
 void CarSimulation::UpdateState(double dt)
@@ -40,19 +39,19 @@ void CarSimulation::UpdateState(double dt)
                                                                -car_.y()+0.5*sin(car_.xi())));
 }
 
-void CarSimulation::start_simulation1()
+void CarSimulation::StartSimulation1()
 {
     lead_car_.InitializeState();
     car_.InitializeState();
 }
-void CarSimulation::start_simulation2()
+void CarSimulation::StartSimulation2()
 {
     lead_car_.InitializeState();
     car_.InitializeState();
 }
 
 void CarSimulation::InitializeObjects(QVBoxLayout *layout, QVBoxLayout *output_layout, QOpenGLShaderProgram* shader,
-                                       Textures* textures, Terrain* terrain, Road *road, AdaptiveCar* car, Car* leadCar)
+                                       Textures* textures)
 {
     car_.SetControlOutputPanel(layout, output_layout, this);
     car_.InitializeControls();

@@ -67,7 +67,7 @@ void Window::handleButton1()
     else
     {
         current_simulation->currentSim = 1;
-        current_simulation->start_simulation1();
+        current_simulation->StartSimulation1();
         timer->start(100);
         m_button1->setText("Stop Simulation 1");
         std::cout << "starting simulation" << std::endl;
@@ -84,7 +84,7 @@ void Window::handleButton2()
     else
     {
         current_simulation->currentSim = 2;
-        current_simulation->start_simulation2();
+        current_simulation->StartSimulation2();
         timer->start(100);
         m_button2->setText("Stop Simulation 2");
         std::cout << "starting simulation" << std::endl;

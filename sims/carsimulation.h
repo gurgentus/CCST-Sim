@@ -1,7 +1,7 @@
 #ifndef CARSIMULATION_H
 #define CARSIMULATION_H
 
-#include <common/simulation.h>
+#include "simulation.h"
 
 #include <objects/terrain.h>
 #include <objects/road.h>
@@ -22,7 +22,7 @@ public:
 
     using Simulation::InitializeObjects;
     void InitializeObjects(QVBoxLayout *layout, QVBoxLayout *control_layout, QOpenGLShaderProgram* shader,
-                           Textures *textures_, Terrain* terrain, Road* road, AdaptiveCar *car, Car *leadCar);
+                           Textures *textures_);
     void InitializeObjects(QVBoxLayout* info_layout);
 
     // OpenGL functions
@@ -30,8 +30,8 @@ public:
     void paintGL();
 
     // Simulation logic functions
-    void start_simulation1();
-    void start_simulation2();
+    void StartSimulation1();
+    void StartSimulation2();
     void UpdateState(double dt);
 
 protected Q_SLOTS:

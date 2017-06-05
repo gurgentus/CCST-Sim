@@ -9,7 +9,6 @@
 #include "vertex.h"
 #include "input.h"
 #include "myopenglwidget.h"
-#include "nums/simulator.h"
 #include <window.h>
 
 #include <iostream>

@@ -30,7 +30,7 @@ void Car::UpdateControls()
 {
     if (speedControl != nullptr)
     {
-        UpdateSpeed(0.1*(double)speedControl->m_value);
+        UpdateSpeed(0.1*(double)speedControl->value());
     }
 }
 

@@ -3,6 +3,7 @@
 
 #include "transform3d.h"
 
+// OpenGL Camera Manager
 // Source: http://www.trentreed.net/blog/qt5-opengl-part-3b-camera-control/
 class Camera3D
 {

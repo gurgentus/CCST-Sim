@@ -1,8 +1,8 @@
 #ifndef RESTRICTED3BODYSIMULATION_H
 #define RESTRICTED3BODYSIMULATION_H
 
+#include "orbitalsimulation.h"
 #include <objects/planet.h>
-#include <orbitalsimulation.h>
 #include <nums/Restricted3BodySolver.h>
 
 class Restricted3BodySimulation : public OrbitalSimulation

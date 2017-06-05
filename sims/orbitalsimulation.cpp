@@ -30,7 +30,7 @@ void OrbitalSimulation::InitializeObjects(QVBoxLayout* info_layout)
 void OrbitalSimulation::InitializeObjects(QVBoxLayout *layout, QVBoxLayout *output_layout, QOpenGLShaderProgram* shader,
                                        Textures* textures)
 {
-    for (int i=0; i< planets.size(); i++)
+    for (unsigned long i=0; i< planets.size(); i++)
     {
         planets[i]->SetControlOutputPanel(layout, output_layout, this);
     }
@@ -41,7 +41,7 @@ void OrbitalSimulation::InitializeObjects(QVBoxLayout *layout, QVBoxLayout *outp
 void OrbitalSimulation::UpdateState(double dt)
 {
 
-    for (int i=0; i< planets.size(); i++)
+    for (unsigned long  i=0; i< planets.size(); i++)
     {
         if (planets[i]->p_simulator() != nullptr)
         {
@@ -97,15 +97,15 @@ void OrbitalSimulation::setZRotation(int angle)
 //    }
 }
 
-void OrbitalSimulation::start_simulation1()
+void OrbitalSimulation::StartSimulation1()
 {
-    for (int i=0; i< planets.size(); i++)
+    for (unsigned long i=0; i< planets.size(); i++)
     {
         planets[i]->InitializeState();
         planets[i]->p_simulator()->InitialConditions();
     }
 }
-void OrbitalSimulation::start_simulation2()
+void OrbitalSimulation::StartSimulation2()
 {
 }
 
@@ -133,7 +133,7 @@ void OrbitalSimulation::initializeGL()
     //glEnable(GL_DEPTH_TEST | GL_CULL_FACE);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-    for (int i=0; i < planets.size(); i++)
+    for (unsigned long i=0; i < planets.size(); i++)
     {
         if (i==1)
         {
@@ -182,7 +182,7 @@ void OrbitalSimulation::paintGL()
     p_program_->setUniformValue("car", CAR_TEXTURE);
     p_program_->setUniformValue("car2", MOON_TEXTURE);
 
-    for (int i=0; i< planets.size(); i++)
+    for (unsigned long i=0; i< planets.size(); i++)
     {
         planets[i]->SetModels();
         planets[i]->Draw();

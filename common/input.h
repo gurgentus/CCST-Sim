@@ -4,6 +4,7 @@
 #include <Qt>
 #include <QPoint>
 
+// Keyboard Input Manager
 // Source: http://www.trentreed.net/blog/qt5-opengl-part-3b-camera-control/
 class Input
 {
