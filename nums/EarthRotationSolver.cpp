@@ -9,7 +9,7 @@ void EarthRotationSolver::InitialConditions()
 void EarthRotationSolver::UpdateState(double dt)
 {
     t_ = t_ + dt;
-    rot = (-2*M_PI*dt)/(24*3600);
+    rot = 2*M_PI*dt/86164;
 }
 void EarthRotationSolver::SolveEquation(std::vector<double> yi) {
 
