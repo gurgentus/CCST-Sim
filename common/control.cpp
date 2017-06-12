@@ -4,6 +4,7 @@
 #include <QTimer>
 #include <cmath>
 #include "myopenglwidget.h"
+#include "sims/simulation.h"
 #include <string>
 
 Control::~Control()
@@ -16,7 +17,7 @@ void Control::setFValue(int value)
 {           
     old_value = m_value;
     m_value = value*scale_;
-    sbody_->UpdateControls();
+    p_controllable_->UpdateControls();
     value_label->setText(QString::number(value*scale_));
 
 }

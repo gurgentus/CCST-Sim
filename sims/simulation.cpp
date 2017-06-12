@@ -7,6 +7,7 @@ Simulation::Simulation()
     setFocusPolicy( Qt::StrongFocus );
 }
 
+
 void Simulation::InitializeObjects(QOpenGLShaderProgram* shader, Textures* textures)
 {
     MainViewWidget::InitializeObjects(shader, textures);
@@ -27,5 +28,21 @@ void Simulation::paintGL()
 void Simulation::update()
 {
     MainViewWidget::update();
+}
+
+void Simulation::SetControlOutputPanel(QVBoxLayout* control_layout, QVBoxLayout *output_layout)
+{
+   control_layout_ = control_layout;
+   output_layout_ = output_layout;
+}
+
+double Simulation::getSim_speed() const
+{
+    return sim_speed_;
+}
+
+void Simulation::setSim_speed(double value)
+{
+    sim_speed_ = value;
 }
 

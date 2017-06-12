@@ -54,6 +54,16 @@ void SBody::ResetOrientation()
 
 }
 
+double SBody::getSpatial_scale() const
+{
+    return spatial_scale;
+}
+
+void SBody::setSpatial_scale(double value)
+{
+    spatial_scale = value;
+}
+
 AbstractOdeSolver *SBody::p_simulator() const
 {
     return p_simulator_;

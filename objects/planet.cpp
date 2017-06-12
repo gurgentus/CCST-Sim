@@ -10,6 +10,10 @@ void Planet::SetPositionFunction( QVector3D (AbstractOdeSolver::*fun)()  )
 {
     pos = fun;
 }
+void Planet::SetRotationFunction( double (AbstractOdeSolver::*fun)()  )
+{
+    rot = fun;
+}
 
 void Planet::InitializeState()
 {
@@ -22,7 +26,6 @@ void Planet::InitializeState()
     y_ = 0;
     z_ = 0;
 
-    sim_speed_ = 1;
 }
 
 void Planet::ResetOrientation()
@@ -47,7 +50,7 @@ bool Planet::SetupDefaultMesh(QVector4D texSignature)
     {
         // V texture coordinate.
         float V = i / (float)stacks;
-        float phi = V * pi;
+        float phi = pi - V * pi;
 
         for ( int j = 0; j <= slices; ++j )
         {
@@ -81,39 +84,25 @@ bool Planet::SetupDefaultMesh(QVector4D texSignature)
     return true;
 }
 
-void Planet::InitializeControls()
-{
-    speedControl = new Control(control_layout_, drawingWidget, this, 1, 100000, 1, 10, "Simulation Speed: ", "");
-}
-
 void Planet::InitializeOutputs()
 {
     x_position_output_ = new Output(output_layout_, 0, 1, "Relative X Position: ", "km");
     y_position_output_ = new Output(output_layout_, 0, 1, "Relative Y Position: ", "km");
     z_position_output_ = new Output(output_layout_, 0, 1, "Relative Z Position: ", "km");
     r_output_ = new Output(output_layout_, 0, 1, "Distance to the origin: ", "km");
-    e_output_ = new Output(output_layout_, 0, 1, "Eccentricity", "");
+    // e_output_ = new Output(output_layout_, 0, 1, "Eccentricity", "");
     t_output_ = new Output(output_layout_, 0, 1, "Time", "days");
 
 }
 
-void Planet::UpdateControls()
-{
-    if (speedControl != nullptr)
-    {
-        sim_speed_ = (double)speedControl->value();
-    }
-}
-
-
 double Planet::r() const
 {
-    return r_;
+    return r_*spatial_scale;
 }
 
 void Planet::setR(double r)
 {
-    r_ = r;
+    r_ = r/spatial_scale;
 }
 
 void Planet::setPosition(QVector3D pos)
@@ -125,18 +114,29 @@ void Planet::setPosition(QVector3D pos)
 
 void Planet::UpdateState(double dt)
 {
-    double scale = 10000;
+    if (p_simulator_ != nullptr) {
+        p_simulator_->UpdateState(dt);
 
-    p_simulator_->UpdateState(sim_speed_*dt);
-    setPosition((p_simulator_->*pos)());
+        if (pos != nullptr) {
+            setPosition((p_simulator_->*pos)());
+        }
+
+        ResetOrientation();
+
+        if (rot != nullptr) {
+            rotate((p_simulator_->*rot)()*180/M_PI, 0.0f, 1.0f, 0.0f);
+        }
+
+        setTranslation(x_/spatial_scale, y_/spatial_scale, z_/spatial_scale);
+        local_to_world_matrix_ = toMatrix();
+        UpdateOutputs();
+    }
+
     //QVector3D vel = p_simulator_->velocity();
     //u_ = vel.x();
     //v_ = vel.y();
     //w_ = vel.z();
-    ResetOrientation();
-    setTranslation(x_/scale, y_/scale, z_/scale);
-    local_to_world_matrix_ = toMatrix();
-    UpdateOutputs();
+
 }
 
 void Planet::UpdateOutputs()
@@ -156,11 +156,6 @@ void Planet::UpdateOutputs()
     if (r_output_ != nullptr)
     {
         r_output_->setText(QString::number(sqrt(x_*x_+y_*y_+z_*z_)));
-    }
-    if (e_output_ != nullptr)
-    {
-        //double e = p_simulator_->eccentricity();
-        //e_output_->setText(QString::number(e));
     }
     if (t_output_ != nullptr)
     {

@@ -9,10 +9,11 @@
 #include <common/transform3d.h>
 #include <nums/TwoBodySolver.h>
 #include <common/output.h>
+#include "objects/controllable.h"
 
 class QOpenGLWidget;
 
-class SBody: public Transform3D
+class SBody: public Transform3D, public Controllable
 {
     friend class Wing;
 public:
@@ -30,16 +31,19 @@ public:
     // gets called on changes to the control
     virtual void UpdateControls();
 
-
     // set/get methods
     AbstractOdeSolver *p_simulator() const;
     void setP_simulator(AbstractOdeSolver *p_simulator);
-
-    QVBoxLayout* output_layout_;
+    double getSpatial_scale() const;
+    void setSpatial_scale(double value);
 
 protected:
     // convenience method that resets orientation before applying rotations
     virtual void ResetOrientation();
+
+    // scaling factor for drawing the object
+    double spatial_scale;
+    // simulation speed
 
     // size of the object
     float size;
@@ -47,6 +51,7 @@ protected:
     // pointers to controls and the drawing area for this object
     Control* sizeControl;
     QVBoxLayout* control_layout_;
+    QVBoxLayout* output_layout_;
 
     QOpenGLWidget* drawingWidget;
 

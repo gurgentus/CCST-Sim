@@ -57,8 +57,11 @@ class Mesh {
         void Draw();
         void Cleanup();
 
-    protected:
+        string getMesh_file() const;
+        void setMesh_file(const string &value);
 
+protected:
+        string mesh_file = "";
         QOpenGLShaderProgram* p_program_;
         QOpenGLVertexArrayObject vao_;
         int model_to_world_;

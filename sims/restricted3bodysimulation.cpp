@@ -9,14 +9,20 @@ using namespace QtCharts;
 
 void Restricted3BodySimulation::InitializeSimulation()
 {
+    double spatial_scale = 10000;
+
     sat_.setP_simulator(&simulator);
-    sat_.setR(0.1);
+    sat_.setSpatial_scale(spatial_scale);
+    sat_.setR(1000);
+    sat_.setMesh_file(":/Data/Objects/nasa.obj");
 
-    earth_.setR(0.5378);
     earth_.setP_simulator(&simulator);
+    earth_.setSpatial_scale(spatial_scale);
+    earth_.setR(5378);
 
-    moon_.setR(0.6378*0.3);
     moon_.setP_simulator(&simulator);
+    moon_.setSpatial_scale(spatial_scale);
+    moon_.setR(6378*0.3);
 
     sat_.SetPositionFunction(static_cast<QVector3D (AbstractOdeSolver::*)()>(&Restricted3BodySolver::position));
     earth_.SetPositionFunction(static_cast<QVector3D (AbstractOdeSolver::*)()>(&Restricted3BodySolver::body1pos));
@@ -32,6 +38,8 @@ void Restricted3BodySimulation::InitializeGUI()
     sat_.InitializeOutputs();
     sat_.InitializeControls();
     PlotSimulation();
+
+    camera_.translate(0,0,2);
 }
 
 void Restricted3BodySimulation::PlotSimulation()
@@ -67,5 +75,5 @@ void Restricted3BodySimulation::PlotSimulation()
 
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
-    planets[2]->output_layout_->addWidget(chartView);
+    output_layout_->addWidget(chartView);
 }

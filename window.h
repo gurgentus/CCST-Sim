@@ -12,6 +12,7 @@
 #include <sims/orbitalsimulation.h>
 #include <sims/restricted3bodysimulation.h>
 #include <sims/twobodysimulation.h>
+#include <sims/satellitegroundtrackingsimulation.h>
 
 namespace Ui {
 class Window;
@@ -37,6 +38,7 @@ private:
     CarSimulation simulation;
     TwoBodySimulation orbital_simulation;
     Restricted3BodySimulation restricted_3body;
+    SatelliteGroundTrackingSimulation sat_simulation;
 
     Simulation* current_simulation;
     QPushButton* m_button;

@@ -11,7 +11,7 @@
  * using a slider so the class is  inhertied from QSlider class
  */
 
-class SBody;
+class Controllable;
 
 class Control : public QSlider
 {
@@ -22,13 +22,13 @@ public:
      * min and max slider values, scale to go from slider values to the actual units of the control variable,
      * default value of the slider, label for the control variable and label for the units
      */
-    Control(QVBoxLayout *layout = NULL, QOpenGLWidget *drawing_widget = NULL, SBody* sbody = NULL,
+    Control(QVBoxLayout *layout = NULL, QOpenGLWidget *drawing_widget = NULL, Controllable* controllable = NULL,
             double min = 0, double max = 100, double scale = 1, double default_value = 0, QString label = "", QString units = "")
     : QSlider(Qt::Horizontal, layout->parentWidget())
     {
        scale_ = scale;
        setRange(min, max);
-       sbody_ = sbody;
+       p_controllable_ = controllable;
        setValue(default_value);
 
        // Add the control to the control panel
@@ -71,7 +71,7 @@ private:
     // Pointer to the simulation window for drawing control effects
     QOpenGLWidget* drawing_widget_;
     // Pointer to the simulated object
-    SBody* sbody_;
+    Controllable* p_controllable_;
 };
 
 #endif // CONTROL_H

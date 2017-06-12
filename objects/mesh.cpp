@@ -189,3 +189,13 @@ void Mesh::Cleanup()
 {
     vao_.destroy();
 }
+
+string Mesh::getMesh_file() const
+{
+    return mesh_file;
+}
+
+void Mesh::setMesh_file(const string &value)
+{
+    mesh_file = value;
+}

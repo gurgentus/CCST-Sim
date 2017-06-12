@@ -23,5 +23,6 @@
         <file>Data/Textures/earthmap1k.jpg</file>
         <file>Data/Textures/earth_low.jpg</file>
         <file>Data/Textures/moon.jpg</file>
+        <file>Data/Objects/cubesat.obj</file>
     </qresource>
 </RCC>

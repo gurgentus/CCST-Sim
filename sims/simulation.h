@@ -23,12 +23,18 @@ public:
     // Instructions label
     QLabel* instructions = new QLabel("Change text to include instructions");
 
+    // Pointer to the control and output panels
+    QVBoxLayout* control_layout_;
+    QVBoxLayout* output_layout_;
+
     // By default the GUI provides buttons for running two versions of the simulation
     // This specifies which version is currently being run
     int currentSim = 0;
 
     // Simulation speed control
-    Control* speedControl;
+    Control* speedControl_;
+
+    void SetControlOutputPanel(QVBoxLayout* control_layout, QVBoxLayout* output_layout);
 
     // Constants used in simulations
     constexpr static const float pi = 3.1415926535897932384626433832795f;
@@ -41,6 +47,9 @@ public:
     virtual void StartSimulation1() = 0;
     virtual void StartSimulation2() = 0;
 
+    double getSim_speed() const;
+    void setSim_speed(double value);
+
     // Standard OpenGL methods
     void initializeGL();
     void paintGL();
@@ -48,6 +57,8 @@ public:
 protected Q_SLOTS:
     // Standard OpenGL methods
     void update();
+    double sim_speed_ = 1;
+
 };
 
 #endif // SIMULATION_H

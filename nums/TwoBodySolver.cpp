@@ -9,23 +9,42 @@
 
 #include <Python.h>
 
-const double G = 6.67259e-20;
-const double m1 = 5.974e24;
-const double m2 = 7.348e22;
 
 const double h = 10;// (tf-t0)/n;
-
-const double r = 384400;
-const double mu = G*(m1+m2);
-//const double v = sqrt(mu/r);
-
-const double e = 0.0549;
-const double mom = sqrt(r*mu*(1+e));
-const double v = mom/r;
+const double G = 6.67259e-20;
+const double m1 = 5.974e24;
+const double m2 = 0; //7.348e22;
 
 using namespace std;
 
 void TwoBodySolver::InitialConditions()
+{
+
+
+//    const double mu = G*(m1+m2);
+//    const double r = 384400;
+//    const double e = 0.0549;
+//    const double mom = sqrt(r*mu*(1+e));
+//    const double v = mom/r;
+    // const double v = sqrt(mu/r);
+    omt.orbit_desc_apog(6700, 10000, 60*M_PI/180, 270*M_PI/180, 45*M_PI/180, 398600);
+    Eigen::Vector3f r, v;
+    double theta = 230*M_PI/180;
+    r << cos(theta), sin(theta), 0;
+    r = ((omt.h*omt.h)/(omt.mu*(1+omt.e*cos(theta))))*r;
+    v << -sin(theta), omt.e+cos(theta), 0;
+    v = (omt.mu/omt.h)*v;
+
+    Eigen::Vector3f Rx, Vx;
+    // position in geocentric equatorial frame
+    omt.change_coords(Rx, r);
+    omt.change_coords(Vx, v);
+
+    // Moon orbit
+    InitialConditions(Rx, Vx);
+}
+
+void TwoBodySolver::InitialConditions(Eigen::Vector3f r, Eigen::Vector3f v)
 {
     RungeKuttaSolver::SetStateDimension(12);
     RungeKuttaSolver::SetStepSize(h);
@@ -36,12 +55,12 @@ void TwoBodySolver::InitialConditions()
     state[6] = 0;
     state[7] = 0;
     state[8] = 0;
-    state[3] = r;
-    state[4] = 0;
-    state[5] = 0;
-    state[9] = 0;
-    state[10] = v;
-    state[11] = 0;
+    state[3] = r(0);
+    state[4] = r(1);
+    state[5] = r(2);
+    state[9] = v(0);
+    state[10] = v(1);
+    state[11] = v(2);
 
     SetInitialValue(state);
     SetTimeInterval(0, 400);
@@ -91,7 +110,7 @@ QVector3D TwoBodySolver::position()
     YG = state[4] - state[1]; //(m1*state[1][i] + m2*state[4][i])/(m1+m2);
     ZG = state[5] - state[2]; // (m1*state[2][i] + m2*state[5][i])/(m1+m2);
 
-    return QVector3D(XG, YG, ZG);
+    return QVector3D(XG, ZG, -YG);
 }
 
 QVector3D TwoBodySolver::velocity()
@@ -104,19 +123,17 @@ QVector3D TwoBodySolver::velocity()
     V = state[10] - state[7];
     W = state[11] - state[8];
 
-    return QVector3D(U, V, W);
+    return QVector3D(U, W, -V);
 }
 
 double TwoBodySolver::eccentricity()
 {
-    QVector3D pos = position();
-    QVector3D vel = velocity();
-    QVector3D h_vec = QVector3D::crossProduct(pos,vel);
-
-    //double h = h_vec.length();
-    QVector3D C = QVector3D::crossProduct(vel,h_vec) - mu*pos/pos.length();
-    double e = C.length()/mu;
-    return e;
+//    QVector3D pos = position();
+//    QVector3D vel = velocity();
+//    QVector3D h_vec = QVector3D::crossProduct(pos,vel);
+//    QVector3D C = QVector3D::crossProduct(vel,h_vec) - mu*pos/pos.length();
+//    double e = C.length()/mu;
+    return omt.e;
 }
 
 //void TwoBodySolver::Simulate()

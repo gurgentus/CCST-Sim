@@ -4,6 +4,7 @@
 #include <QtOpenGL>
 #include <iostream>
 #include <window.h>
+#include <orbital/omt.h>
 
 //#include <qwt_plot.h>
 //#include <qwt_plot_curve.h>
@@ -84,6 +85,18 @@ int main(int argc, char *argv[])
 //      plot.resize( 600, 400 );
 //      plot.show();
 
+    //Omt omt;
+//    QVector3D r(-5368, -1784, 3691);
+
+//    double x, y;
+//    std::tie(x,y) =  Omt::right_ascension_and_declination(r);
+//    std::cout << x*180/3.14 << ", " << y*180/3.14 << std::endl;
+
+//    QVector3D x = QVector3D(1600, 5310, 3800);
+//    QVector3D v = QVector3D(-7.350, 0.46, 2.47);
+//    Omt::state_transition(x, v, 3200, 398600);
+
+    // std::cout << x.x() << ", " << x.y() << ", " << x.z() << ", " << v.x() << ", " << v.y() << ", " << v.z() << std::endl;
 
     return app.exec();
 }

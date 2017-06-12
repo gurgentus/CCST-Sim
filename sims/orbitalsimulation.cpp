@@ -13,7 +13,7 @@ void OrbitalSimulation::AddPlanet(Planet& planet)
 
 void OrbitalSimulation::InitializeObjects(QVBoxLayout* info_layout)
 {
-    instructions->setText("Move slider to change simulation speed");
+    instructions->setText("Move the slider to change the simulation speed. \nRight-click with the mouse and use the keyboard keys \nto move around and zoom in/out.");
     info_layout->addWidget(instructions);
     InitializeObjects(info_layout, info_layout, &shader, &textures_);
     //simulator.simulate();
@@ -27,9 +27,10 @@ void OrbitalSimulation::InitializeObjects(QVBoxLayout* info_layout)
     }
 }
 
-void OrbitalSimulation::InitializeObjects(QVBoxLayout *layout, QVBoxLayout *output_layout, QOpenGLShaderProgram* shader,
+void OrbitalSimulation::InitializeObjects(QVBoxLayout *layout, QVBoxLayout* output_layout, QOpenGLShaderProgram* shader,
                                        Textures* textures)
 {
+    SetControlOutputPanel(layout, output_layout);
     for (unsigned long i=0; i< planets.size(); i++)
     {
         planets[i]->SetControlOutputPanel(layout, output_layout, this);
@@ -40,12 +41,11 @@ void OrbitalSimulation::InitializeObjects(QVBoxLayout *layout, QVBoxLayout *outp
 
 void OrbitalSimulation::UpdateState(double dt)
 {
-
     for (unsigned long  i=0; i< planets.size(); i++)
     {
         if (planets[i]->p_simulator() != nullptr)
         {
-             planets[i]->UpdateState(dt);
+             planets[i]->UpdateState(sim_speed_*dt);
         }
     }
 
@@ -102,7 +102,9 @@ void OrbitalSimulation::StartSimulation1()
     for (unsigned long i=0; i< planets.size(); i++)
     {
         planets[i]->InitializeState();
-        planets[i]->p_simulator()->InitialConditions();
+        if (planets[i]->p_simulator() != nullptr) {
+            planets[i]->p_simulator()->InitialConditions();
+        }
     }
 }
 void OrbitalSimulation::StartSimulation2()
@@ -135,20 +137,21 @@ void OrbitalSimulation::initializeGL()
 
     for (unsigned long i=0; i < planets.size(); i++)
     {
-        if (i==1)
+        if (planets[i]->getMesh_file() != "")
         {
-            if ( !planets[1]->SetupDefaultMesh(QVector4D( 0.0f, 0.0f, 1.0f, 1.0f )) )
-            {
-                std::cerr << "Failed to load the earth!" << std::endl;
-            }
+            if ( !planets[i]->LoadMesh(planets[i]->getMesh_file(), QVector4D( 0.0f, 1.0f, 1.0f, 1.0f  )) )
+             {
+
+                 std::cerr << "Failed to load the satellite model!" << std::endl;
+             }
         }
         else
         {
-            if (i==2)
+            if (i==1)
             {
-                if ( !planets[i]->LoadMesh(":/Data/Objects/nasa.obj", QVector4D( 0.0f, 1.0f, 0.0f, 1.0f  )) )
+                if ( !planets[1]->SetupDefaultMesh(QVector4D( 0.0f, 0.0f, 1.0f, 1.0f )) )
                 {
-                    std::cerr << "Failed to load the car!" << std::endl;
+                    std::cerr << "Failed to load the earth model!" << std::endl;
                 }
             }
             else
@@ -156,7 +159,7 @@ void OrbitalSimulation::initializeGL()
                 if ( !planets[i]->SetupDefaultMesh(QVector4D(  1.0f, 1.0f, 1.0f, 1.0f )) )
                 {
 
-                    std::cerr << "Failed to load the earth!" << std::endl;
+                    std::cerr << "Failed to load the moon model!" << std::endl;
                 }
             }
         }

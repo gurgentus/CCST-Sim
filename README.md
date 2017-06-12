@@ -20,7 +20,7 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
 
  [GUI]: ./SolverDefinition.png "Solver"
  [Car]: ./Car.png "Car"
- [Orbit]: ./Orbit.png "Orbit"
+ [Orbit]: ./sat.png "Orbit"
  [R3B]: ./Restricted3Body.png "Restricted 3 Body"
 
 ![Car][Car]

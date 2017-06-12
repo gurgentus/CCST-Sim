@@ -15,13 +15,12 @@ public:
 
     // initialize state and control values
     void InitializeState();
-    void InitializeControls();
     void InitializeOutputs();
     // update state and output based on gui control
-    void UpdateControls();
     void UpdateOutputs();
 
     void SetPositionFunction( QVector3D (AbstractOdeSolver::*fun)()  );
+    void SetRotationFunction( double (AbstractOdeSolver::*fun)()  );
 
     double r() const;
     void setR(double r);
@@ -32,13 +31,14 @@ public:
 
     void setPosition(QVector3D pos);
     void UpdateState(double dt);
+
+    // Pointers to two functions returning respectively position and rotation of the object
+    // These can be set to any functions of the corresponding solver
     QVector3D (AbstractOdeSolver::*pos)();
+    double (AbstractOdeSolver::*rot)();
 protected:
     void ResetOrientation();
 
-    // simulation speed control
-    Control* speedControl;
-    double sim_speed_;
     double x_;
     double y_;
     double z_;
@@ -52,7 +52,6 @@ protected:
     Output* y_position_output_;
     Output* z_position_output_;
     Output* r_output_;
-    Output* e_output_; // eccentricity
     Output* t_output_;
 };
 

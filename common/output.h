@@ -31,7 +31,11 @@ public:
        output_layout->addWidget(label2, 0, 3, 1, 1);
        layout->addLayout(output_layout);
        output_layout->setColumnStretch(4,10);
+
+       this->scale = scale;
     }
+    double scale;
+    void setValue(double value);
 };
 
 #endif // OUTPUT_H

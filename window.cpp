@@ -24,9 +24,9 @@ Window::Window(QWidget *parent)
     // create menu bar
     QMenuBar* menu_bar = new QMenuBar(this);
     QAction* car_sim = new QAction("2D Car Simulation", this);
-    QAction* orbit_sim = new QAction("2 Body Problem", this);
+    QAction* orbit_sim = new QAction("Satellite Tracking", this);
     QAction* orbit_sim2 = new QAction("Restricted 3 Body Problem", this);
-
+    //QAction* orbit_sim3 = new QAction("Satellite and Ground Tracking", this);
 
     //menu_bar->setNativeMenuBar(true);
     menu = new QMenu("Simulation");
@@ -34,6 +34,7 @@ Window::Window(QWidget *parent)
     menu->addAction(car_sim);
     menu->addAction(orbit_sim);
     menu->addAction(orbit_sim2);
+    //menu->addAction(orbit_sim3);
     menu_bar->addAction(menu->menuAction());
 
     connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(setup_simulation(QAction*)));
@@ -137,7 +138,7 @@ void Window::setup_simulation(QAction *action)
     {
         current_simulation = &simulation;
     }
-    if (action->text() == "2 Body Problem")
+    if (action->text() == "Satellite Tracking")
     {
         current_simulation = &orbital_simulation;
         orbital_simulation.InitializeSimulation();
@@ -146,6 +147,11 @@ void Window::setup_simulation(QAction *action)
     {
         current_simulation = &restricted_3body;
         restricted_3body.InitializeSimulation();
+    }
+    if (action->text() == "Satellite and Ground Tracking")
+    {
+        current_simulation = &sat_simulation;
+        sat_simulation.InitializeSimulation();
     }
 
     mainLayout->addLayout(leftLayout);
@@ -159,13 +165,17 @@ void Window::setup_simulation(QAction *action)
 
     current_simulation->InitializeObjects(right_layout);
 
-    if (action->text() == "2 Body Problem")
+    if (action->text() == "Satellite Tracking")
     {
         orbital_simulation.InitializeGUI();
     }
     if (action->text() == "Restricted 3 Body Problem")
     {
         restricted_3body.InitializeGUI();
+    }
+    if (action->text() == "Satellite and Ground Tracking")
+    {
+        sat_simulation.InitializeGUI();
     }
     topLeftLayout->addWidget(current_simulation);
 
