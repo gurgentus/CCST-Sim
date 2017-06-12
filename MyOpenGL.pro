@@ -48,7 +48,10 @@ SOURCES += common/camera3D.cpp \
     sims/satellitegroundtrackingsimulation.cpp \
     orbital/omt.cpp \
     nums/EarthRotationSolver.cpp \
-    objects/controllable.cpp
+    objects/controllable.cpp \
+    kalman/FusionEKF.cpp \
+    kalman/kalman_filter.cpp \
+    kalman/tools.cpp
 
 HEADERS  += common/camera3D.h \
     common/control.h \
@@ -520,7 +523,12 @@ HEADERS  += common/camera3D.h \
     Eigen/SVD \
     Eigen/UmfPackSupport \
     nums/EarthRotationSolver.h \
-    objects/controllable.h
+    objects/controllable.h \
+    kalman/FusionEKF.h \
+    kalman/ground_truth_package.h \
+    kalman/kalman_filter.h \
+    kalman/measurement_package.h \
+    kalman/tools.h
 
 FORMS    += window.ui
 
