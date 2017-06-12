@@ -9,7 +9,7 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
  - [X] Basic modular OOP framework setup with OpenGL wrappers for 3D graphics
  - [X] Basic car module with PID control algorithm and adaptive cruise control
  - [X] More realistic car model with steering
- - [X] Toy two body and restricted three body (moon mission) orbital mechanics simulations
+ - [X] Satellite orbit determination and restricted three body (moon mission) orbital mechanics simulations
  - [ ] Controls toolbox with basic algorithms (mixed C++ and calls to Python libraries, eventually all C++ for performance improvement)
  - [ ] Testing, bug fixes
  - [ ] Optimize code design for modularity and OOP for easy extensions to other models and simulations
