@@ -23,11 +23,18 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
  [Orbit]: ./sat.png "Orbit"
  [R3B]: ./Restricted3Body.png "Restricted 3 Body"
 
-![Car][Car]
+#### Restricted 3 body problem - lunar mission
 
 ![R3B][R3B]
 
+#### Satellite Tracking
 ![Orbit][Orbit]
+
+#### Adaptive Cruise Control
+
+![Car][Car]
+
+#### Example of Solver Code
 
 ![GUI][GUI]
 
