@@ -4,6 +4,7 @@
 #include "orbitalsimulation.h"
 #include "objects/sbody.h"
 #include "nums/earthrotationsolver.h"
+#include "nums/TwoBodySolver.h"
 #include <objects/planet.h>
 #include <objects/controllable.h>
 

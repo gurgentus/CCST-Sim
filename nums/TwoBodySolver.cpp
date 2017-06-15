@@ -20,13 +20,17 @@ using namespace std;
 void TwoBodySolver::InitialConditions()
 {
 
-
 //    const double mu = G*(m1+m2);
 //    const double r = 384400;
 //    const double e = 0.0549;
 //    const double mom = sqrt(r*mu*(1+e));
 //    const double v = mom/r;
     // const double v = sqrt(mu/r);
+
+    Eigen::Vector3f Rx, Vx;
+
+    // if we want to describe the
+    /*
     omt.orbit_desc_apog(6700, 10000, 60*M_PI/180, 270*M_PI/180, 45*M_PI/180, 398600);
     Eigen::Vector3f r, v;
     double theta = 230*M_PI/180;
@@ -35,12 +39,24 @@ void TwoBodySolver::InitialConditions()
     v << -sin(theta), omt.e+cos(theta), 0;
     v = (omt.mu/omt.h)*v;
 
-    Eigen::Vector3f Rx, Vx;
     // position in geocentric equatorial frame
     omt.change_coords(Rx, r);
     omt.change_coords(Vx, v);
+    */
 
-    // Moon orbit
+    // if we want to describe the trajectory using Gibbs method
+    /*
+
+    Omt::orbit_desc(Rx, Vx, QVector3D(-294.32, 4265.1, 5986.7),
+                   QVector3D(-1365.5, 3637.6, 6346.8), QVector3D(-2940.3, 2473.7, 6555.8), 398600);
+    omt.orbit_desc(QVector3D(Rx(0), Rx(1), Rx(2)), QVector3D(Vx(0), Vx(1), Vx(2)), 398600);
+    */
+
+    // if we want to describe the trajectory using Lambert problem formulation
+    Omt::orbit_desc(Rx, Vx, QVector3D(5000, 10000, 2100), QVector3D(-14600, 2500, 7000), 3600, true, 398600);
+    omt.orbit_desc(QVector3D(Rx(0), Rx(1), Rx(2)), QVector3D(Vx(0), Vx(1), Vx(2)), 398600);
+
+    // satellite orbit
     InitialConditions(Rx, Vx);
 }
 

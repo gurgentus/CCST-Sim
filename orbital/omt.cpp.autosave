@@ -453,3 +453,9 @@ int Omt::target_rel_state(Eigen::Vector3f& r_rel, Eigen::Vector3f& v_rel, Eigen:
     a_rel = Q*a_rel;
     return 0;
 }
+
+// delta v required for plane change maneuver
+double Omt::delv(double v1, double v2, double i)
+{
+    return sqrt(v1*v1+v2*v2-2*v1*v2*cos(i));
+}

@@ -46,8 +46,12 @@ void TwoBodySimulation::InitializeGUI()
 
 void TwoBodySimulation::UpdateState(double dt)
 {
-    double longit, lat;
-    simulator.omt.sat_long_lat(longit, lat, 230*M_PI/180, sim_speed_*simulator.time());
+    double longit, lat, E, tm, theta;
+    tm = sim_speed_*simulator.time();
+    simulator.omt.e_anom_kepler(E, simulator.omt.e, tm*M_PI/simulator.omt.period);
+    theta =2*atan(sqrt((1+simulator.omt.e)/(1-simulator.omt.e))*tan(E/2));
+
+    simulator.omt.sat_long_lat(longit, lat, theta, tm);
     if (longitude_output_ != nullptr)
     {
         longitude_output_->setValue(longit);
@@ -60,15 +64,16 @@ void TwoBodySimulation::UpdateState(double dt)
 }
 void TwoBodySimulation::PlotSimulation()
 {
+    std::cout << r_rel << " " << v_rel <<  "" << a_rel << std::endl;
     //omt.orbit_desc(QVector3D(-6045, -3490, 2500), QVector3D(-3.457, 6.618, 2.533), 398600);
     //omt.orbit_desc(80000, 1.4, 30*M_PI/180, 40*M_PI/180, 60*M_PI/180, 30*M_PI/180, 398600);
     Eigen::Vector3f res;
     //omt.change_coords(res, Eigen::Vector3f(6285.0,3628.6,0));
     //std::cout << res << std::endl;
 
-    double longit, lat;
-    simulator.omt.sat_long_lat(longit, lat, 230*M_PI/180, 45*60);
-    std::cout << longit*180/M_PI << " " << lat*180/M_PI << std::endl;
+//    double longit, lat;
+//    simulator.omt.sat_long_lat(longit, lat, 230*M_PI/180, 45*60);
+//    std::cout << longit*180/M_PI << " " << lat*180/M_PI << std::endl;
     if (e_output_ != nullptr)
     {
         e_output_->setValue(simulator.omt.e);

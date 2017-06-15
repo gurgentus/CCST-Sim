@@ -5,6 +5,7 @@
 #include <common/output.h>
 #include <orbital/omt.h>
 #include "Eigen/Dense"
+#include <QtCharts>
 
 #include "RungeKuttaSolver.hpp"
 

@@ -51,7 +51,10 @@ SOURCES += common/camera3D.cpp \
     objects/controllable.cpp \
     kalman/FusionEKF.cpp \
     kalman/kalman_filter.cpp \
-    kalman/tools.cpp
+    kalman/tools.cpp \
+    #kalman/OrbitDeterminationFilter.cpp \
+    kalman/ukf.cpp
+    #nums/GroundTrackingSolver.cpp
 
 HEADERS  += common/camera3D.h \
     common/control.h \
@@ -527,8 +530,12 @@ HEADERS  += common/camera3D.h \
     kalman/FusionEKF.h \
     kalman/ground_truth_package.h \
     kalman/kalman_filter.h \
-    kalman/measurement_package.h \
-    kalman/tools.h
+    kalman/tools.h \
+    #kalman/OrbitDeterminationFilter.h \
+    kalman/ukf.h \
+    kalman/measurement_package.h
+    #kalman/OrbitMeasurementPackage.h \
+    #nums/GroundTrackingSolver.h
 
 FORMS    += window.ui
 

@@ -6,9 +6,11 @@ using Eigen::VectorXd;
 
 KalmanFilter::KalmanFilter() {
   R_[0] = MatrixXd(2, 2);
-  R_[1] = MatrixXd(3, 3);
-  H_[0] = MatrixXd(2, 4);
-  H_[1] = MatrixXd(3, 4);
+  R_[1] = MatrixXd(2, 2);
+  R_[3] = MatrixXd(2, 2);
+  H_[0] = MatrixXd(2, 18);
+  H_[1] = MatrixXd(2, 18);
+  H_[1] = MatrixXd(2, 18);
 }
 
 KalmanFilter::~KalmanFilter() {}
@@ -20,15 +22,31 @@ void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
   F_ = F_in;
   H_[0] = H_in[0];
   H_[1] = H_in[1];
+  H_[2] = H_in[2];
   R_[0] = R_in[0];
   R_[1] = R_in[1];
+  R_[2] = R_in[2];
   Q_ = Q_in;
 }
 
-void KalmanFilter::Predict() {
+void KalmanFilter::Predict(double dt) {
   /**
     * predict the state
   */
+  float dt_2 = dt * dt;
+  float dt_3 = dt_2 * dt;
+  float dt_4 = dt_3 * dt;
+
+  //Modify the F matrix so that the time is integrated
+  F_(0, 2) = dt;
+  F_(1, 3) = dt;
+
+  //set the process covariance matrix Q
+  Q_ <<  dt_4/NaxT4, 0, dt_3/NaxT2, 0,
+        0, dt_4/NayT4, 0, dt_3/NayT2,
+        dt_3/NaxT2, 0, dt_2*noise_ax, 0,
+        0, dt_3/NayT2, 0, dt_2*noise_ay;
+
   x_ = F_ * x_;
   P_ = F_ * P_ * F_.transpose() + Q_;
 }
