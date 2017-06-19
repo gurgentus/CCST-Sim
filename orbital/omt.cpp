@@ -15,7 +15,7 @@ Omt::Omt()
   declination from the position vector in the
   geocentric equatorial coordinae system.
 */
-std::pair<double, double> Omt::right_ascension_and_declination(Eigen::Vector3f& r)
+std::pair<double, double> Omt::right_ascension_and_declination(Eigen::Vector3d& r)
 {
     double norm = r.norm();
     double l = r(0)/norm;
@@ -175,28 +175,40 @@ int Omt::state_transition(QVector3D& r, QVector3D& v, const double dt, const dou
  */
 int Omt::orbit_desc(const QVector3D& r, const QVector3D& v, const double mu)
 {
+    Eigen::Vector3d r2, v2;
+    r2 << r.x(), r.y(), r.z();
+    v2 << v.x(), v.y(), v.z();
+    orbit_desc(r2, v2, mu);
+    return 0;
+}
+
+int Omt::orbit_desc(const Eigen::Vector3d& r, const Eigen::Vector3d& v, const double mu)
+{
     this->mu = mu;
-    double r_scalar = r.length();
-    double speed = v.length();
-    double v_r = QVector3D::dotProduct(r,v)/r_scalar;
-    h_vec = QVector3D::crossProduct(r,v);
-    h = h_vec.length();
+    double r_scalar = r.norm();
+    double speed = v.norm();
+    double v_r = r.dot(v)/r_scalar;
+    h_vec = r.cross(v);
+    h = h_vec.norm();
     // inclination
     i = acos(h_vec.z()/h);
     // node line
-    QVector3D N = QVector3D::crossProduct(QVector3D(0,0,1), h_vec);
-    double N_len = N.length();
+    Eigen::Vector3d un;
+    un << 0,0,1;
+    Eigen::Vector3d N;
+    N= un.cross(h_vec);
+    double N_len = N.norm();
     // right ascension of the ascending node
-    Omega = acos(N.x()/N_len);
-    if (N.y() < 0) {
+    Omega = acos(N(0)/N_len);
+    if (N(1) < 0) {
         Omega = 2*M_PI - Omega;
     }
     // eccentricity vector
     e_vec = (1/mu)*((speed*speed - mu/r_scalar)*r - r_scalar*v_r*v);
-    e = e_vec.length();
+    e = e_vec.norm();
     // argument of perigree
-    omega = acos(QVector3D::dotProduct(N/N_len,e_vec/e));
-    if (e_vec.z() < 0) {
+    omega = acos(N.dot(e_vec)/(N_len*e));
+    if (e_vec(2) < 0) {
         omega = 2*M_PI - omega;
     }
     // true anomality
@@ -215,13 +227,13 @@ int Omt::orbit_desc(const QVector3D& r, const QVector3D& v, const double mu)
 int Omt::orbit_desc(const QVector3D& r1, const QVector3D& r2, const QVector3D& r3, const double mu)
 {
     this->mu = mu;
-    Eigen::Vector3f r,v;
+    Eigen::Vector3d r,v;
     Omt::orbit_desc(r,v,r1,r2,r3,mu);
     orbit_desc(QVector3D(r(0),r(1),r(2)), QVector3D(v(0),v(1),v(2)), mu);
     return 0;
 }
 
-int Omt::orbit_desc(Eigen::Vector3f& r, Eigen::Vector3f& v, const QVector3D& r1, const QVector3D& r2, const QVector3D &r3, const double mu)
+int Omt::orbit_desc(Eigen::Vector3d& r, Eigen::Vector3d& v, const QVector3D& r1, const QVector3D& r2, const QVector3D &r3, const double mu)
 {
     double r1_norm = r1.length();
     double r2_norm = r2.length();
@@ -239,7 +251,7 @@ int Omt::orbit_desc(Eigen::Vector3f& r, Eigen::Vector3f& v, const QVector3D& r1,
     return 0;
 }
 
-int Omt::orbit_desc(Eigen::Vector3f& r, Eigen::Vector3f& v, const QVector3D& r1,
+int Omt::orbit_desc(Eigen::Vector3d& r, Eigen::Vector3d& v, const QVector3D& r1,
                     const QVector3D& r2, double dt, bool prograde, const double mu)
 {
     double r1_norm = r1.length();
@@ -353,7 +365,7 @@ int Omt::orbit_desc_apog(const double r_p, const double r_a, const double i, con
     return 0;
 }
 
-void Omt::perifocal_to_geocentric (Eigen::Matrix3f &transf) {
+void Omt::perifocal_to_geocentric (Eigen::Matrix3d &transf) {
     double sO = sin(Omega);
     double cO = cos(Omega);
     double so = sin(omega);
@@ -366,8 +378,8 @@ void Omt::perifocal_to_geocentric (Eigen::Matrix3f &transf) {
         si*so, si*co, ci;
 }
 
-void Omt::change_coords(Eigen::Vector3f &geocentric_v, const Eigen::Vector3f &perifocal_v) {
-    Eigen::Matrix3f transf;
+void Omt::change_coords(Eigen::Vector3d &geocentric_v, const Eigen::Vector3d &perifocal_v) {
+    Eigen::Matrix3d transf;
     perifocal_to_geocentric(transf);
     geocentric_v = transf*perifocal_v;
 }
@@ -398,16 +410,16 @@ int Omt::sat_long_lat(double& longitude, double& latitude, const double theta0, 
     // update orbit orientation
     Omega = Omega + Omega_prime * dt;
     omega = omega + omega_prime * dt;
-    Eigen::Vector3f r, v, rX;
+    Eigen::Vector3d r, v, rX;
     // position in perifocal frame
     r << cos(theta), sin(theta), 0;
     r = ((h*h)/(mu*(1+e*cos(theta))))*r;
 
-    Eigen::Vector3f Rx;
+    Eigen::Vector3d Rx;
     // position in geocentric equatorial frame
     change_coords(Rx, r);
 
-    Eigen::Matrix3f rot;
+    Eigen::Matrix3d rot;
     // angle between stationary and rotating x axes
     double th = 2*dt*M_PI*(1+1/365.26)/(24*3600);
     // rotation matrix between stationary and rotating equatorial frames
@@ -426,30 +438,56 @@ int Omt::sat_long_lat(double& longitude, double& latitude, const double theta0, 
  * the relative position, velocity, and acceleration of the second spacecraft
  * relative to the first along the local vertical/local horizontal frame of the first craft.
  */
-int Omt::target_rel_state(Eigen::Vector3f& r_rel, Eigen::Vector3f& v_rel, Eigen::Vector3f& a_rel,
-                          Eigen::Vector3f& r_1, Eigen::Vector3f& v_1, Eigen::Vector3f& r_2, Eigen::Vector3f& v_2, double mu)
+int Omt::target_rel_state(Eigen::Vector3d& r_rel, Eigen::Vector3d& v_rel, Eigen::Vector3d& a_rel,
+                          Eigen::Vector3d& r_1, Eigen::Vector3d& v_1, Eigen::Vector3d& r_2, Eigen::Vector3d& v_2, double mu)
 {
     double r_1norm = r_1.norm();
     double r_2norm = r_2.norm();
     double r_1normsq = r_1norm*r_1norm;
-    Eigen::Vector3f h_1 = r_1.cross(v_1);
-    Eigen::Vector3f i = r_1/r_1norm;
-    Eigen::Vector3f k = h_1/h_1.norm();
-    Eigen::Vector3f j = k.cross(i);
-    Eigen::Matrix3f Q;
+    Eigen::Vector3d h_1 = r_1.cross(v_1);
+    Eigen::Vector3d i = r_1/r_1norm;
+    Eigen::Vector3d k = h_1/h_1.norm();
+    Eigen::Vector3d j = k.cross(i);
+    Eigen::Matrix3d Q;
     Q << i(0), i(1), i(2),
          j(0), j(1), j(2),
          k(0), k(1), k(2);
 
-    Eigen::Vector3f Omega = h_1/(r_1normsq);
-    Eigen::Vector3f OmegaPrime = -2*v_1.dot(r_1)*Omega/(r_1normsq);
-    Eigen::Vector3f a_1 = -mu*r_1/(r_1normsq*r_1norm);
-    Eigen::Vector3f a_2 = -mu*r_2/(r_2norm*r_2norm*r_2norm);
+    Eigen::Vector3d Omega = h_1/(r_1normsq);
+    Eigen::Vector3d OmegaPrime = -2*v_1.dot(r_1)*Omega/(r_1normsq);
+    Eigen::Vector3d a_1 = -mu*r_1/(r_1normsq*r_1norm);
+    Eigen::Vector3d a_2 = -mu*r_2/(r_2norm*r_2norm*r_2norm);
     r_rel = r_2 - r_1;
     v_rel = v_2 - v_1 - Omega.cross(r_rel);
     a_rel = a_2 - a_1 - OmegaPrime.cross(r_rel) - Omega.cross(Omega.cross(r_rel)) - 2*Omega.cross(v_rel);
     r_rel = Q*r_rel;
     v_rel = Q*v_rel;
     a_rel = Q*a_rel;
+    return 0;
+}
+
+// delta v required for plane change maneuver
+double Omt::delv(double v1, double v2, double i)
+{
+    return sqrt(v1*v1+v2*v2-2*v1*v2*cos(i));
+}
+
+// convert from inertial to satellite fixed frames
+int Omt::oblateness_force_perturbation(Eigen::Vector3d& f, Eigen::Vector3d pos, Eigen::Vector3d vel, double J_2)
+{
+    double r_norm = pos.norm();
+    double r_normsq = r_normsq*r_normsq;
+    double theta = acos(e_vec.dot(pos)/(e,r_norm));
+    double R_e = 6378;
+    Eigen::Vector3d u_r = pos/pos.norm();
+    Eigen::Vector3d h_hat = h_vec/h_vec.norm();
+    Eigen::Vector3d u_perp = h_hat.cross(u_r);
+    double sinsq = sin(i)*sin(i);
+    double sinot = sin(omega+theta);
+    double pre = -(mu/r_normsq)*1.5*(R_e*R_e/r_normsq)*J_2;
+    double p_r = pre*(1-3*sinsq*sinot*sinot);
+    double p_perp = pre*sinsq*sin(2*(omega+theta));
+    double p_h = pre*sin(2*i)*sinot;
+    f = p_r*u_r + p_perp*u_perp + p_h*h_hat;
     return 0;
 }

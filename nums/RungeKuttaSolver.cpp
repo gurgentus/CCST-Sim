@@ -28,12 +28,29 @@ void RungeKuttaSolver::SolveEquation(std::vector<double> yi)
 void RungeKuttaSolver::UpdateState(double dt)
 {
     double total_d = 0;
-    while (total_d <= dt)
+    while (total_d < dt)
     {
         RKIteration(t_, state);
         total_d += mStepSize;
     }
     t_ = t_ + total_d;
+}
+
+void RungeKuttaSolver::getState(Eigen::VectorXd& st)
+{
+    st = Eigen::VectorXd(state_dim_);
+    for (int i=0; i<state_dim_; i++ )
+    {
+         st(i) = state[i];
+    }
+}
+
+void RungeKuttaSolver::setState(const Eigen::VectorXd& st)
+{
+    for (int i=0; i<state_dim_; i++ )
+    {
+         state[i] = st(i);
+    }
 }
 
 void RungeKuttaSolver::RKIteration(double ti, std::vector<double>& yi)

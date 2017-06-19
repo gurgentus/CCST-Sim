@@ -12,7 +12,7 @@ using std::vector;
  * Constructor.
  */
 FusionEKF::FusionEKF() {
-
+        std::cout << "test2" << std::endl;
 }
 
 /**

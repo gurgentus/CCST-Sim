@@ -3,6 +3,7 @@
 
 #include "AbstractOdeSolver.hpp"
 #include <QVector3D>
+#include "Eigen/Dense"
 
 class RungeKuttaSolver: public AbstractOdeSolver
 {
@@ -19,6 +20,9 @@ public:
     // single RK iteration
     void RKIteration(double ti, std::vector<double> &yi);
     void SetStateDimension(int state_dim);
+
+    void getState(Eigen::VectorXd& st);
+    void setState(const Eigen::VectorXd& st);
 
     // virtual methods
     virtual void InitialConditions() = 0;

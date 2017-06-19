@@ -10,7 +10,7 @@
 #include <Python.h>
 
 
-const double h = 10;// (tf-t0)/n;
+const double h = 0.1;// (tf-t0)/n;
 const double G = 6.67259e-20;
 const double m1 = 5.974e24;
 const double m2 = 0; //7.348e22;
@@ -27,12 +27,12 @@ void TwoBodySolver::InitialConditions()
 //    const double v = mom/r;
     // const double v = sqrt(mu/r);
 
-    Eigen::Vector3f Rx, Vx;
+    Eigen::Vector3d Rx, Vx;
 
     // if we want to describe the
     /*
     omt.orbit_desc_apog(6700, 10000, 60*M_PI/180, 270*M_PI/180, 45*M_PI/180, 398600);
-    Eigen::Vector3f r, v;
+    Eigen::Vector3d r, v;
     double theta = 230*M_PI/180;
     r << cos(theta), sin(theta), 0;
     r = ((omt.h*omt.h)/(omt.mu*(1+omt.e*cos(theta))))*r;
@@ -53,14 +53,16 @@ void TwoBodySolver::InitialConditions()
     */
 
     // if we want to describe the trajectory using Lambert problem formulation
-    Omt::orbit_desc(Rx, Vx, QVector3D(5000, 10000, 2100), QVector3D(-14600, 2500, 7000), 3600, true, 398600);
-    omt.orbit_desc(QVector3D(Rx(0), Rx(1), Rx(2)), QVector3D(Vx(0), Vx(1), Vx(2)), 398600);
+    //Omt::orbit_desc(Rx, Vx, QVector3D(5000, 10000, 2100), QVector3D(-14600, 2500, 7000), 3600, true, 398600);
+    //omt.orbit_desc(QVector3D(Rx(0), Rx(1), Rx(2)), QVector3D(Vx(0), Vx(1), Vx(2)), 398600);
 
     // satellite orbit
+    Rx << 757.7, 5222.607, 4851.5;
+    Vx << 2.21321, 4.67834, -5.37130;
     InitialConditions(Rx, Vx);
 }
 
-void TwoBodySolver::InitialConditions(Eigen::Vector3f r, Eigen::Vector3f v)
+void TwoBodySolver::InitialConditions(Eigen::Vector3d r, Eigen::Vector3d v)
 {
     RungeKuttaSolver::SetStateDimension(12);
     RungeKuttaSolver::SetStepSize(h);
@@ -79,7 +81,7 @@ void TwoBodySolver::InitialConditions(Eigen::Vector3f r, Eigen::Vector3f v)
     state[11] = v(2);
 
     SetInitialValue(state);
-    SetTimeInterval(0, 400);
+    //SetTimeInterval(0, 400);
     t_ = 0;
 }
 
@@ -102,6 +104,24 @@ void TwoBodySolver::InitialConditions(Eigen::Vector3f r, Eigen::Vector3f v)
 void TwoBodySolver::RightHandSide(double t, const std::vector<double> &y, std::vector<double> &f)
 {
     double r = sqrt(pow(y[3]-y[0],2) + pow(y[4]-y[1],2) + pow(y[5]-y[2],2));
+    const double rho_0 = 3.614e-22;
+    const double R_e = 6378.1363;
+    const double r_0 = 7.0e2+R_e;
+    const double H = 88.667;
+    const double A = 3e-6;
+    const double omega = 2*M_PI/86164;
+    double rho = rho_0*exp(-(r-r_0)/H);
+    double J2 = 1.082626925638815e-3;
+    double C_D = 2;
+    const double omega_E = 2*M_PI/86164;
+//    double x = y[3];
+//    double y = y[4];
+//    double z = y[5];
+    double u = y[6];
+    double v = y[7];
+    double w = y[8];
+    double v_rel = sqrt((u+omega_E*y[4])*(u+omega_E*y[4])+(v-omega_E*y[3])*(v-omega_E*y[3])+w*w);
+
     f[0] = y[6];
     f[1] = y[7];
     f[2] = y[8];
@@ -111,9 +131,12 @@ void TwoBodySolver::RightHandSide(double t, const std::vector<double> &y, std::v
     f[6] = G*m2*(y[3]-y[0])/pow(r,3);
     f[7] = G*m2*(y[4]-y[1])/pow(r,3);
     f[8] = G*m2*(y[5]-y[2])/pow(r,3);
-    f[9] = -G*m1*(y[3]-y[0])/pow(r,3);
-    f[10] = -G*m1*(y[4]-y[1])/pow(r,3);
-    f[11] = -G*m1*(y[5]-y[2])/pow(r,3);
+    f[9] = -G*m1*(y[3]-y[0])/pow(r,3);// - G*m1*J2*R_e*R_e*y[3]*(1.5/(pow(r,5))-7.5*y[5]/pow(r,7))
+          //  -0.5*rho*C_D*A*v_rel*(u + omega_E*y[4])/970;
+    f[10] = -G*m1*(y[4]-y[1])/pow(r,3);// - G*m1*J2*R_e*R_e*y[4]*(1.5/(pow(r,5))-7.5*y[5]/pow(r,7))
+            //-0.5*rho*C_D*A*v_rel*(v - omega_E*y[3])/970;
+    f[11] = -G*m1*(y[5]-y[2])/pow(r,3);// - G*m1*J2*R_e*R_e*y[5]*(1.5/(pow(r,5))-7.5*y[5]/pow(r,7))
+           // -0.5*rho*C_D*A*v_rel*w/970;
 }
 
 QVector3D TwoBodySolver::position()
@@ -126,7 +149,7 @@ QVector3D TwoBodySolver::position()
     YG = state[4] - state[1]; //(m1*state[1][i] + m2*state[4][i])/(m1+m2);
     ZG = state[5] - state[2]; // (m1*state[2][i] + m2*state[5][i])/(m1+m2);
 
-    return QVector3D(XG, ZG, -YG);
+    return QVector3D(XG, YG, ZG);
 }
 
 QVector3D TwoBodySolver::velocity()

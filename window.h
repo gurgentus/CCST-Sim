@@ -38,7 +38,7 @@ private:
     CarSimulation simulation;
     TwoBodySimulation orbital_simulation;
     Restricted3BodySimulation restricted_3body;
-    SatelliteGroundTrackingSimulation sat_simulation;
+    //SatelliteGroundTrackingSimulation sat_simulation;
 
     Simulation* current_simulation;
     QPushButton* m_button;

@@ -11,7 +11,8 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
  - [X] More realistic car model with steering
  - [X] Satellite orbit determination and restricted three body (Moon mission) orbital mechanics simulations
  - [X] Probabilistic filter module (Kalman, Extended Kalman, Unscented Kalman)
- - [ ] Connect probabilistic filter module to orbit determination module (with the state consisting of position and velocity of the satellite, positions of three ground tracking stations, as well as mu, J2, and drag coefficient for estimating higher order perturbation effects).
+ - [X] Connect probabilistic filter module to orbit determination module (with the state consisting of position and velocity of the satellite, positions of three ground tracking stations, as well as mu, J2, and drag coefficient for estimating higher order perturbation effects).
+ - [ ] Test and tune the filter
  - [ ] Controls toolbox with basic algorithms (mixed C++ and calls to Python libraries, eventually all C++ for performance improvement)
  - [ ] Add higher order perturbation effects to motion models (tide contribution, drag, third-body effects, solar radiation, Earth radiation, etc)
  - [ ] Testing, bug fixes

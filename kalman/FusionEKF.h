@@ -32,12 +32,12 @@ public:
   */
   KalmanFilter ekf_;
   UKF ukf_;
-private:
+protected:
   // check whether the tracking toolbox was initiallized or not (first measurement)
   bool is_initialized_;
 
   // previous timestamp
-  long previous_timestamp_;
+  double previous_timestamp_;
 
   // tool object used to compute the RMSE
   Tools tools;

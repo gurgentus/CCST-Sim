@@ -148,11 +148,11 @@ void Window::setup_simulation(QAction *action)
         current_simulation = &restricted_3body;
         restricted_3body.InitializeSimulation();
     }
-    if (action->text() == "Satellite and Ground Tracking")
-    {
-        current_simulation = &sat_simulation;
-        sat_simulation.InitializeSimulation();
-    }
+//    if (action->text() == "Satellite and Ground Tracking")
+//    {
+//        current_simulation = &sat_simulation;
+//        sat_simulation.InitializeSimulation();
+//    }
 
     mainLayout->addLayout(leftLayout);
     mainLayout->addLayout(right_layout);
@@ -173,10 +173,10 @@ void Window::setup_simulation(QAction *action)
     {
         restricted_3body.InitializeGUI();
     }
-    if (action->text() == "Satellite and Ground Tracking")
-    {
-        sat_simulation.InitializeGUI();
-    }
+//    if (action->text() == "Satellite and Ground Tracking")
+//    {
+//        sat_simulation.InitializeGUI();
+//    }
     topLeftLayout->addWidget(current_simulation);
 
         //QMainWindow window;

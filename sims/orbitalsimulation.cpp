@@ -45,7 +45,7 @@ void OrbitalSimulation::UpdateState(double dt)
     {
         if (planets[i]->p_simulator() != nullptr)
         {
-             planets[i]->UpdateState(sim_speed_*dt);
+             planets[i]->UpdateState(dt);
         }
     }
 
@@ -109,6 +109,10 @@ void OrbitalSimulation::StartSimulation1()
 }
 void OrbitalSimulation::StartSimulation2()
 {
+    for (unsigned long i=0; i< planets.size(); i++)
+    {
+        planets[i]->InitializeState();
+    }
 }
 
 void OrbitalSimulation::initializeGL()

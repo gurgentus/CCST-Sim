@@ -2,6 +2,7 @@
 #define KALMAN_FILTER_H_
 #include "Eigen/Dense"
 #include "tools.h"
+#include "nums/GroundTrackingSolver.h"
 
 class KalmanFilter {
 public:
@@ -25,6 +26,8 @@ public:
   // measurement covariance matrix
   // size 2 array for 2 measurement models
   Eigen::MatrixXd R_[3];
+
+  GroundTrackingSolver simulator;
 
   /**
    * Constructor
@@ -64,7 +67,7 @@ public:
    * Updates the state by using Extended Kalman Filter equations
    * @param z The measurement at k+1
    */
-  void UpdateEKF(const Eigen::VectorXd &z);
+  void UpdateEKF(const Eigen::VectorXd &z, int sensor);
 
 private:
   // tool object used to compute the Jacobian

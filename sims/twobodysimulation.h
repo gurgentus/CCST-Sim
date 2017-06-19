@@ -7,10 +7,12 @@
 #include "nums/TwoBodySolver.h"
 #include <objects/planet.h>
 #include <objects/controllable.h>
+#include "kalman/OrbitDeterminationFilter.h"
 
 class TwoBodySimulation : public OrbitalSimulation, public Controllable
 {
 public:
+    OrbitDeterminationFilter filter;
     Planet earth_;
     Planet moon_;
 
@@ -24,6 +26,12 @@ public:
     Output* omega_output_; // argument of perigee
     Output* longitude_output_;
     Output* latitude_output_;
+    Output* time_output_;
+
+    bool is_initialized_ = false;
+    double previous_timestamp_ = 0;
+    double current_time_ = 0;
+    vector<MeasurementPackage> measurement_pack_list;
 
     // implement inherited method from Controllable
     void UpdateControls();
@@ -32,6 +40,9 @@ public:
     void InitializeGUI();
     void UpdateState(double dt);
     void PlotSimulation();
+
+private:
+    void check_files(ifstream& in_file, string& in_name);
 };
 
 #endif // TWOBODYSIMULATION_H
