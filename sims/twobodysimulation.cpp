@@ -51,24 +51,6 @@ void TwoBodySimulation::UpdateState(double dt)
 {
     if (currentSim == 1)
     {
-        double longit, lat, E, tm, theta;
-        tm = sim_speed_*simulator.time();
-        simulator.omt.e_anom_kepler(E, simulator.omt.e, tm*2*M_PI/simulator.omt.period);
-        theta =2*atan(sqrt((1+simulator.omt.e)/(1-simulator.omt.e))*tan(E/2));
-
-        simulator.omt.sat_long_lat(longit, lat, theta, tm);
-        if (longitude_output_ != nullptr)
-        {
-            longitude_output_->setValue(longit);
-        }
-        if (latitude_output_ != nullptr)
-        {
-            latitude_output_->setValue(lat);
-        }
-        OrbitalSimulation::UpdateState(dt);
-    }
-    if (currentSim == 2)
-    {
         current_time_ = current_time_ + 10*dt;
         std::cout << "Current time: " << current_time_ << std::endl;
         std::cout << "Time step: " << 10*dt << std::endl;
