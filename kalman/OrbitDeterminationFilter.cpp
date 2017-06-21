@@ -45,11 +45,11 @@ OrbitDeterminationFilter::OrbitDeterminationFilter()
 
     // initialize state [x, y, z, u, v, w, mu, J2, C_D, x_s1, y_s1, z_s1, x_s2, y_s2, z_s2, x_s3, y_s3, z_s3]
     // last 9 elements are the three station locations
-    VectorXd x = VectorXd(18);
-    const double G = 6.67259e-20;
-    const double m1 = 5.974e24;
-    double initmu = G*m1; //3.986004415e5;
-    x << 757.7, 5222.607, 4851.5, 2.21321, 4.67834, -5.37130, initmu, 1.082626925638815e-3, 2, -5127.51, -3794.16, 0.0, 3860.91, 3238.49, 3898.094, 549.505, -1380.872, 6182.197;
+    Eigen::VectorXd x = Eigen::VectorXd::Zero(18);
+    //const double G = 6.67259e-20;
+    //const double m1 = 5.974e24;
+    //double initmu = G*m1; //3.986004415e5;
+    //x << 757.7, 5222.607, 4851.5, 2.21321, 4.67834, -5.37130, initmu, 1.082626925638815e-3, 2, -5127.51, -3794.16, 0.0, 3860.91, 3238.49, 3898.094, 549.505, -1380.872, 6182.197;
 
 
     // initialize P, F, and Q and the filters
@@ -115,12 +115,12 @@ void OrbitDeterminationFilter::ProcessMeasurement(vector<MeasurementPackage> &me
    ****************************************************************************/
 
   // Update the state transition matrix F according to the new elapsed time in seconds
-
+ std::cout << "Fusion: " << measurement_pack_list[0].timestamp_ << std::endl;
   //compute the time elapsed between the current and previous measurements
   float dt = (measurement_pack_list[0].timestamp_ - previous_timestamp_); // / 1000000.0;	//dt - expressed in seconds
   previous_timestamp_ = measurement_pack_list[0].timestamp_;
 
-  std::cout << "Fusion: " << previous_timestamp_ << std::endl;
+
   std::cout << "Time Filter: " << dt << std::endl;
 
   // predict

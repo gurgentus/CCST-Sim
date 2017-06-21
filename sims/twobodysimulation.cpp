@@ -7,19 +7,19 @@ void TwoBodySimulation::InitializeSimulation()
 {
     double spatial_scale = 400;
 
-    moon_.setP_simulator(&simulator);
-    moon_.setSpatial_scale(spatial_scale);
-    moon_.setR(100);
-    moon_.setMesh_file(":/Data/Objects/cube.obj");
+    sat_.setP_simulator(&simulator);
+    sat_.setSpatial_scale(spatial_scale);
+    sat_.setR(100);
+    sat_.setMesh_file(":/Data/Objects/cube.obj");
 
     earth_.setP_simulator(&er_simulator);
     earth_.setSpatial_scale(spatial_scale);
     earth_.setR(6378);
 
-    moon_.SetPositionFunction(static_cast<QVector3D (AbstractOdeSolver::*)()>(&TwoBodySolver::position));
+    sat_.SetPositionFunction(static_cast<QVector3D (AbstractOdeSolver::*)()>(&TwoBodySolver::position));
     earth_.SetRotationFunction(static_cast<double (AbstractOdeSolver::*)()>(&EarthRotationSolver::rotation));
 
-    AddPlanet(moon_);
+    AddPlanet(sat_);
     AddPlanet(earth_);
 
     sat_simulator.InitialConditions();
@@ -27,10 +27,11 @@ void TwoBodySimulation::InitializeSimulation()
 
 void TwoBodySimulation::InitializeGUI()
 {
-    moon_.InitializeOutputs();
+    sat_.InitializeOutputs();
 
     speedControl_ = new Control(control_layout_, this, this, 1, 100000, 1, 10, "Simulation Speed: ", "");
-
+    t_output_ = new Output(output_layout_, 0, 1, "Time:", "seconds");
+    u_output_ = new Output(output_layout_, 0, 1, "Uncertainty:", "km");
     e_output_ = new Output(output_layout_, 0, 1, "Eccentricity:", "");
     h_output_ = new Output(output_layout_, 0, 1, "Specific Angular Momentum:", "km^2/s");
     i_output_ = new Output(output_layout_, 0, 180/M_PI, "Inclination:", "deg");
@@ -43,7 +44,7 @@ void TwoBodySimulation::InitializeGUI()
 
     camera_.translate(0,0,80);
 
-    PlotSimulation();
+    //PlotSimulation();
 }
 
 void TwoBodySimulation::UpdateState(double dt)
@@ -68,12 +69,12 @@ void TwoBodySimulation::UpdateState(double dt)
     }
     if (currentSim == 2)
     {
-        current_time_ = current_time_ + 0.1*dt;
+        current_time_ = current_time_ + 10*dt;
         std::cout << "Current time: " << current_time_ << std::endl;
-        std::cout << "Time step: " << 0.1*dt << std::endl;
+        std::cout << "Time step: " << 10*dt << std::endl;
         // simulate ground truth data
-        sat_simulator.UpdateState(0.1*dt);
-        std::cout << "GROUND INTEGRATING FORWARD: " << 0.1*dt << "s";
+        sat_simulator.UpdateState(10*dt);
+        std::cout << "GROUND INTEGRATING FORWARD: " << 10*dt << "s";
         std::normal_distribution<double> distribution(0.0,0.01);
         double noise = distribution(generator);
         const double omega_E = 2*M_PI/86164;
@@ -89,7 +90,7 @@ void TwoBodySimulation::UpdateState(double dt)
         meas_package.raw_measurements_ = VectorXd(2);
         pos << -5127.51, -3794.16, 0;
         pos = rotate*pos;
-        //std::cout << "gs ground truth: " << pos(0) << " " << pos(1) << " " << pos(2) << std::endl;
+
         QVector3D rel = sat_simulator.position() - QVector3D(pos(0), pos(1), pos(2));
         double rho = rel.length();
         double rhodot = QVector3D::dotProduct(rel,
@@ -98,7 +99,7 @@ void TwoBodySimulation::UpdateState(double dt)
         std::cout << "Ground data: " << sat_simulator.position().x() << " " << sat_simulator.position().y() << " " << sat_simulator.position().z()
                   << sat_simulator.velocity().x() << " " << sat_simulator.velocity().y() << " " << sat_simulator.velocity().z() << std::endl;
         std::cout << "Ground range: " << sat_simulator.position().length() << " " << rhodot << std::endl;
-        std::cout << "Ground station cords: " << pos(0) << " " << pos(1) << " " << pos(2);
+        std::cout << "Ground station cords: " << pos(0) << " " << pos(1) << " " << pos(2) << std::endl;
         meas_package.raw_measurements_ << rho + noise, rhodot + noise;
         meas_package.timestamp_ = current_time_;
         measurement_pack_list.push_back(meas_package);
@@ -113,6 +114,7 @@ void TwoBodySimulation::UpdateState(double dt)
         rhodot = QVector3D::dotProduct(rel,
             QVector3D(sat_simulator.velocity().x()+pos(1)*omega_E,sat_simulator.velocity().y()-pos(0)*omega_E, sat_simulator.velocity().z()) )/rho;
         meas_package.timestamp_ = current_time_;
+
         meas_package.raw_measurements_ << rho + noise, rhodot + noise;
         measurement_pack_list.push_back(meas_package);
 
@@ -127,7 +129,6 @@ void TwoBodySimulation::UpdateState(double dt)
             QVector3D(sat_simulator.velocity().x()+pos(1)*omega_E,sat_simulator.velocity().y()-pos(0)*omega_E, sat_simulator.velocity().z()) )/rho;
         meas_package.timestamp_ = current_time_;
         meas_package.raw_measurements_ << rho + noise, rhodot + noise;
-        meas_package.timestamp_ = current_time_;
         measurement_pack_list.push_back(meas_package);
 
         if (measurement_pack_list.size() != 0) {
@@ -140,7 +141,7 @@ void TwoBodySimulation::UpdateState(double dt)
           double eig = filter.ekf_.P_.operatorNorm();
           std::cout << eig << std::endl;
 
-          planets[0]->setTranslation(filter.ekf_.x_(0)/spatial_scale, filter.ekf_.x_(1)/spatial_scale, -filter.ekf_.x_(2)/spatial_scale);
+          planets[0]->setTranslation(filter.ekf_.x_(0)/spatial_scale, filter.ekf_.x_(2)/spatial_scale, filter.ekf_.x_(1)/spatial_scale);
           planets[0]->local_to_world_matrix_ = planets[0]->toMatrix();
           planets[0]->UpdateOutputs();
           std::cout << "Estimated data: " << filter.ekf_.x_(0) << " " << filter.ekf_.x_(1) << " " << filter.ekf_.x_(2)
@@ -151,10 +152,18 @@ void TwoBodySimulation::UpdateState(double dt)
           //Eigen::VectorXd st2;
           //sat_simulator.getState(st2);
           //sat_simulator.omt.orbit_desc(sat_simulator.position(), sat_simulator.velocity(), st2(6));
+          if (t_output_ != nullptr)
+          {
+              t_output_->setValue(current_time_); //setValue(simulator.omt.e);
+          }
 
+          if (u_output_ != nullptr)
+          {
+              u_output_->setValue(eig); //setValue(simulator.omt.e);
+          }
           if (e_output_ != nullptr)
           {
-              e_output_->setValue(eig); //setValue(simulator.omt.e);
+              e_output_->setValue(sat_simulator.omt.e);
           }
           if (h_output_ != nullptr)
           {
@@ -173,6 +182,24 @@ void TwoBodySimulation::UpdateState(double dt)
               i_output_->setValue(sat_simulator.omt.i);
           }
 
+          Eigen::MatrixXd rotate_back(3,3);
+          rotate_back << cos(-omega_E*current_time_), sin(-omega_E*current_time_), 0,
+                  -sin(-omega_E*current_time_), cos(-omega_E*current_time_), 0,
+                  0, 0, 1;
+
+          Eigen::Vector3d Rx(3);
+          Rx = rotate_back*filter.ekf_.x_.segment(0,3);
+          // longitude and latitude
+          double longitude,latitude;
+          std::tie(longitude,latitude) =  Omt::right_ascension_and_declination(Rx);
+          if (longitude_output_ != nullptr)
+          {
+              longitude_output_->setValue(longitude);
+          }
+          if (latitude_output_ != nullptr)
+          {
+              latitude_output_->setValue(latitude);
+          }
         }
     }
 }

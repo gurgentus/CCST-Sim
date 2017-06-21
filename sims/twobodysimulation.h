@@ -18,13 +18,15 @@ public:
     std::default_random_engine generator;
 
     Planet earth_;
-    Planet moon_;
+    Planet sat_;
 
     // For orbital mechanics simulation logic
     SatelliteSolver sat_simulator;
     std::normal_distribution<double> distribution;
     TwoBodySolver simulator;
     EarthRotationSolver er_simulator;
+    Output* t_output_; // time
+    Output* u_output_; // uncertainty
     Output* e_output_; // eccentricity
     Output* h_output_; // specific angular momentum
     Output* i_output_; // inclination

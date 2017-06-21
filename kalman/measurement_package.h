@@ -5,7 +5,7 @@
 
 class MeasurementPackage {
 public:
-  long long timestamp_;
+  double timestamp_;
 
   enum SensorType{
     STATION1,

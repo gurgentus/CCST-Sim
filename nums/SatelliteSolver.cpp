@@ -7,7 +7,7 @@
 #include <QApplication>
 #include "nums/SatelliteSolver.h"
 
-const double h = 0.001;
+const double h = 0.01;
 const double G = 6.67259e-20;
 const double m1 = 5.974e24;
 const double R_e = 6378.1363;

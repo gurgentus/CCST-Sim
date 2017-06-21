@@ -91,8 +91,6 @@ void Planet::InitializeOutputs()
     z_position_output_ = new Output(output_layout_, 0, 1, "Relative Z Position: ", "km");
     r_output_ = new Output(output_layout_, 0, 1, "Distance to the origin: ", "km");
     // e_output_ = new Output(output_layout_, 0, 1, "Eccentricity", "");
-    t_output_ = new Output(output_layout_, 0, 1, "Time", "seconds");
-
 }
 
 double Planet::r() const
@@ -127,15 +125,10 @@ void Planet::UpdateState(double dt)
             rotate((p_simulator_->*rot)()*180/M_PI, 0.0f, 1.0f, 0.0f);
         }
 
-        setTranslation(x_/spatial_scale, z_/spatial_scale, -y_/spatial_scale);
+        setTranslation(x_/spatial_scale, z_/spatial_scale, y_/spatial_scale);
         local_to_world_matrix_ = toMatrix();
         UpdateOutputs();
     }
-
-    //QVector3D vel = p_simulator_->velocity();
-    //u_ = vel.x();
-    //v_ = vel.y();
-    //w_ = vel.z();
 
 }
 
