@@ -11,7 +11,7 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
  - [X] More realistic car model with steering
  - [X] Satellite orbit determination and restricted three body (Moon mission) orbital mechanics simulations
  - [X] Probabilistic filter module (Kalman, Extended Kalman, Unscented Kalman)
- - [X] Connect probabilistic filter module to orbit determination module (with the state consisting of position and velocity of the satellite, positions of three ground tracking stations, as well as mu, J2, and drag coefficient for estimating higher order perturbation effects).
+ - [X] Connect probabilistic filter module to orbit determination module (with the state consisting of position and velocity of the satellite, positions of three ground tracking stations, as well as mu, J2, and drag coefficient for estimating higher order perturbation effects). [Derivations Link](.docs/derivations.pdf)
  - [X] Test sequential estimation, batch estimation with same epoch measurement for each batch
  - [ ] Implement multiple epoch measurements in each batch
  - [ ] Controls toolbox with basic algorithms (mixed C++ and calls to Python libraries, eventually all C++ for performance improvement)
@@ -23,12 +23,12 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
 
 [//]: # (Image References)
 
- [GUI]: ./SolverDefinition.png "Solver"
- [Car]: ./Car.png "Car"
- [Orbit]: ./sat.png "Orbit"
- [R3B]: ./Restricted3Body.png "Restricted 3 Body"
- [video1]: ./orbit.mov "Satelite Orbit Video"
-
+ [GUI]: ./docs/SolverDefinition.png "Solver"
+ [Car]: ./docs/Car.png "Car"
+ [Orbit]: ./docs/sat.png "Orbit"
+ [R3B]: ./docs/Restricted3Body.png "Restricted 3 Body"
+ [video1]: ./docs/orbit.mov "Satelite Orbit Video"
+ [deriv]: ./docs/derivations.pdf "Derivations"
 #### Restricted 3 body problem - lunar mission
 
 ![R3B][R3B]
@@ -65,21 +65,3 @@ http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
 
 Initial testing car meshes were loaded based on car obj file in:
 http://people.sc.fsu.edu/~jburkardt/data/obj/obj.html
-
-
-# Notes to self
-
-Adding python interfaces
-
-add in the pro file (add through right-click on the project -> Add Library)
-
-
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../Applications/anaconda/lib/release/ -lpython3.5m
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../Applications/anaconda/lib/debug/ -lpython3.5m
-else:unix: LIBS += -L$$PWD/../../../../Applications/anaconda/lib/ -lpython3.5m
-
-INCLUDEPATH += $$PWD/../../../../Applications/anaconda/include/python3.5m
-DEPENDPATH += $$PWD/../../../../Applications/anaconda/include/python3.5m
-CONFIG += no_keywords
-
-- had to rename libJPEG.dylib; libTIFF.dylib; libPng.dylib; libsqlite3.0.dylib to avoid linker confusion
