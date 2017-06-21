@@ -5,7 +5,7 @@
 #include <vector>
 #include <cmath>
 #include <QApplication>
-#include "nums/GroundTrackingSolver.h"
+#include "nums/SatelliteSolver.h"
 
 const double h = 0.001;
 const double G = 6.67259e-20;
@@ -17,17 +17,17 @@ const double A = 3e-6;
 const double rho_0 = 3.614e-4;
 const double omega_E = 2*M_PI/86164;
 
-void GroundTrackingSolver::InitialConditions()
+void SatelliteSolver::InitialConditions()
 {
-    Eigen::VectorXd Rx(18);
+    Eigen::VectorXd Rx(9);
     double initmu = G*m1; //3.986004415e5;
-    Rx << 757.7, 5222.607, 4851.5, 2.21321, 4.67834, -5.37130, initmu, 1.082626925638815e-3, 2, -5127.51, -3794.16, 0.0, 3860.91, 3238.49, 3898.094, 549.505, -1380.872, 6182.197;
+    Rx << 757.7, 5222.607, 4851.5, 2.21321, 4.67834, -5.37130, initmu, 1.082626925638815e-3, 2;
     InitialConditions(Rx, 10);
 }
 
-void GroundTrackingSolver::InitialConditions(Eigen::VectorXd& x, double dt)
+void SatelliteSolver::InitialConditions(Eigen::VectorXd& x, double dt)
 {
-    RungeKuttaSolver::SetStateDimension(18);
+    RungeKuttaSolver::SetStateDimension(9);
     RungeKuttaSolver::SetStepSize(h);
 
     for (unsigned int i=0; i<x.size(); i++)
@@ -39,7 +39,7 @@ void GroundTrackingSolver::InitialConditions(Eigen::VectorXd& x, double dt)
     t_ = 0;
 }
 
-void GroundTrackingSolver::RightHandSide(double t, const std::vector<double> &y, std::vector<double> &f)
+void SatelliteSolver::RightHandSide(double t, const std::vector<double> &y, std::vector<double> &f)
 {
     Eigen::Vector3d pos, vel;
     double r = sqrt(y[0]*y[0] + y[1]*y[1] + y[2]*y[2]);
@@ -66,18 +66,9 @@ void GroundTrackingSolver::RightHandSide(double t, const std::vector<double> &y,
     f[6] = 0;
     f[7] = 0;
     f[8] = 0;
-    f[9] = y[10]*omega_E;
-    f[10] = -y[9]*omega_E;
-    f[11] = 0;
-    f[12] = y[13]*omega_E;
-    f[13] = -y[12]*omega_E;
-    f[14] = 0;
-    f[15] = y[16]*omega_E;
-    f[16] = -y[15]*omega_E;
-    f[17] = 0;
 }
 
-QVector3D GroundTrackingSolver::position()
+QVector3D SatelliteSolver::position()
 {
     double XG;
     double YG;
@@ -86,6 +77,19 @@ QVector3D GroundTrackingSolver::position()
     XG = state[0];
     YG = state[1];
     ZG = state[2];
+
+    return QVector3D(XG, YG, ZG);
+}
+
+QVector3D SatelliteSolver::velocity()
+{
+    double XG;
+    double YG;
+    double ZG;
+
+    XG = state[3];
+    YG = state[4];
+    ZG = state[5];
 
     return QVector3D(XG, YG, ZG);
 }

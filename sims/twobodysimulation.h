@@ -4,19 +4,25 @@
 #include "orbitalsimulation.h"
 #include "objects/sbody.h"
 #include "nums/earthrotationsolver.h"
+#include "nums/SatelliteSolver.h"
 #include "nums/TwoBodySolver.h"
 #include <objects/planet.h>
 #include <objects/controllable.h>
 #include "kalman/OrbitDeterminationFilter.h"
+#include <random>
 
 class TwoBodySimulation : public OrbitalSimulation, public Controllable
 {
 public:
     OrbitDeterminationFilter filter;
+    std::default_random_engine generator;
+
     Planet earth_;
     Planet moon_;
 
     // For orbital mechanics simulation logic
+    SatelliteSolver sat_simulator;
+    std::normal_distribution<double> distribution;
     TwoBodySolver simulator;
     EarthRotationSolver er_simulator;
     Output* e_output_; // eccentricity

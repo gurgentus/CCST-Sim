@@ -15,7 +15,7 @@ class OrbitDeterminationFilter : public FusionEKF
 {
 public:
     OrbitDeterminationFilter();
-    void ProcessMeasurement(const MeasurementPackage &measurement_pack, double time);
+    void ProcessMeasurement(vector<MeasurementPackage> &measurement_pack_list);
 };
 
 #endif // ORBITDETERMINATIONFILTER_H

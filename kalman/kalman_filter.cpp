@@ -4,11 +4,13 @@
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
+const double omega_E = 2*M_PI/86164;
+
 KalmanFilter::KalmanFilter() {
-  R_[0] = MatrixXd(1, 1);
+  R_[0] = MatrixXd(6, 6);
   R_[1] = MatrixXd(1, 1);
   R_[2] = MatrixXd(1, 1);
-  H_[0] = MatrixXd(1, 18);
+  H_[0] = MatrixXd(6, 18);
   H_[1] = MatrixXd(1, 18);
   H_[2] = MatrixXd(1, 18);
 }
@@ -32,7 +34,7 @@ void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
 }
 
 const double R_e = 6378.1363;
-const double rho_0 = 3.614e-22;
+const double rho_0 = 3.614e-4;
 const double r_0 = 7.0e2+R_e;
 const double H = 88.667;
 const double A = 3e-6;
@@ -41,14 +43,15 @@ void KalmanFilter::Predict(double dt) {
   /**
     * predict the state
   */
-  const double omega_E = 2*M_PI/86164;
   double x = x_(0);
   double y = x_(1);
   double z = x_(2);
   double u = x_(3);
   double v = x_(4);
   double w = x_(5);
-  double v_rel = sqrt((u+omega_E*y)*(u+omega_E*y)+(v-omega_E*x)*(v-omega_E*x)+w*w);
+  double uoy = u+omega_E*y;
+  double vox = v-omega_E*x;
+  double v_rel = sqrt(uoy*uoy+vox*vox+w*w);
   double r = sqrt(x*x+y*y+z*z);
   double rcubed = r*r*r;
   double r2five = rcubed*r*r;
@@ -71,8 +74,7 @@ void KalmanFilter::Predict(double dt) {
   double R15_105 = -7.5/r2seven+52.5*z*z/r2nine;
   double R45_105 = -22.5/r2seven+52.5*z*z/r2nine;
   double ReSq = R_e*R_e;
-  double uoy = u+omega_E*y;
-  double vox = v-omega_E*x;
+
 
   long x_size = x_.size();
   Eigen::MatrixXd I = Eigen::MatrixXd::Identity(x_size, x_size);
@@ -123,27 +125,41 @@ void KalmanFilter::Predict(double dt) {
   A(15, 16) = -omega_E;
   A(16, 15) = omega_E;
 
-  F_ = I + A*dt + A*A*dt*dt/2 + A*A*A*dt*dt*dt/6 + A*A*A*A*dt*dt*dt*dt/24;
+  F_ = I + A*dt + A*A*dt*dt/2 + A*A*A*dt*dt*dt/6 + A*A*A*A*dt*dt*dt*dt/24 + A*A*A*A*A*dt*dt*dt*dt*dt/120;
 
   // set the process covariance matrix Q, will need to tune
-  Q_ = 0.01*I;
+  Q_ = 0.0001*dt*I;
+  Q_(6,6) = 0.00000001;
+  Q_(7,7) = 0.00000001;
+  Q_(8,8) = 0.00000001;
+
+          std::cout << "FILTER INTEGRATING FORWARD: " << dt << "s";
 
   simulator.setState(x_);
   simulator.UpdateState(dt);
   simulator.getState(x_);
 
   P_ = F_ * P_ * F_.transpose() + Q_;
+  std::cout << "P: " << P_ << std::endl;
 }
 
-void KalmanFilter::Update(const VectorXd &y, const MatrixXd& H, const MatrixXd& R) {
-  MatrixXd Ht = H.transpose();
-  MatrixXd S = H * P_ * Ht + R;
-  MatrixXd K = P_ * Ht * S.inverse();
+void KalmanFilter::Update(const Eigen::VectorXd &y, const Eigen::MatrixXd& H, const Eigen::MatrixXd& R) {
+  long x_size = x_.size();
+  long y_size = y.size();
+  Eigen::MatrixXd I = MatrixXd::Identity(x_size, x_size);
+  Eigen::MatrixXd Ht = H.transpose();
+  Eigen::MatrixXd S = H * P_ * Ht + R;
+  // use Cholesky decomposition instead of inverse
+  Eigen::MatrixXd D = S.llt().solve(MatrixXd::Identity(y_size, y_size));
+  //Eigen::MatrixXd K = P_ * Ht * S.inverse();
+  Eigen::MatrixXd K = P_ * Ht * D;
+
   //new estimate
   x_ = x_ + (K * y);
-  long x_size = x_.size();
-  MatrixXd I = MatrixXd::Identity(x_size, x_size);
-  P_ = (I - K * H) * P_;
+
+  Eigen::MatrixXd P_temp = (I - K * H) * P_;
+  P_ = P_temp;
+  std::cout << "Op norm: " << P_.operatorNorm() << std::endl;
 }
 
 void KalmanFilter::UpdateKF(const VectorXd &z) {
@@ -155,24 +171,69 @@ void KalmanFilter::UpdateKF(const VectorXd &z) {
   Update(y, H_[0], R_[0]);
 }
 
+void KalmanFilter::UpdateEKF(const Eigen::VectorXd& z)
+{
+    VectorXd h = VectorXd(6);
+    for (unsigned int sensor=0; sensor<3; sensor++) {
+        h(2*sensor) = sqrt((x_(0)-x_(9+3*sensor))*(x_(0)-x_(9+3*sensor))+(x_(1)-x_(10+3*sensor))*(x_(1)-x_(10+3*sensor))
+                      + (x_(2)-x_(11+3*sensor))*(x_(2)-x_(11+3*sensor)));
+        h(2*sensor+1) = ((x_(0)-x_(9+3*sensor))*(x_(3)+x_(10+3*sensor)*omega_E)
+                +(x_(1)-x_(10+3*sensor))*(x_(4)-x_(9+3*sensor)*omega_E) + (x_(2)-x_(11+3*sensor))*x_(5))/h(2*sensor);
+    }
+
+    VectorXd y = z - h;
+    std::cout << "z: " << z << std::endl;
+    std::cout << "h: " << h << std::endl;
+    std::cout << "diff: " << y << std::endl;
+    std::cout << "estimated station cords: " << x_(9) << " " << x_(10) << " " << x_(11);
+    //compute the Jacobian matrix
+    H_[0] = Eigen::MatrixXd::Zero(6,18);
+    for (unsigned int sensor=0; sensor<3; sensor++) {
+        H_[0](2*sensor,0) = (x_(0)-x_(9+3*sensor))/h(sensor);
+        H_[0](2*sensor,1) = (x_(1)-x_(10+3*sensor))/h(sensor);
+        H_[0](2*sensor,2) = (x_(2)-x_(11+3*sensor))/h(sensor);
+
+        H_[0](2*sensor, 9+3*sensor) = -(x_(0)-x_(9+3*sensor))/h(sensor);
+        H_[0](2*sensor, 10+3*sensor) = -(x_(1)-x_(10+3*sensor))/h(sensor);
+        H_[0](2*sensor, 11+3*sensor) = -(x_(2)-x_(11+3*sensor))/h(sensor);
+    }
+    for (unsigned int sensor=0; sensor<3; sensor++) {
+        double B = h(2*sensor+1)/h(2*sensor);
+
+        H_[0](2*sensor+1,0) = -B*H_[0](2*sensor,0)+(x_(3)+omega_E*x_(10+3*sensor))/h(2*sensor);
+        H_[0](2*sensor+1,1) = -B*H_[0](2*sensor,1)+(x_(4)-omega_E*x_(9+3*sensor))/h(2*sensor);
+        H_[0](2*sensor+1,2) = -B*H_[0](2*sensor,2)+(x_(5))/h(2*sensor);
+
+        H_[0](2*sensor+1,3) = (x_(0)-x_(9+3*sensor))/h(2*sensor);
+        H_[0](2*sensor+1,4) = (x_(1)-x_(10+3*sensor))/h(2*sensor);
+        H_[0](2*sensor+1,5) = (x_(2)-x_(11+3*sensor))/h(2*sensor);
+
+        H_[0](2*sensor+1, 9+3*sensor) = -B*H_[0](2*sensor,9+3*sensor)-(x_(3)+omega_E*x_(10+3*sensor))/h(2*sensor);
+        H_[0](2*sensor+1, 10+3*sensor) = -B*H_[0](2*sensor,10+3*sensor)-(x_(4)-omega_E*x_(9+3*sensor))/h(2*sensor);
+        H_[0](2*sensor+1, 11+3*sensor) = -B*H_[0](2*sensor,11+3*sensor)-(x_(5))/h(2*sensor);
+    }
+    Update(y, H_[0], R_[0]);
+}
 void KalmanFilter::UpdateEKF(const VectorXd &z, int sensor) {
   /**
     * update the state by using Extended Kalman Filter equations
   */
 
   VectorXd h = VectorXd(1);
-
+    std::cout << "gs est: " << x_(9) << " " << x_(10) << " " << x_(11) << std::endl;
   double range = sqrt((x_(0)-x_(9+3*sensor))*(x_(0)-x_(9+3*sensor))+(x_(1)-x_(10+3*sensor))*(x_(1)-x_(10+3*sensor))
-                    + (x_(2)-x_(11+3*sensor))+(x_(2)-x_(11+3*sensor)));
+                    + (x_(2)-x_(11+3*sensor))*(x_(2)-x_(11+3*sensor)));
 //  double rhodot = ( (x_(0)-x_(9+3*sensor))*(x_(3)+x_(10+3*sensor)*omega_E)
 //                  + (x_(1)-x_(10+3*sensor))*(x_(4)-x_(9+3*sensor)*omega_E) +  (x_(2)-x_(11+3*sensor))*(x_(5)) )/rho;
   // state to measurement function
   h << range;
 
   VectorXd y = z - h;
+  std::cout << "err: " << z << " " << h << "diff: " << y << std::endl;
 
   //compute the Jacobian matrix
-  H_[sensor] << (x_(0)-x_(9+3*sensor))/range, (x_(1)-x_(10+3*sensor))/range, (x_(2)-x_(11+3*sensor))/range,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;
+  H_[sensor] << (x_(0)-x_(9+3*sensor))/range, (x_(1)-x_(10+3*sensor))/range, (x_(2)-x_(11+3*sensor))/range,0,0,0,
+          0,0,0,0,0,0,0,0,0,0,0,0;
   H_[sensor](0, 9+3*sensor) = -(x_(0)-x_(9+3*sensor))/range;
   H_[sensor](0, 10+3*sensor) = -(x_(1)-x_(10+3*sensor))/range;
   H_[sensor](0, 11+3*sensor) = -(x_(2)-x_(11+3*sensor))/range;

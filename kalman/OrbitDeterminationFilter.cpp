@@ -12,28 +12,36 @@ OrbitDeterminationFilter::OrbitDeterminationFilter()
     MatrixXd R_array[NUMSENSORS_];
 
     // initializing matrices
-    H_array[0] = MatrixXd(1, 18);
+    H_array[0] = MatrixXd(6, 18);
     H_array[1] = MatrixXd(1, 18);
     H_array[2] = MatrixXd(1, 18);
 
-    R_array[0] = MatrixXd(1, 1);
+    R_array[0] = MatrixXd(6, 6);
     R_array[1] = MatrixXd(1, 1);
     R_array[2] = MatrixXd(1, 1);
 
     // Radar measurement noise standard deviation range in km
-    double var_radr_ = 100;
+    double var_ra_ = 0.01;
+    double var_radr_ = 0.01;
+
 
     // measurement covariance matrices
-    R_array[0] << var_radr_;
+    R_array[0] << var_ra_, 0, 0, 0, 0, 0,
+            0, var_radr_, 0, 0, 0, 0,
+            0, 0, var_ra_, 0, 0, 0,
+            0, 0, 0, var_radr_, 0, 0,
+            0, 0, 0, 0, var_ra_, 0,
+            0, 0, 0, 0, 0, var_radr_;
+
     R_array[1] << var_radr_;
     R_array[2] << var_radr_;
 
     // measurement matrices, not used for UKF, comment for Unscented Kalman Filter
-    H_array[0] << 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+//    H_array[0] << 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
 
-    H_array[1] << 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+//    H_array[1] << 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
 
-    H_array[2] << 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+//    H_array[2] << 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
 
     // initialize state [x, y, z, u, v, w, mu, J2, C_D, x_s1, y_s1, z_s1, x_s2, y_s2, z_s2, x_s3, y_s3, z_s3]
     // last 9 elements are the three station locations
@@ -45,29 +53,15 @@ OrbitDeterminationFilter::OrbitDeterminationFilter()
 
 
     // initialize P, F, and Q and the filters
-    MatrixXd P = MatrixXd(18, 18);
-    double uns = 1e-8;
-    P <<  uns, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, uns, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, uns, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, uns, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, uns, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, uns, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, uns, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, uns, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0, uns, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0, 0, uns, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, uns, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, uns, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, uns, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, uns, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, uns, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, uns, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, uns, 0,
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, uns;
+    double uns = 100;
+    MatrixXd P = uns*Eigen::MatrixXd::Identity(18, 18);
+    for (unsigned int i=0; i<9; i++)
+    {
+        P(i,i) = 1;
+    }
 
     MatrixXd F = Eigen::MatrixXd::Zero(18, 18);
-    MatrixXd Q = MatrixXd(18, 18);
+    MatrixXd Q = Eigen::MatrixXd(18, 18);
 
     // initialize the extended Kalman filter
     ekf_.Init(x, P, F,
@@ -80,17 +74,18 @@ OrbitDeterminationFilter::OrbitDeterminationFilter()
 
 
 // processes each measurement depending if it's station
-void OrbitDeterminationFilter::ProcessMeasurement(const MeasurementPackage &measurement_pack, double time) {
+void OrbitDeterminationFilter::ProcessMeasurement(vector<MeasurementPackage> &measurement_pack_list) {
 
 
   /*****************************************************************************
    *  Initialization
    ****************************************************************************/
+
   if (!is_initialized_) {
     // can switch some of the stations off for debugging
-    if ((measurement_pack.sensor_type_ == MeasurementPackage::STATION1) ||
-    (measurement_pack.sensor_type_ == MeasurementPackage::STATION2) ||
-    (measurement_pack.sensor_type_ == MeasurementPackage::STATION3))  {
+//    if ((measurement_pack.sensor_type_ == MeasurementPackage::STATION1) ||
+//    (measurement_pack.sensor_type_ == MeasurementPackage::STATION2) ||
+//    (measurement_pack.sensor_type_ == MeasurementPackage::STATION3))  {
 
       // can choose between KF/EKF:
       // note: none of the state variables are not observed
@@ -106,10 +101,9 @@ void OrbitDeterminationFilter::ProcessMeasurement(const MeasurementPackage &meas
       //  return;
       //}
       //ukf_.x_ << rho*cos(phi), rho*sin(phi), rho_prime, phi, 0, 0, 0;
-    }
 
-    // initialize timestamp
-    previous_timestamp_ = time;
+    // remove three observations corresponding to this time
+    measurement_pack_list.erase(measurement_pack_list.begin(),measurement_pack_list.begin()+3);
 
     // done initializing, no need to predict or update
     is_initialized_ = true;
@@ -123,8 +117,8 @@ void OrbitDeterminationFilter::ProcessMeasurement(const MeasurementPackage &meas
   // Update the state transition matrix F according to the new elapsed time in seconds
 
   //compute the time elapsed between the current and previous measurements
-  float dt = (time - previous_timestamp_); // / 1000000.0;	//dt - expressed in seconds
-  previous_timestamp_ = time;
+  float dt = (measurement_pack_list[0].timestamp_ - previous_timestamp_); // / 1000000.0;	//dt - expressed in seconds
+  previous_timestamp_ = measurement_pack_list[0].timestamp_;
 
   std::cout << "Fusion: " << previous_timestamp_ << std::endl;
   std::cout << "Time Filter: " << dt << std::endl;
@@ -132,7 +126,8 @@ void OrbitDeterminationFilter::ProcessMeasurement(const MeasurementPackage &meas
   // predict
   // choose between KF/EKF:
 //  double tm = 0;
-//  double h = 0.1;
+//  double h = 0.01;
+
 //  while (tm < dt) {
     ekf_.Predict(dt);
 //    tm = tm + h;
@@ -145,24 +140,32 @@ void OrbitDeterminationFilter::ProcessMeasurement(const MeasurementPackage &meas
    *  Update
    ****************************************************************************/
 
-  if (time > measurement_pack.timestamp_)
-  {
-      std::cout << "received measurement" << std::endl;
-      if (measurement_pack.sensor_type_ == MeasurementPackage::STATION1) {
-        // Radar updates
-        // ekf_.UpdateEKF(measurement_pack.raw_measurements_);
-        ekf_.UpdateEKF(measurement_pack.raw_measurements_, 0);
-      }
-      if (measurement_pack.sensor_type_ == MeasurementPackage::STATION2) {
-        // Radar updates
-        // ekf_.UpdateEKF(measurement_pack.raw_measurements_);
-        ekf_.UpdateEKF(measurement_pack.raw_measurements_, 1);
-      }
-      if (measurement_pack.sensor_type_ == MeasurementPackage::STATION3) {
-        // Radar updates
-        // ekf_.UpdateEKF(measurement_pack.raw_measurements_);
-        ekf_.UpdateEKF(measurement_pack.raw_measurements_, 2);
-      }
-  }
+    std::cout << "received measurement" << std::endl;
+    // update based on three stations
+    Eigen::VectorXd z_list = Eigen::VectorXd(6);
+    z_list << measurement_pack_list[0].raw_measurements_, measurement_pack_list[1].raw_measurements_, measurement_pack_list[2].raw_measurements_;
+
+    ekf_.UpdateEKF(z_list);
+    measurement_pack_list.erase(measurement_pack_list.begin(),measurement_pack_list.begin()+3);
+
+//  if (fabs(time - measurement_pack.timestamp_) < 0.1)
+//  {
+
+//      if (measurement_pack.sensor_type_ == MeasurementPackage::STATION1) {
+//        // Radar updates
+//        // ekf_.UpdateEKF(measurement_pack.raw_measurements_);
+//        ekf_.UpdateEKF(measurement_pack.raw_measurements_, 0);
+//      }
+//      if (measurement_pack.sensor_type_ == MeasurementPackage::STATION2) {
+//        // Radar updates
+//        // ekf_.UpdateEKF(measurement_pack.raw_measurements_);
+//        ekf_.UpdateEKF(measurement_pack.raw_measurements_, 1);
+//      }
+//      if (measurement_pack.sensor_type_ == MeasurementPackage::STATION3) {
+//        // Radar updates
+//        // ekf_.UpdateEKF(measurement_pack.raw_measurements_);
+//        ekf_.UpdateEKF(measurement_pack.raw_measurements_, 2);
+//      }
+//  }
 }
 

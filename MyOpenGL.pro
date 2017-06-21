@@ -54,7 +54,8 @@ SOURCES += common/camera3D.cpp \
     kalman/tools.cpp \
     kalman/OrbitDeterminationFilter.cpp \
     kalman/ukf.cpp \
-    nums/GroundTrackingSolver.cpp
+    nums/GroundTrackingSolver.cpp \
+    nums/SatelliteSolver.cpp
 
 HEADERS  += common/camera3D.h \
     common/control.h \
@@ -535,7 +536,8 @@ HEADERS  += common/camera3D.h \
     kalman/ukf.h \
     kalman/measurement_package.h \
     kalman/OrbitMeasurementPackage.h \
-    nums/GroundTrackingSolver.h
+    nums/GroundTrackingSolver.h \
+    nums/SatelliteSolver.h
 
 FORMS    += window.ui
 

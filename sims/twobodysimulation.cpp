@@ -22,88 +22,7 @@ void TwoBodySimulation::InitializeSimulation()
     AddPlanet(moon_);
     AddPlanet(earth_);
 
-
-    // initialize filtering
-    // check_arguments(argc, argv);
-
-    string in_file_name_ = "/Users/gurgentus/Dropbox/MyOpenGL/Data/sensor_data.txt";
-    ifstream in_file_(in_file_name_.c_str(), ifstream::in);
-    check_files(in_file_, in_file_name_);
-
-//    string out_file_name_ = argv[2];
-//    ofstream out_file_(out_file_name_.c_str(), ofstream::out);
-
-    // check_files(in_file_, in_file_name_, out_file_, out_file_name_);
-
-    /**********************************************
-     *  Set Measurements                          *
-     **********************************************/
-
-    string line;
-
-    // prep the measurement packages (each line represents a measurement at a
-    // timestamp)
-    while (getline(in_file_, line)) {
-      string sensor_type;
-      MeasurementPackage meas_package;
-      //GroundTruthPackage gt_package;
-      istringstream iss(line);
-      long long timestamp;
-
-      // reads first element from the current line
-      iss >> timestamp;
-      iss >> sensor_type;
-      if (sensor_type.compare("101") == 0) {
-        // laser measurement
-
-        // read measurements at this timestamp
-        meas_package.sensor_type_ = MeasurementPackage::STATION1;
-        meas_package.raw_measurements_ = VectorXd(1);
-        float rho;
-        float rhodot;
-        iss >> rho;
-        iss >> rhodot;
-        meas_package.raw_measurements_ << rho/1000;
-        meas_package.timestamp_ = timestamp;
-        measurement_pack_list.push_back(meas_package);
-      }
-      if (sensor_type.compare("337") == 0) {
-        // laser measurement
-
-        // read measurements at this timestamp
-        meas_package.sensor_type_ = MeasurementPackage::STATION2;
-        meas_package.raw_measurements_ = VectorXd(1);
-        float rho;
-        float rhodot;
-        iss >> rho;
-        iss >> rhodot;
-        meas_package.raw_measurements_ << rho/1000;
-        meas_package.timestamp_ = timestamp;
-        measurement_pack_list.push_back(meas_package);
-      }
-      if (sensor_type.compare("394") == 0) {
-        // laser measurement
-
-        // read measurements at this timestamp
-        meas_package.sensor_type_ = MeasurementPackage::STATION3;
-        meas_package.raw_measurements_ = VectorXd(1);
-        float rho;
-        float rhodot;
-        iss >> rho;
-        iss >> rhodot;
-        meas_package.raw_measurements_ << rho/1000;
-        meas_package.timestamp_ = timestamp;
-        measurement_pack_list.push_back(meas_package);
-      }
-
-    }
-
-    if (in_file_.is_open()) {
-      in_file_.close();
-    }
-
-    cout << "Done!" << endl;
-
+    sat_simulator.InitialConditions();
 }
 
 void TwoBodySimulation::InitializeGUI()
@@ -149,20 +68,73 @@ void TwoBodySimulation::UpdateState(double dt)
     }
     if (currentSim == 2)
     {
+        current_time_ = current_time_ + 0.1*dt;
+        std::cout << "Current time: " << current_time_ << std::endl;
+        std::cout << "Time step: " << 0.1*dt << std::endl;
+        // simulate ground truth data
+        sat_simulator.UpdateState(0.1*dt);
+        std::cout << "GROUND INTEGRATING FORWARD: " << 0.1*dt << "s";
+        std::normal_distribution<double> distribution(0.0,0.01);
+        double noise = distribution(generator);
+        const double omega_E = 2*M_PI/86164;
+        Eigen::MatrixXd rotate = Eigen::MatrixXd(3,3);
+        Eigen::VectorXd pos = Eigen::VectorXd(3);
+        rotate << cos(omega_E*current_time_), sin(omega_E*current_time_), 0,
+                -sin(omega_E*current_time_), cos(omega_E*current_time_), 0,
+                0, 0, 1;
+
+        // read measurements at this timestamp
+        MeasurementPackage meas_package;
+        meas_package.sensor_type_ = MeasurementPackage::STATION1;
+        meas_package.raw_measurements_ = VectorXd(2);
+        pos << -5127.51, -3794.16, 0;
+        pos = rotate*pos;
+        //std::cout << "gs ground truth: " << pos(0) << " " << pos(1) << " " << pos(2) << std::endl;
+        QVector3D rel = sat_simulator.position() - QVector3D(pos(0), pos(1), pos(2));
+        double rho = rel.length();
+        double rhodot = QVector3D::dotProduct(rel,
+            QVector3D(sat_simulator.velocity().x()+pos(1)*omega_E,sat_simulator.velocity().y()-pos(0)*omega_E, sat_simulator.velocity().z()) )/rho;
+
+        std::cout << "Ground data: " << sat_simulator.position().x() << " " << sat_simulator.position().y() << " " << sat_simulator.position().z()
+                  << sat_simulator.velocity().x() << " " << sat_simulator.velocity().y() << " " << sat_simulator.velocity().z() << std::endl;
+        std::cout << "Ground range: " << sat_simulator.position().length() << " " << rhodot << std::endl;
+        std::cout << "Ground station cords: " << pos(0) << " " << pos(1) << " " << pos(2);
+        meas_package.raw_measurements_ << rho + noise, rhodot + noise;
+        meas_package.timestamp_ = current_time_;
+        measurement_pack_list.push_back(meas_package);
+
+        noise = distribution(generator);
+        meas_package.sensor_type_ = MeasurementPackage::STATION2;
+        meas_package.raw_measurements_ = VectorXd(2);
+        pos << 3860.91, 3238.490, 3898.094;
+        pos = rotate*pos;
+        rel = sat_simulator.position() - QVector3D(pos(0), pos(1), pos(2));
+        rho = rel.length();
+        rhodot = QVector3D::dotProduct(rel,
+            QVector3D(sat_simulator.velocity().x()+pos(1)*omega_E,sat_simulator.velocity().y()-pos(0)*omega_E, sat_simulator.velocity().z()) )/rho;
+        meas_package.timestamp_ = current_time_;
+        meas_package.raw_measurements_ << rho + noise, rhodot + noise;
+        measurement_pack_list.push_back(meas_package);
+
+        noise = distribution(generator);
+        meas_package.sensor_type_ = MeasurementPackage::STATION3;
+        meas_package.raw_measurements_ = VectorXd(2);
+        pos << 549.505, -1380.872, 6182.197;
+        pos = rotate*pos;
+        rel = sat_simulator.position() - QVector3D(pos(0), pos(1), pos(2));
+        rho = rel.length();
+        rhodot = QVector3D::dotProduct(rel,
+            QVector3D(sat_simulator.velocity().x()+pos(1)*omega_E,sat_simulator.velocity().y()-pos(0)*omega_E, sat_simulator.velocity().z()) )/rho;
+        meas_package.timestamp_ = current_time_;
+        meas_package.raw_measurements_ << rho + noise, rhodot + noise;
+        meas_package.timestamp_ = current_time_;
+        measurement_pack_list.push_back(meas_package);
+
         if (measurement_pack_list.size() != 0) {
 
-          if (!is_initialized_) {
-            // initialize timestamp
-            previous_timestamp_ = measurement_pack_list[0].timestamp_;
-            is_initialized_ = true;
-            filter.ProcessMeasurement(measurement_pack_list[0], current_time_);
-            measurement_pack_list.erase (measurement_pack_list.begin(),measurement_pack_list.begin()+1);
-            return;
-          }
-          current_time_ = current_time_ + dt;
           // Call the fusion, which contains the decision logic for using
           // KF, EKF, UKF, dependent on the measurement type
-          filter.ProcessMeasurement(measurement_pack_list[0], current_time_);
+          filter.ProcessMeasurement(measurement_pack_list);
           planets[0]->setPosition(QVector3D(filter.ekf_.x_(0),filter.ekf_.x_(1),filter.ekf_.x_(2)));
           double spatial_scale = planets[1]->getSpatial_scale();
           double eig = filter.ekf_.P_.operatorNorm();
@@ -171,39 +143,34 @@ void TwoBodySimulation::UpdateState(double dt)
           planets[0]->setTranslation(filter.ekf_.x_(0)/spatial_scale, filter.ekf_.x_(1)/spatial_scale, -filter.ekf_.x_(2)/spatial_scale);
           planets[0]->local_to_world_matrix_ = planets[0]->toMatrix();
           planets[0]->UpdateOutputs();
-          std::cout << filter.ekf_.x_(0) << " " << filter.ekf_.x_(1) << " " << filter.ekf_.x_(2) << std::endl;
+          std::cout << "Estimated data: " << filter.ekf_.x_(0) << " " << filter.ekf_.x_(1) << " " << filter.ekf_.x_(2)
+                    << " " << filter.ekf_.x_(3) << " " << filter.ekf_.x_(4) << " " << filter.ekf_.x_(5) << std::endl;
+          std::cout << "Estimated range: " << filter.ekf_.x_.segment(0,3).norm() << std::endl;
+          sat_simulator.omt.orbit_desc(filter.ekf_.x_.segment(0,3), filter.ekf_.x_.segment(3,3), filter.ekf_.x_(6));
 
-          simulator.omt.orbit_desc(filter.ekf_.x_.segment(0,3), filter.ekf_.x_.segment(3,3), filter.ekf_.x_(6));
+          //Eigen::VectorXd st2;
+          //sat_simulator.getState(st2);
+          //sat_simulator.omt.orbit_desc(sat_simulator.position(), sat_simulator.velocity(), st2(6));
 
           if (e_output_ != nullptr)
           {
-              e_output_->setValue(simulator.omt.e);
+              e_output_->setValue(eig); //setValue(simulator.omt.e);
           }
           if (h_output_ != nullptr)
           {
-              h_output_->setValue(simulator.omt.h);
+              h_output_->setValue(sat_simulator.omt.h);
           }
           if (Omega_output_ != nullptr)
           {
-              Omega_output_->setValue(simulator.omt.Omega);
+              Omega_output_->setValue(sat_simulator.omt.Omega);
           }
           if (omega_output_ != nullptr)
           {
-              omega_output_->setValue(simulator.omt.omega);
+              omega_output_->setValue(sat_simulator.omt.omega);
           }
           if (i_output_ != nullptr)
           {
-              i_output_->setValue(simulator.omt.i);
-          }
-
-
-          //OrbitalSimulation::UpdateState(measurement_pack_list[0].timestamp_ - previous_timestamp_);
-          previous_timestamp_ = measurement_pack_list[0].timestamp_;
-
-          //std::cout << simulator.position().x() << " " << simulator.position().y() << " " << simulator.position().z()  << std::endl;
-          if (current_time_ > measurement_pack_list[0].timestamp_)
-          {
-            measurement_pack_list.erase(measurement_pack_list.begin(),measurement_pack_list.begin()+1);
+              i_output_->setValue(sat_simulator.omt.i);
           }
 
         }

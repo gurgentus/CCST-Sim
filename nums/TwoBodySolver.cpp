@@ -104,7 +104,7 @@ void TwoBodySolver::InitialConditions(Eigen::Vector3d r, Eigen::Vector3d v)
 void TwoBodySolver::RightHandSide(double t, const std::vector<double> &y, std::vector<double> &f)
 {
     double r = sqrt(pow(y[3]-y[0],2) + pow(y[4]-y[1],2) + pow(y[5]-y[2],2));
-    const double rho_0 = 3.614e-22;
+    const double rho_0 = 3.614e-4;
     const double R_e = 6378.1363;
     const double r_0 = 7.0e2+R_e;
     const double H = 88.667;
@@ -162,7 +162,7 @@ QVector3D TwoBodySolver::velocity()
     V = state[10] - state[7];
     W = state[11] - state[8];
 
-    return QVector3D(U, W, -V);
+    return QVector3D(U, V, W);
 }
 
 double TwoBodySolver::eccentricity()

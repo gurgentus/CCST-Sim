@@ -91,7 +91,7 @@ void Planet::InitializeOutputs()
     z_position_output_ = new Output(output_layout_, 0, 1, "Relative Z Position: ", "km");
     r_output_ = new Output(output_layout_, 0, 1, "Distance to the origin: ", "km");
     // e_output_ = new Output(output_layout_, 0, 1, "Eccentricity", "");
-    t_output_ = new Output(output_layout_, 0, 1, "Time", "days");
+    t_output_ = new Output(output_layout_, 0, 1, "Time", "seconds");
 
 }
 
@@ -160,7 +160,7 @@ void Planet::UpdateOutputs()
     if (t_output_ != nullptr)
     {
 
-        t_output_->setText(QString::number(p_simulator_->time()/(3600*24)));
+        t_output_->setText(QString::number(p_simulator_->time()));///(3600*24)));
     }
 }
 

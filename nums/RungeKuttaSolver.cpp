@@ -22,7 +22,6 @@ void RungeKuttaSolver::SolveEquation(std::vector<double> yi)
         RKIteration(ti, yi);
         ti = ti+mStepSize;
     }
-
 }
 
 void RungeKuttaSolver::UpdateState(double dt)

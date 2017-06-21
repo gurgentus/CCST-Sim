@@ -68,6 +68,7 @@ public:
    * @param z The measurement at k+1
    */
   void UpdateEKF(const Eigen::VectorXd &z, int sensor);
+  void UpdateEKF(const Eigen::VectorXd &z);
 
 private:
   // tool object used to compute the Jacobian
