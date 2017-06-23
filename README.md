@@ -14,7 +14,7 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
  - [X] Connect probabilistic filter module to orbit determination module (with the state consisting of position and velocity of the satellite, positions of three ground tracking stations, as well as mu, J2, and drag coefficient for estimating higher order perturbation effects). [Derivations Link](./docs/derivations.pdf)
  - [X] Add sequential estimation, batch estimation with same epoch measurement for each batch
  - [ ] Add uncertainty ellipse visualization and implement multiple epoch measurements in each batch
- - [ ] Write a two point boundary problem solver for optimal control problems
+ - [X] Write a two point boundary value problem solver for nonlinear systems
  - [ ] Optimal control: add minimal time orbit transfer solver using maximum principle and boundary problem solver
  - [ ] Testing
  - [ ] Controls toolbox with basic algorithms (mixed C++ and calls to Python libraries, eventually all C++ for performance improvement)
