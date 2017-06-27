@@ -11,64 +11,91 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = MyOpenGL
 TEMPLATE = app
 
-SOURCES += common/camera3D.cpp \
-    common/control.cpp \
-    common/input.cpp \
-    common/main.cpp \
-    common/output.cpp \
-    common/textures.cpp \
-    common/transform3d.cpp \
-    #common/dynamiccontrol.cpp \
-    cst/transferfunction.cpp \
-    cst/cst.cpp \
-    cst/complexnumber.cpp \
-    cst/pfd.cpp \
-    nums/AbstractOdeSolver.cpp \
-    nums/AdaptiveRungeKuttaSolver.cpp \
-    nums/Restricted3BodySolver.cpp \
-    nums/RungeKuttaSolver.cpp \
-    nums/TwoBodySolver.cpp \
-    objects/adaptivecar.cpp \
-    #objects/airplane.cpp \
-    objects/car.cpp \
-    objects/mesh.cpp \
-    objects/part.cpp \
-    objects/planet.cpp \
-    objects/road.cpp \
-    objects/sbody.cpp \
-    objects/terrain.cpp \
-    #objects/wing.cpp \
-    sims/carsimulation.cpp \
-    sims/orbitalsimulation.cpp \
-    sims/restricted3bodysimulation.cpp \
-    sims/simulation.cpp \
-    sims/twobodysimulation.cpp \
-    mainviewwidget.cpp \
-    window.cpp \
-    sims/satellitegroundtrackingsimulation.cpp \
-    orbital/omt.cpp \
-    nums/EarthRotationSolver.cpp \
-    objects/controllable.cpp \
-    kalman/FusionEKF.cpp \
-    kalman/kalman_filter.cpp \
-    kalman/tools.cpp \
-    kalman/OrbitDeterminationFilter.cpp \
-    kalman/ukf.cpp \
-    nums/GroundTrackingSolver.cpp \
-    nums/SatelliteSolver.cpp
 
-HEADERS  += common/camera3D.h \
-    common/control.h \
-    common/input.h \
-    common/output.h \
-    common/textures.h \
-    common/transform3d.h \
-    common/vertex.h \
-    #common/dynamiccontrol.h \
-    cst/complexnumber.h \
-    cst/cst.h \
-    cst/pfd.h \
-    cst/transferfunction.h \
+CONFIG       += plugin static
+QT           += widgets
+
+LIBS           = -L$$PWD/plugins/
+
+macx-xcode {
+    LIBS += -lSatelliteTrackingPlugin$($${QMAKE_XCODE_LIBRARY_SUFFIX_SETTING})
+} else {
+    LIBS += -lSatelliteTrackingPlugin
+    if(!debug_and_release|build_pass):CONFIG(debug, debug|release) {
+        mac:LIBS = $$member(LIBS, 0) $$member(LIBS, 1)_debug
+        win32:LIBS = $$member(LIBS, 0) $$member(LIBS, 1)d
+    }
+}
+
+#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/plugins/release/ -lSatelliteTrackingPlugin_debug
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/plugins/debug/ -lSatelliteTrackingPlugin_debug
+#else:unix: LIBS += -L$$PWD/plugins/ -lSatelliteTrackingPlugin_debug
+
+#INCLUDEPATH += $$PWD/plugins
+#DEPENDPATH += $$PWD/plugins
+
+#win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/plugins/release/libSatelliteTrackingPlugin_debug.a
+#else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/plugins/debug/libSatelliteTrackingPlugin_debug.a
+#else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/plugins/release/SatelliteTrackingPlugin_debug.lib
+#else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/plugins/debug/SatelliteTrackingPlugin_debug.lib
+#else:unix: PRE_TARGETDEPS += $$PWD/plugins/libSatelliteTrackingPlugin_debug.a
+
+
+SOURCES += \
+    Common/Camera3D.cpp \
+    Common/Control.cpp \
+    Common/Input.cpp \
+    Common/Output.cpp \
+    Common/Textures.cpp \
+    Common/Transform3d.cpp \
+    Cst/ComplexNumber.cpp \
+    Cst/Cst.cpp \
+    Cst/Pfd.cpp \
+    Cst/TransferFunction.cpp \
+    Kalman/FusionEKF.cpp \
+    Kalman/OrbitDeterminationFilter.cpp \
+    Nums/AbstractOdeSolver.cpp \
+    Nums/AdaptiveRungeKuttaSolver.cpp \
+    Nums/Restricted3BodySolver.cpp \
+    Nums/RungeKuttaSolver.cpp \
+    Nums/TwoBodySolver.cpp \
+    Nums/EarthRotationSolver.cpp \
+    Nums/GroundTrackingSolver.cpp \
+    Nums/SatelliteSolver.cpp \
+    Nums/FiniteDifferenceGrid.cpp \
+    Nums/BoundaryValueProblem.cpp \
+    Nums/DifferentialSystem.cpp \
+    Objects/SimObject.cpp \
+    Objects/Controllable.cpp \
+    Window.cpp \
+    MainViewWidget.cpp \
+    Sims/Simulation.cpp \
+    Sims/OrbitalSimulation.cpp \
+    Orbital/Omt.cpp \
+    main.cpp \
+    Objects/Terrain.cpp \
+    Objects/AdaptiveCar.cpp \
+    Objects/Car.cpp \
+    Objects/Mesh.cpp \
+    Objects/Part.cpp \
+    Objects/Road.cpp \
+    Objects/Satellite.cpp \
+    Kalman/CarFilterTools.cpp \
+    Kalman/KalmanFilter.cpp \
+    Kalman/UnscentedKalmanFilter.cpp
+
+HEADERS  += \
+    Common/Camera3D.hpp \
+    Common/Control.hpp \
+    Common/Input.hpp \
+    Common/Output.hpp \
+    Common/Textures.hpp \
+    Common/Transform3d.hpp \
+    Common/Vertex.hpp \
+    Cst/Cst.hpp \
+    Cst/Pfd.hpp \
+    Cst/TransferFunction.hpp \
+    Cst/ComplexNumber.hpp \
     GL/eglew.h \
     GL/glew.h \
     GL/glxew.h \
@@ -215,31 +242,8 @@ HEADERS  += common/camera3D.h \
     glm/vec3.hpp \
     glm/vec4.hpp \
     glm/vector_relational.hpp \
-    nums/AbstractOdeSolver.hpp \
-    nums/AdaptiveRungeKuttaSolver.h \
-    nums/Restricted3BodySolver.h \
-    nums/RungeKuttaSolver.hpp \
-    nums/TwoBodySolver.h \
-    objects/adaptivecar.h \
-    #objects/airplane.h \
-    objects/car.h \
-    objects/mesh.h \
-    objects/part.h \
-    objects/planet.h \
-    objects/road.h \
-    objects/sbody.h \
-    objects/terrain.h \
-    #objects/wing.h \
-    objects/controllablepart.h \
-    sims/carsimulation.h \
-    sims/orbitalsimulation.h \
-    sims/restricted3bodysimulation.h \
-    sims/simulation.h \
-    sims/twobodysimulation.h \
-    mainviewwidget.h \
-    window.h \
-    sims/satellitegroundtrackingsimulation.h \
-    orbital/omt.h \
+    Nums/AbstractOdeSolver.hpp \
+    Nums/RungeKuttaSolver.hpp \
     Eigen/src/Cholesky/LDLT.h \
     Eigen/src/Cholesky/LLT.h \
     Eigen/src/Cholesky/LLT_MKL.h \
@@ -526,20 +530,42 @@ HEADERS  += common/camera3D.h \
     Eigen/SuperLUSupport \
     Eigen/SVD \
     Eigen/UmfPackSupport \
-    nums/EarthRotationSolver.h \
-    objects/controllable.h \
-    kalman/FusionEKF.h \
-    kalman/ground_truth_package.h \
-    kalman/kalman_filter.h \
-    kalman/tools.h \
-    kalman/OrbitDeterminationFilter.h \
-    kalman/ukf.h \
-    kalman/measurement_package.h \
-    kalman/OrbitMeasurementPackage.h \
-    nums/GroundTrackingSolver.h \
-    nums/SatelliteSolver.h
+    Nums/BoundaryValueProblem.hpp \
+    Nums/Node.hpp \
+    Nums/DifferentialSystem.hpp \
+    Nums/FiniteDifferenceGrid.hpp \
+    SimulationInterface.hpp \
+    Objects/SimObject.hpp \
+    MainViewWidget.hpp \
+    Window.hpp \
+    Sims/Simulation.hpp \
+    Sims/OrbitalSimulation.hpp \
+    Orbital/Omt.hpp \
+    Objects/Terrain.hpp \
+    Objects/Adaptivecar.hpp \
+    Objects/Car.hpp \
+    Objects/Controllable.hpp \
+    Objects/Mesh.hpp \
+    Objects/Part.hpp \
+    Objects/Road.hpp \
+    Objects/Satellite.hpp \
+    Kalman/CarFilterTools.hpp \
+    Kalman/MeasurementPackage.hpp \
+    Kalman/GroundTruthPackage.hpp \
+    Kalman/FusionEKF.hpp \
+    Kalman/KalmanFilter.hpp \
+    Kalman/UnscentedKalmanFilter.hpp \
+    Kalman/OrbitMeasurementPackage.hpp \
+    Kalman/OrbitDeterminationFilter.hpp \
+    Nums/AdaptiveRungeKuttaSolver.hpp \
+    Nums/EarthRotationSolver.hpp \
+    Nums/GroundTrackingSolver.hpp \
+    Nums/Restricted3BodySolver.hpp \
+    Nums/SatelliteSolver.hpp \
+    Nums/TwoBodySolver.hpp
 
-FORMS    += window.ui
+#FORMS    += \
+#    Window.ui
 
 DISTFILES += \
     SimpleFragmentShader.fragmentshader \
@@ -623,3 +649,5 @@ QMAKE_MAC_SDK = macosx10.12
 #CONFIG += qwt
 #INCLUDEPATH +="/usr/local/qwt-6.1.3/include"
 #LIBS += -L/usr/local/qwt-6.1.3/lib -lqwt
+
+

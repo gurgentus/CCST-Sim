@@ -1,4 +1,4 @@
-#include "transferfunction.h"
+#include "TransferFunction.hpp"
 #include <string>
 #include <cmath>
 #include <sstream>

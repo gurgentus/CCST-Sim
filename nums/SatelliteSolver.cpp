@@ -5,7 +5,8 @@
 #include <vector>
 #include <cmath>
 #include <QApplication>
-#include "nums/SatelliteSolver.h"
+
+#include "Nums/SatelliteSolver.hpp"
 
 const double h = 0.01;
 const double G = 6.67259e-20;

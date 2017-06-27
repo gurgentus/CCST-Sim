@@ -5,7 +5,8 @@
 #include <vector>
 #include <cmath>
 #include <QApplication>
-#include "nums/GroundTrackingSolver.h"
+
+#include "Nums/GroundTrackingSolver.hpp"
 
 const double h = 0.01;
 const double G = 6.67259e-20;

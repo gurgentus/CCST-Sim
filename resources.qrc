@@ -24,6 +24,6 @@
         <file>Data/Textures/earth_low.jpg</file>
         <file>Data/Textures/moon.jpg</file>
         <file>Data/Objects/cubesat.obj</file>
-        <file>Data/sensor_data.txt</file>
+        <file>Data/Textures/red.jpg</file>
     </qresource>
 </RCC>

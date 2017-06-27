@@ -10,7 +10,7 @@ protected:
     double mInitialTime;
     double mFinalTime;
     double mInitialValue;
-    double t_;
+    double t_ = 0;
     std::vector<double> mInitialValueVector;
 public:
     void SetStepSize(double h);

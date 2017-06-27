@@ -1,4 +1,4 @@
-#include "AdaptiveRungeKuttaSolver.h"
+#include "AdaptiveRungeKuttaSolver.hpp"
 
 #include "AbstractOdeSolver.hpp"
 #include <iostream>

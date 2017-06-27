@@ -1,5 +1,4 @@
-#include "restricted3bodysolver.h"
-
+#include "Restricted3BodySolver.hpp"
 
 #include <cassert>
 #include <iostream>
@@ -42,12 +41,7 @@ void Restricted3BodySolver::InitialConditions()
     state[0] = (6378+200)*cos(phi)-pi2*r12;
     state[1] = (6378+200)*sin(phi);
     state[2] = vbo*cos(phi+M_PI/2-gamma);
-    // state[2] = vbo*sin(gamma-phi);
     state[3] = vbo*sin(phi+M_PI/2-gamma);
-    // state[3] = vbo*cos(gamma-phi);
-
-    //vx     =  v0*(sind(gamma)*cosd(phi) - cosd(gamma)*sind(phi));
-    //vy     =  v0*(sind(gamma)*sind(phi) + cosd(gamma)*cosd(phi));
 
     SetInitialValue(state);
     SetTimeInterval(0, 400);

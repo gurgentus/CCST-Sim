@@ -17,8 +17,8 @@ private:
     Eigen::VectorXd sol_vec_; // pointer to the solution vector
     std::string filename_;  // allow the user to specify the output file or use a default name
 
-    static constexpr double ERR_TOL = 1e-4;
-    static const int MAX_ITER = 100;
+    static constexpr double ERR_TOL = 1e-1;
+    static const int MAX_ITER = 50;
 
 public:
     BoundaryValueProblem(DifferentialSystem *p_ode, int num_nodes, int dim);

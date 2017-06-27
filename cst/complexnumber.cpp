@@ -1,4 +1,4 @@
-#include "complexnumber.h"
+#include "ComplexNumber.hpp"
 #include <cmath>
 
 ComplexNumber::ComplexNumber()

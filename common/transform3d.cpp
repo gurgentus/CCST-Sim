@@ -1,5 +1,6 @@
-#include "Transform3D.h"
+#include "Transform3D.hpp"
 #include <QDebug>
+#include <iostream>
 
 // Transform By (Add/Scale)
 void Transform3D::translate(const QVector3D &dt)

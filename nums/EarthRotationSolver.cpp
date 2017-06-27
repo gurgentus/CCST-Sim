@@ -1,9 +1,10 @@
-#include "EarthRotationSolver.h"
+#include "EarthRotationSolver.hpp"
 #include <iostream>
 
 void EarthRotationSolver::InitialConditions()
 {
     t_ = 0;
+    rot = 0;
 }
 
 void EarthRotationSolver::UpdateState(double dt)

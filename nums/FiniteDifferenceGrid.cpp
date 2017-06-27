@@ -2,7 +2,7 @@
 #include "FiniteDifferenceGrid.hpp"
 #include "Node.hpp"
 
-FiniteDifferenceGrid::FiniteDifferenceGrid(int num_nodes, double t_min, double t_max)
+FiniteDifferenceGrid::FiniteDifferenceGrid(unsigned long num_nodes, double t_min, double t_max)
 {
     double step_size = (t_max-t_min)/((double)(num_nodes-1));
     for (int i=0; i<num_nodes; i++)

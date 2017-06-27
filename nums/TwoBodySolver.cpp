@@ -4,7 +4,7 @@
 #include <math.h>  
 #include <vector>
 #include <cmath>
-#include "TwoBodySolver.h"
+#include "TwoBodySolver.hpp"
 #include <QApplication>
 
 #include <Python.h>

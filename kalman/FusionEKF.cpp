@@ -1,5 +1,5 @@
-#include "FusionEKF.h"
-#include "tools.h"
+#include "FusionEKF.hpp"
+#include "CarFilterTools.hpp"
 #include "Eigen/Dense"
 #include <iostream>
 
@@ -12,7 +12,7 @@ using std::vector;
  * Constructor.
  */
 FusionEKF::FusionEKF() {
-        std::cout << "test2" << std::endl;
+
 }
 
 /**

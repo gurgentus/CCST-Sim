@@ -3,7 +3,6 @@
 
 #include "Eigen/Dense"
 #include <vector>
-#include "BoundaryConditions.hpp"
 #include "Node.hpp"
 
 class FiniteDifferenceGrid
@@ -13,7 +12,7 @@ public:
 private:
     std::vector<Node> nodes_;
 public:
-    FiniteDifferenceGrid(int num_nodes, double t_min, double t_max);
+    FiniteDifferenceGrid(unsigned long num_nodes, double t_min, double t_max);
 };
 
 #endif

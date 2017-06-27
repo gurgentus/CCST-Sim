@@ -23,7 +23,7 @@ void main()
     gl_Position = cameraToView * worldToCamera * modelToWorld * vec4(in_position, 1);
 
     v2f_positionW = cameraToView * worldToCamera * modelToWorld * vec4(in_position, 1);//modelToWorld * vec4(in_position, 1);
-    v2f_normalW = cameraToView * worldToCamera * modelToWorld * vec4(in_normal, 1); //modelToWorld * vec4(in_normal, 0);
+    v2f_normalW = cameraToView * worldToCamera * modelToWorld * vec4(in_normal, 0); //modelToWorld * vec4(in_normal, 0);
     v2f_texcoord = in_texcoord;
     vColor = color;
 }

@@ -1,4 +1,4 @@
-#include "OrbitDeterminationFilter.h"
+#include "OrbitDeterminationFilter.hpp"
 #include <iostream>
 
 OrbitDeterminationFilter::OrbitDeterminationFilter()
@@ -21,8 +21,8 @@ OrbitDeterminationFilter::OrbitDeterminationFilter()
     R_array[2] = MatrixXd(1, 1);
 
     // Radar measurement noise standard deviation range in km
-    double var_ra_ = 0.01;
-    double var_radr_ = 0.01;
+    double var_ra_ = 0.001;
+    double var_radr_ = 0.001;
 
 
     // measurement covariance matrices
@@ -53,11 +53,11 @@ OrbitDeterminationFilter::OrbitDeterminationFilter()
 
 
     // initialize P, F, and Q and the filters
-    double uns = 100;
+    double uns = 10;
     MatrixXd P = uns*Eigen::MatrixXd::Identity(18, 18);
-    for (unsigned int i=0; i<9; i++)
+    for (unsigned int i=0; i<6; i++)
     {
-        P(i,i) = 1;
+        P(i,i) = 10;
     }
 
     MatrixXd F = Eigen::MatrixXd::Zero(18, 18);
@@ -115,13 +115,13 @@ void OrbitDeterminationFilter::ProcessMeasurement(vector<MeasurementPackage> &me
    ****************************************************************************/
 
   // Update the state transition matrix F according to the new elapsed time in seconds
- std::cout << "Fusion: " << measurement_pack_list[0].timestamp_ << std::endl;
+  //std::cout << "Fusion: " << measurement_pack_list[0].timestamp_ << std::endl;
   //compute the time elapsed between the current and previous measurements
   float dt = (measurement_pack_list[0].timestamp_ - previous_timestamp_); // / 1000000.0;	//dt - expressed in seconds
   previous_timestamp_ = measurement_pack_list[0].timestamp_;
 
 
-  std::cout << "Time Filter: " << dt << std::endl;
+  //std::cout << "Time Filter: " << dt << std::endl;
 
   // predict
   // choose between KF/EKF:
@@ -140,7 +140,7 @@ void OrbitDeterminationFilter::ProcessMeasurement(vector<MeasurementPackage> &me
    *  Update
    ****************************************************************************/
 
-    std::cout << "received measurement" << std::endl;
+    //std::cout << "received measurement" << std::endl;
     // update based on three stations
     Eigen::VectorXd z_list = Eigen::VectorXd(6);
     z_list << measurement_pack_list[0].raw_measurements_, measurement_pack_list[1].raw_measurements_, measurement_pack_list[2].raw_measurements_;

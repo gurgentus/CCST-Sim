@@ -1,4 +1,4 @@
-#include "part.h"
+#include "Part.hpp"
 #include <iostream>
 
 Part::Part()
@@ -18,13 +18,13 @@ void Part::InitializeControls()
 {
 //    aileronAngleControl = new Control(controlLayout, drawingWidget);
 //    aileronAngleControl->setValue(20);
-    SBody::InitializeControls();
+    SimObject::InitializeControls();
 //    sizeControl->setValue(4);
 //    aileron.sizeControl = sizeControl;
 }
 void Part::UpdateControls()
 {
-    SBody::UpdateControls();
+    SimObject::UpdateControls();
 //    aileron.position = position;
 //    aileron.toPosRotMatrix = toPosRotMatrix;
 

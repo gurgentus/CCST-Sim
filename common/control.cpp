@@ -1,10 +1,10 @@
-#include "control.h"
+#include "Control.hpp"
+
+#include "Sims/Simulation.hpp"
 
 #include <iostream>
 #include <QTimer>
 #include <cmath>
-#include "myopenglwidget.h"
-#include "sims/simulation.h"
 #include <string>
 
 Control::~Control()

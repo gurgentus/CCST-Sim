@@ -1,4 +1,4 @@
-#include "mesh.h"
+#include "Mesh.hpp"
 #include <stdio.h>
 #include <iostream>
 
@@ -36,12 +36,9 @@ bool Mesh::SetupMesh()
     QOpenGLBuffer m_vertex;
     QOpenGLBuffer m_index(QOpenGLBuffer::IndexBuffer);
 
-
-
     // Create Vertex Array Object
     vao_.create();
     vao_.bind();
-
 
     m_vertex.create();
     if ( !m_vertex.bind() )

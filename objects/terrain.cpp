@@ -1,6 +1,6 @@
 // original version of this file was based on: https://www.3dgep.com/multi-textured-terrain-in-opengl/#Resources
 //#include "TerrainPCH.h"
-#include "Terrain.h"
+#include "Terrain.hpp"
 
 // Enable mutitexture blending across the terrain
 #ifndef ENABLE_MULTITEXTURE
