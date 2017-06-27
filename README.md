@@ -29,6 +29,7 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
  [GUI]: ./docs/SolverDefinition.png "Solver"
  [Car]: ./docs/Car.png "Car"
  [Orbit]: ./docs/sat.png "Orbit"
+ [Sat]: ./docs/sat2.png "Sat"
  [R3B]: ./docs/Restricted3Body.png "Restricted 3 Body"
  [video1]: ./docs/orbit.mov "Satelite Orbit Video"
  [deriv]: ./docs/derivations.pdf "Derivations"
@@ -38,8 +39,13 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
 
 #### Satellite Tracking
 
+##### Preliminary Orbit Determination
+
 ![Orbit][Orbit]
 
+##### Statistical Orbit Determination
+
+![StOrbit][Sat]
 
 #### Adaptive Cruise Control
 
