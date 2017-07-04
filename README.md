@@ -11,7 +11,7 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
  - [X] More realistic car model with steering
  - [X] Satellite orbit determination and restricted three body (Moon mission) orbital mechanics simulations
  - [X] Probabilistic filter module (Kalman, Extended Kalman, Unscented Kalman)
- - [X] Connect probabilistic filter module to orbit determination module (with the state consisting of position and velocity of the satellite, positions of three ground tracking stations, as well as mu, J2, and drag coefficient for estimating higher order perturbation effects). [Derivations Link](./Docs/derivations.pdf)
+ - [X] Connect probabilistic filter module to orbit determination module (with the state consisting of position and velocity of the satellite, positions of three ground tracking stations, as well as mu, J2, and drag coefficient for estimating higher order perturbation effects). [Derivations Link](./docs/derivations.pdf)
  - [X] Add sequential estimation, batch estimation with same epoch measurement for each batch
  - [ ] Use WebSockets to better separate ground truth measurement simulation from state estimation
  - [ ] Add uncertainty ellipse visualization and implement multiple epoch measurements in each batch
@@ -27,13 +27,13 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
 
 [//]: # (Image References)
 
- [GUI]: ./Docs/SolverDefinition.png "Solver"
- [Car]: ./Docs/Car.png "Car"
- [Orbit]: ./Docs/sat3.png "Orbit"
- [Sat]: ./Docs/sat2.png "Sat"
- [R3B]: ./Docs/Restricted3Body.png "Restricted 3 Body"
- [video1]: ./Docs/orbit.mov "Satelite Orbit Video"
- [deriv]: ./Docs/derivations.pdf "Derivations"
+ [GUI]: ./docs/SolverDefinition.png "Solver"
+ [Car]: ./docs/Car.png "Car"
+ [Orbit]: ./docs/sat.png "Orbit"
+ [Sat]: ./docs/sat2.png "Sat"
+ [R3B]: ./docs/Restricted3Body.png "Restricted 3 Body"
+ [video1]: ./docs/orbit.mov "Satelite Orbit Video"
+ [deriv]: ./docs/derivations.pdf "Derivations"
 #### Restricted 3 body problem - lunar mission
 
 ![R3B][R3B]
