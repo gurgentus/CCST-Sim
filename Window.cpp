@@ -83,6 +83,9 @@ void Window::CreateActions()
 
     about_act = new QAction(tr("&Info"), this);
     connect(about_act, SIGNAL(triggered()), this, SLOT(About()));
+
+    sim_action_group = new QActionGroup(this);
+
 }
 
 void Window::CreateMenus()
@@ -140,7 +143,7 @@ void Window::PopulateMenus(QObject *plugin)
     // Populate the menu with the simulation from the plugin
     SimulationInterface *i_sim = qobject_cast<SimulationInterface*>(plugin);
     if (i_sim)
-        AddToMenu(plugin, i_sim->Simulations(), simulations_menu, SLOT(ChangeSim()));
+        AddToMenu(plugin, i_sim->Simulations(), simulations_menu, SLOT(ChangeSim()));//, sim_action_group);
 
 }
 
@@ -158,10 +161,10 @@ void Window::AddToMenu(QObject *plugin, const QStringList &sim_names,
 //        SimulationInterface *i_sim = qobject_cast<SimulationInterface *>(action->parent());
 
 
-//        if (actionGroup) {
-//            action->setCheckable(true);
-//            actionGroup->addAction(action);
-//        }
+        if (actionGroup) {
+            action->setCheckable(true);
+            actionGroup->addAction(action);
+        }
     }
 }
 
@@ -171,10 +174,23 @@ void Window::ChangeSim()
     QAction *action = qobject_cast<QAction *>(sender());
     i_sim = qobject_cast<SimulationInterface *>(action->parent());
     sim.p_sim = i_sim;
-    i_sim->InitializeSimulation(sim);
-    i_sim->InitializeObjects(right_layout);
-    i_sim->InitializeGraphics();
-    i_sim->InitializeGUI();
+
+    if (!i_sim->is_initialized())
+    {
+        i_sim->InitializeSimulation(sim);
+        i_sim->InitializeObjects(right_layout);
+        i_sim->InitializeGraphics();
+        i_sim->InitializeGUI();
+    }
+    if (i_sim->is_running())
+    {
+        m_button1->setText("Stop Simulation 1");
+    }
+    else
+    {
+        m_button1->setText("Simulation 1");
+    }
+
 }
 
 void Window::About()
@@ -189,14 +205,14 @@ void Window::HandleButton1()
     if (m_button1->text() == "Stop Simulation 1")
     {
         timer->stop();
+        i_sim->StopSimulation1();
         m_button1->setText("Simulation 1");
         std::cout << "Stopping simulation 1" << std::endl;
     }
     else
     {
-        //i_sim->currentSim = 1;
         i_sim->StartSimulation1();
-        timer->start(100);
+        timer->start(1000);
         m_button1->setText("Stop Simulation 1");
         std::cout << "Starting simulation 1" << std::endl;
     }
@@ -206,14 +222,14 @@ void Window::HandleButton2()
     if (m_button2->text() == "Stop Simulation 2")
     {
         timer->stop();
+        i_sim->StopSimulation2();
         m_button2->setText("Simulation 2");
         std::cout << "Stopping simulation 2" << std::endl;
     }
     else
     {
-        //i_sim->currentSim = 2;
         i_sim->StartSimulation2();
-        timer->start(100);
+        timer->start(1000);
         m_button2->setText("Stop Simulation 2");
         std::cout << "Starting simulation 2" << std::endl;
     }

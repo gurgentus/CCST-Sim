@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl charts
+QT       += core gui opengl charts websockets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -19,17 +19,19 @@ LIBS           = -L$$PWD/plugins/
 
 macx-xcode {
     LIBS += -lSatelliteTrackingPlugin$($${QMAKE_XCODE_LIBRARY_SUFFIX_SETTING})
+    LIBS += -lGroundStationSimulationPlugin$($${QMAKE_XCODE_LIBRARY_SUFFIX_SETTING})
 } else {
     LIBS += -lSatelliteTrackingPlugin
+    LIBS += -lGroundStationSimulationPlugin
     if(!debug_and_release|build_pass):CONFIG(debug, debug|release) {
         mac:LIBS = $$member(LIBS, 0) $$member(LIBS, 1)_debug
         win32:LIBS = $$member(LIBS, 0) $$member(LIBS, 1)d
     }
 }
 
-#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/plugins/release/ -lSatelliteTrackingPlugin_debug
-#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/plugins/debug/ -lSatelliteTrackingPlugin_debug
-#else:unix: LIBS += -L$$PWD/plugins/ -lSatelliteTrackingPlugin_debug
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/plugins/release/ -lGroundStationSimulationPlugin_debug
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/plugins/debug/ -lGroundStationSimulationPlugin_debug
+else:unix: LIBS += -L$$PWD/plugins/ -lGroundStationSimulationPlugin_debug
 
 #INCLUDEPATH += $$PWD/plugins
 #DEPENDPATH += $$PWD/plugins
@@ -530,6 +532,7 @@ HEADERS  += \
     Eigen/SuperLUSupport \
     Eigen/SVD \
     Eigen/UmfPackSupport \
+    json.hpp \
     Nums/BoundaryValueProblem.hpp \
     Nums/Node.hpp \
     Nums/DifferentialSystem.hpp \
@@ -650,4 +653,5 @@ QMAKE_MAC_SDK = macosx10.12
 #INCLUDEPATH +="/usr/local/qwt-6.1.3/include"
 #LIBS += -L/usr/local/qwt-6.1.3/lib -lqwt
 
+INCLUDEPATH += /usr/local/include/
 

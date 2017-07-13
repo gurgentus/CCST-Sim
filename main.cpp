@@ -11,6 +11,7 @@ using namespace QtCharts;
 
 // Static plugins have to be listed here
 Q_IMPORT_PLUGIN(SatelliteTrackingPlugin)
+Q_IMPORT_PLUGIN(GroundStationSimulationPlugin)
 
 int main(int argc, char *argv[])
 {

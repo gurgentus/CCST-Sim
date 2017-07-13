@@ -29,9 +29,12 @@ public:
     virtual void UpdateState(double dt) = 0;
     virtual void StartSimulation1() = 0;
     virtual void StartSimulation2() = 0;
+    virtual void StopSimulation1() = 0;
+    virtual void StopSimulation2() = 0;
     virtual void InitializeGraphics() = 0;
     virtual void RenderGraphics() = 0;
-
+    virtual bool is_initialized() = 0;
+    virtual bool is_running() = 0;
 };
 
 #define SimulationInterface_iid  "org.gensim.SimulationInterface"

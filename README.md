@@ -13,8 +13,10 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
  - [X] Probabilistic filter module (Kalman, Extended Kalman, Unscented Kalman)
  - [X] Connect probabilistic filter module to orbit determination module (with the state consisting of position and velocity of the satellite, positions of three ground tracking stations, as well as mu, J2, and drag coefficient for estimating higher order perturbation effects). [Derivations Link](./Docs/derivations.pdf)
  - [X] Add sequential estimation, batch estimation with same epoch measurement for each batch
- - [ ] Use WebSockets to better separate ground truth measurement simulation from state estimation
- - [ ] Add uncertainty ellipse visualization and implement multiple epoch measurements in each batch
+ - [X] Add uncertainty ellipse visualization
+ - [X] Use QWebSockets and separate plugins to better separate ground truth measurement simulation from state estimation.
+ - [ ] Test running the two processes on different machines and sending telemetry data through TCP connection.
+ - [ ] Implement multiple epoch measurements in each batch
  - [X] Write a two point boundary value problem solver for nonlinear systems
  - [ ] Optimal control: add minimal time orbit transfer solver using maximum principle and boundary problem solver
  - [ ] Testing
@@ -75,3 +77,9 @@ http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
 
 Initial testing car meshes were loaded based on car obj file in:
 http://people.sc.fsu.edu/~jburkardt/data/obj/obj.html
+
+# Build Instructions
+
+Run install-mac or install-ubuntu
+
+Modify library paths in .pro file

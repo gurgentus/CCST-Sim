@@ -63,6 +63,8 @@ private:
     QAction *about_act;
     QAction *about_plugins_act;
 
+    QActionGroup *sim_action_group;
+
     QScrollArea *scroll_area;
 
     QPushButton* m_button1;
