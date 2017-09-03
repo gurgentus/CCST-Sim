@@ -20,6 +20,7 @@ uniform sampler2D stage1;
 uniform sampler2D stage2;
 uniform sampler2D stage3;
 uniform sampler2D stage4;
+uniform sampler2D stage5;
 
 layout (location=0) out vec4 out_color;
 
@@ -48,9 +49,11 @@ void main()
 //    out_color = ( Emissive + Ambient + Diffuse + Specular ) * texture( diffuseSampler, v2f_texcoord );
     vec4 st12 = mix(texture(stage1, v2f_texcoord), texture(stage2, v2f_texcoord), 1.0-vColor[0]);
     vec4 st123 = mix(texture(stage3, v2f_texcoord), st12, 1.0-vColor[2]);
-
-    out_color = ( AmbientLoc + Diffuse ) * st123;
-    out_color.a = vColor[3];
+    vec4 st1234 = mix(texture(stage4, v2f_texcoord), st123, 1.0-vColor[1]);
+    vec4 st12345 = mix(texture(stage5, v2f_texcoord), st1234, 1.0-vColor[3]);
+    //out_color = ( AmbientLoc + Diffuse ) * st123;
+    out_color = st12345;
+    out_color.a = 1-vColor[1]*vColor[2]*vColor[3]/2.0;
 
 
 }

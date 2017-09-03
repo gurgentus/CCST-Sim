@@ -157,10 +157,6 @@ void Window::AddToMenu(QObject *plugin, const QStringList &sim_names,
         connect(action, SIGNAL(triggered()), this, member);
         menu->addAction(action);
 
-//        QAction *action = qobject_cast<QAction *>(sender());
-//        SimulationInterface *i_sim = qobject_cast<SimulationInterface *>(action->parent());
-
-
         if (actionGroup) {
             action->setCheckable(true);
             actionGroup->addAction(action);
@@ -190,7 +186,6 @@ void Window::ChangeSim()
     {
         m_button1->setText("Simulation 1");
     }
-
 }
 
 void Window::About()
@@ -212,7 +207,7 @@ void Window::HandleButton1()
     else
     {
         i_sim->StartSimulation1();
-        timer->start(1000);
+        timer->start(100);
         m_button1->setText("Stop Simulation 1");
         std::cout << "Starting simulation 1" << std::endl;
     }

@@ -20,9 +20,11 @@ LIBS           = -L$$PWD/plugins/
 macx-xcode {
     LIBS += -lSatelliteTrackingPlugin$($${QMAKE_XCODE_LIBRARY_SUFFIX_SETTING})
     LIBS += -lGroundStationSimulationPlugin$($${QMAKE_XCODE_LIBRARY_SUFFIX_SETTING})
+    LIBS += -lCarSimulationPlugin$($${QMAKE_XCODE_LIBRARY_SUFFIX_SETTING})
 } else {
     LIBS += -lSatelliteTrackingPlugin
     LIBS += -lGroundStationSimulationPlugin
+    LIBS += -lCarSimulationPlugin
     if(!debug_and_release|build_pass):CONFIG(debug, debug|release) {
         mac:LIBS = $$member(LIBS, 0) $$member(LIBS, 1)_debug
         win32:LIBS = $$member(LIBS, 0) $$member(LIBS, 1)d
@@ -32,6 +34,11 @@ macx-xcode {
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/plugins/release/ -lGroundStationSimulationPlugin_debug
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/plugins/debug/ -lGroundStationSimulationPlugin_debug
 else:unix: LIBS += -L$$PWD/plugins/ -lGroundStationSimulationPlugin_debug
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/plugins/release/ -lCarSimulationPlugin_debug
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/plugins/debug/ -lCarSimulationPlugin_debug
+else:unix: LIBS += -L$$PWD/plugins/ -lCarSimulationPlugin_debug
+
 
 #INCLUDEPATH += $$PWD/plugins
 #DEPENDPATH += $$PWD/plugins
@@ -49,7 +56,6 @@ SOURCES += \
     Common/Input.cpp \
     Common/Output.cpp \
     Common/Textures.cpp \
-    Common/Transform3d.cpp \
     Cst/ComplexNumber.cpp \
     Cst/Cst.cpp \
     Cst/Pfd.cpp \
@@ -84,7 +90,8 @@ SOURCES += \
     Objects/Satellite.cpp \
     Kalman/CarFilterTools.cpp \
     Kalman/KalmanFilter.cpp \
-    Kalman/UnscentedKalmanFilter.cpp
+    Kalman/UnscentedKalmanFilter.cpp \
+    Common/Transform3D.cpp
 
 HEADERS  += \
     Common/Camera3D.hpp \
@@ -92,7 +99,6 @@ HEADERS  += \
     Common/Input.hpp \
     Common/Output.hpp \
     Common/Textures.hpp \
-    Common/Transform3d.hpp \
     Common/Vertex.hpp \
     Cst/Cst.hpp \
     Cst/Pfd.hpp \
@@ -565,7 +571,8 @@ HEADERS  += \
     Nums/GroundTrackingSolver.hpp \
     Nums/Restricted3BodySolver.hpp \
     Nums/SatelliteSolver.hpp \
-    Nums/TwoBodySolver.hpp
+    Nums/TwoBodySolver.hpp \
+    Common/Transform3D.hpp
 
 #FORMS    += \
 #    Window.ui

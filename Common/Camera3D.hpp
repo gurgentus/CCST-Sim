@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "Transform3d.hpp"
+#include "Transform3D.hpp"
 
 // OpenGL Camera Manager
 // Source: http://www.trentreed.net/blog/qt5-opengl-part-3b-camera-control/

@@ -108,11 +108,11 @@ void TwoBodySolver::RightHandSide(double t, const std::vector<double> &y, std::v
     const double R_e = 6378.1363;
     const double r_0 = 7.0e2+R_e;
     const double H = 88.667;
-    const double A = 3e-6;
-    const double omega = 2*M_PI/86164;
-    double rho = rho_0*exp(-(r-r_0)/H);
-    double J2 = 1.082626925638815e-3;
-    double C_D = 2;
+//    const double A = 3e-6;
+//    const double omega = 2*M_PI/86164;
+//    double rho = rho_0*exp(-(r-r_0)/H);
+//    double J2 = 1.082626925638815e-3;
+//    double C_D = 2;
     const double omega_E = 2*M_PI/86164;
 //    double x = y[3];
 //    double y = y[4];
@@ -120,7 +120,7 @@ void TwoBodySolver::RightHandSide(double t, const std::vector<double> &y, std::v
     double u = y[6];
     double v = y[7];
     double w = y[8];
-    double v_rel = sqrt((u+omega_E*y[4])*(u+omega_E*y[4])+(v-omega_E*y[3])*(v-omega_E*y[3])+w*w);
+//    double v_rel = sqrt((u+omega_E*y[4])*(u+omega_E*y[4])+(v-omega_E*y[3])*(v-omega_E*y[3])+w*w);
 
     f[0] = y[6];
     f[1] = y[7];

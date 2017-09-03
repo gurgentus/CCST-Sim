@@ -37,6 +37,11 @@ void Simulation::paintGL()
 
 void Simulation::update()
 {
+    if (p_sim)
+    {
+        p_sim->CheckKeyboardInput();
+    }
+
     MainViewWidget::update();
 }
 

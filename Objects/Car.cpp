@@ -43,8 +43,6 @@ void Car::ResetOrientation()
 
 bool Car::SetupDefaultMesh(QVector4D texSignature)
 {
-
-
     int stacks = 32;
     int slices = 32;
 

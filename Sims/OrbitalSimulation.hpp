@@ -26,6 +26,8 @@ public:
     // Pointer to the simulation object
     Simulation* p_sim;
 
+    QVBoxLayout* p_info_layout_;  // pointer to the information panel of the gui
+
     void AddSatellite(Satellite& planet);
     void InitializeObjects(QVBoxLayout *controls_layout, QVBoxLayout *outputs_layout, QOpenGLShaderProgram* shader,
                            Textures *textures_);

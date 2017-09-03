@@ -5,7 +5,7 @@
 #include <QOpenGLFunctions>
 #include <QMatrix4x4>
 
-#include "Common/Camera3d.hpp"
+#include "Common/Camera3D.hpp"
 #include "Common/Textures.hpp"
 
 class QOpenGLShaderProgram;

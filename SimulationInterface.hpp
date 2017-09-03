@@ -33,6 +33,7 @@ public:
     virtual void StopSimulation2() = 0;
     virtual void InitializeGraphics() = 0;
     virtual void RenderGraphics() = 0;
+    virtual void CheckKeyboardInput() = 0;
     virtual bool is_initialized() = 0;
     virtual bool is_running() = 0;
 };

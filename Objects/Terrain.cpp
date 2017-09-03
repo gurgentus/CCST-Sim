@@ -178,10 +178,10 @@ bool Terrain::LoadHeightmap( const std::string& filename, unsigned char bitsPerP
             // std::cout <<m_fHeightScale << std::endl;
             // Blend 3 textures depending on the height of the terrain
             float tex0Contribution = 1.0f - GetPercentage( heightValue, 0.0f, 0.75f );
-            float tex2Contribution = 1.0f - GetPercentage( heightValue, 0.75f, 1.0f );
+            float tex2Contribution = GetPercentage( heightValue, 0.75f, 1.0f );
             //std::cout << tex0Contribution << " " << tex2Contribution << std::endl;
 #if ENABLE_MULTITEXTURE
-            position_buffer_.push_back ( Vertex(QVector3D(X, Y, Z), QVector4D( tex0Contribution, 0, tex0Contribution, tex2Contribution ), QVector3D(1, 0, 0), QVector2D(S,T) ));
+            position_buffer_.push_back ( Vertex(QVector3D(X, Y, Z), QVector4D( tex0Contribution, 0, tex2Contribution, 0 ), QVector3D(1, 0, 0), QVector2D(S,T) ));
 #else
             m_PositionBuffer.push_back ( Vertex(QVector3D(X, Y, Z), QVector4D( 1, 0, 0, 0 ), QVector3D(1, 0, 0), QVector2D(S,T) ));
 #endif

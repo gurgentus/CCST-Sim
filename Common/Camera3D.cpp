@@ -1,4 +1,4 @@
-#include "Camera3d.hpp"
+#include "Camera3D.hpp"
 #include <QDebug>
 
 const QVector3D Camera3D::LocalForward(0.0f, 0.0f, -1.0f);
