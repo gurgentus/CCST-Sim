@@ -184,7 +184,7 @@ void Window::ChangeSim()
     }
     else
     {
-        m_button1->setText("Simulation 1");
+        m_button1->setText("Simulation  1");
     }
 }
 

@@ -39,17 +39,6 @@ win32:CONFIG(release, debug|release): LIBS += -L$$PWD/plugins/release/ -lCarSimu
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/plugins/debug/ -lCarSimulationPlugin_debug
 else:unix: LIBS += -L$$PWD/plugins/ -lCarSimulationPlugin_debug
 
-
-#INCLUDEPATH += $$PWD/plugins
-#DEPENDPATH += $$PWD/plugins
-
-#win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/plugins/release/libSatelliteTrackingPlugin_debug.a
-#else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/plugins/debug/libSatelliteTrackingPlugin_debug.a
-#else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/plugins/release/SatelliteTrackingPlugin_debug.lib
-#else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/plugins/debug/SatelliteTrackingPlugin_debug.lib
-#else:unix: PRE_TARGETDEPS += $$PWD/plugins/libSatelliteTrackingPlugin_debug.a
-
-
 SOURCES += \
     Common/Camera3D.cpp \
     Common/Control.cpp \
@@ -82,8 +71,6 @@ SOURCES += \
     Orbital/Omt.cpp \
     main.cpp \
     Objects/Terrain.cpp \
-    Objects/AdaptiveCar.cpp \
-    Objects/Car.cpp \
     Objects/Mesh.cpp \
     Objects/Part.cpp \
     Objects/Road.cpp \
@@ -551,8 +538,6 @@ HEADERS  += \
     Sims/OrbitalSimulation.hpp \
     Orbital/Omt.hpp \
     Objects/Terrain.hpp \
-    Objects/Adaptivecar.hpp \
-    Objects/Car.hpp \
     Objects/Controllable.hpp \
     Objects/Mesh.hpp \
     Objects/Part.hpp \

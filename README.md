@@ -21,10 +21,10 @@ Simulator for testing state estimation (Kalman Filter, Extended Kalman Filter, U
  - [ ] Optimal control: add minimal time orbit transfer solver using maximum principle and boundary problem solver
  - [ ] Testing
  - [ ] Controls toolbox with basic algorithms (mixed C++ and calls to Python libraries, eventually all C++ for performance improvement)
- - [ ] Add higher order perturbation effects to motion models (tide contribution, drag, third-body effects, solar radiation, Earth radiation, etc)
+ - [ ] Add path planning simulations for the car module
  - [ ] Testing, bug fixes
  - [ ] Optimize code design for modularity and OOP for easy extensions to other models and simulations
- - [ ] Add fancier satellite simulation as a module with a tutorial describing how to add modules
+ - [ ] Add a tutorial describing how to add new modules
  - [ ] Add full 6DF module
 
 [//]: # (Image References)
@@ -77,9 +77,3 @@ http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
 
 Initial testing car meshes were loaded based on car obj file in:
 http://people.sc.fsu.edu/~jburkardt/data/obj/obj.html
-
-# Build Instructions
-
-Run install-mac or install-ubuntu
-
-Modify library paths in .pro file
